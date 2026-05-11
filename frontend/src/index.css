@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+
+body {
+  @apply bg-linear-to-br from-purple-800 to-purple-400 min-h-screen;
+
+}
+

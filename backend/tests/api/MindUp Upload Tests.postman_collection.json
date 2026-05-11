@@ -1,0 +1,137 @@
+{
+	"info": {
+		"_postman_id": "91746fb9-7f7d-4d94-86b1-2eae5513b766",
+		"name": "MindUp Upload Tests",
+		"description": "Coleção para testar uploads de imagem de perfil e vídeo.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49840729",
+		"_collection_link": "https://erickpessoal54-6872291.postman.co/workspace/Erick-Barneche's-Workspace~3f506b4a-cb3f-44a7-88d1-7dea700a05f1/collection/49840729-91746fb9-7f7d-4d94-86b1-2eae5513b766?action=share&source=collection_link&creator=49840729"
+	},
+	"item": [
+		{
+			"name": "1 - Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"admin@mindup.com\",\n  \"senha\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2 - Upload Foto Perfil",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "1|ViEflI3OhcFtqQWoJfiNwMA82k3W4z8JJ0hs8Ixs75071b3e",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "foto",
+							"type": "file",
+							"src": "/C:/Users/erick/OneDrive/Desktop/About Me/Loucuras de Imagens/Lindo d+++++.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/users/1/upload-foto",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"users",
+						"1",
+						"upload-foto"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3 - Upload Arquivo Vídeo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "1|ViEflI3OhcFtqQWoJfiNwMA82k3W4z8JJ0hs8Ixs75071b3e",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "arquivo",
+							"type": "file",
+							"src": "/C:/Users/erick/OneDrive/Desktop/video teste.mp4"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/videos/1/upload-arquivo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"videos",
+						"1",
+						"upload-arquivo"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
