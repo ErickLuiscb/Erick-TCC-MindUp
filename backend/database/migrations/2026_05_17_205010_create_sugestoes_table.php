@@ -8,22 +8,31 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('videos', function (Blueprint $table) {
+        Schema::create('sugestoes', function (Blueprint $table) {
             $table->id();
 
+            $table->enum('tipo', [
+                'livro',
+                'filme',
+                'musica'
+            ]);
+
             $table->string('titulo', 150);
+
             $table->text('descricao')->nullable();
 
-            $table->string('arquivo_video', 255);
+            // imagem da sugestão
+            $table->string('capa', 255)->nullable();
 
-            $table->string('thumbnail', 255)->nullable();
+            // links opcionais
+            $table->string('link_externo', 255)->nullable();
 
+            // autor
             $table->foreignId('autor_id')
                 ->constrained('usuarios')
                 ->cascadeOnDelete();
 
             $table->boolean('ativo')->default(true);
-
 
             $table->timestamps();
         });
@@ -31,6 +40,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('videos');
+        Schema::dropIfExists('sugestoes');
     }
 };

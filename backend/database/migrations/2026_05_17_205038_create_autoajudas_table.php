@@ -8,22 +8,28 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('videos', function (Blueprint $table) {
+        Schema::create('autoajudas', function (Blueprint $table) {
             $table->id();
 
             $table->string('titulo', 150);
+
             $table->text('descricao')->nullable();
 
-            $table->string('arquivo_video', 255);
+            // tipo da mídia
+            $table->enum('tipo_midia', [
+                'imagem',
+                'video'
+            ]);
 
-            $table->string('thumbnail', 255)->nullable();
+            // arquivo da mídia
+            $table->string('midia', 255);
 
+            // autor
             $table->foreignId('autor_id')
                 ->constrained('usuarios')
                 ->cascadeOnDelete();
 
             $table->boolean('ativo')->default(true);
-
 
             $table->timestamps();
         });
@@ -31,6 +37,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('videos');
+        Schema::dropIfExists('autoajudas');
     }
 };

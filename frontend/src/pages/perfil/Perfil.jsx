@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"; // ← ADICIONE useEffect
+import React, { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
 
@@ -6,16 +6,14 @@ export default function Perfil() {
   const { usuario, logout, deleteAccount } = useAuth();
   const navigate = useNavigate();
 
-  // ========== FIM DEBUG ==========
-
   if (!usuario) {
     return <p className="text-center text-white mt-10">Carregando perfil...</p>;
   }
 
   const imagemFinal = usuario?.imagem_perfil || "/default_perfil.png";
 
-  console.log("Dados do usuário:", usuario); // DEBUG: Verificar dados do usuário
-  console.log("URL da imagem de perfil:", imagemFinal); // DEBUG: Verificar URL da imagem
+  console.log("Dados do usuário:", usuario);
+  console.log("URL da imagem de perfil:", imagemFinal);
   const excluirConta = async () => {
     if (
       !window.confirm(
@@ -34,7 +32,7 @@ export default function Perfil() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen px-4 py-10 bg-gray-900">
+    <div className="flex justify-center items-center min-h-screen px-4 py-10 bg-purple-900">
       <div className="max-w-md w-full bg-purple-900 p-8 rounded-2xl shadow-xl text-white">
         <h1 className="text-3xl font-bold text-center text-purple-300 mb-6">
           Meu Perfil
