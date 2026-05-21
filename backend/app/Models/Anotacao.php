@@ -10,15 +10,20 @@ class Anotacao extends Model
     use HasFactory;
 
     protected $table = 'anotacoes';
+
     protected $primaryKey = 'id';
-    public $timestamps = false;
+
+    public $timestamps = true;
 
     protected $fillable = [
         'usuario_id',
         'titulo',
         'texto',
-        'data_criacao'
     ];
+
+    // =========================================
+    // RELACIONAMENTOS
+    // =========================================
 
     /**
      * Uma anotação pertence a um usuário.

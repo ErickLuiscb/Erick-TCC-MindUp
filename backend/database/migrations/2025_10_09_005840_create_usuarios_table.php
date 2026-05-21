@@ -30,7 +30,7 @@ return new class extends Migration
         // Necessário para autenticação (Sanctum)
         $table->rememberToken();
 
-        $table->timestamp('criado_em')->useCurrent();
+        $table->timestamps();
     });
 }
 

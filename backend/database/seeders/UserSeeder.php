@@ -18,7 +18,6 @@ class UserSeeder extends Seeder
             'tipo'      => 'psicologo',
             'is_admin'  => true,
             'role'      => 'admin',
-            'criado_em' => now(),
         ]);
 
         // Usuário comum
@@ -29,7 +28,6 @@ class UserSeeder extends Seeder
             'tipo'      => 'usuario',
             'is_admin'  => false,
             'role'      => 'user',
-            'criado_em' => now(),
         ]);
     }
 }

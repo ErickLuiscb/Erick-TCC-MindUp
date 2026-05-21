@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Video extends Model
+class Sugestao extends Model
 {
     use HasFactory;
 
-    protected $table = 'videos';
+    protected $table = 'sugestoes';
 
-    // Agora usamos created_at e updated_at
     public $timestamps = true;
 
     protected $fillable = [
+        'tipo',
         'titulo',
         'descricao',
-        'arquivo_video',
-        'thumbnail',
+        'capa',
+        'link_externo',
         'autor_id',
         'ativo',
     ];
@@ -27,7 +27,7 @@ class Video extends Model
     // RELACIONAMENTOS
     // =========================================
 
-    // AUTOR DO VÍDEO
+    // AUTOR
     public function autor()
     {
         return $this->belongsTo(User::class, 'autor_id');
@@ -38,7 +38,7 @@ class Video extends Model
     {
         return $this->belongsToMany(
             Categoria::class,
-            'categoria_video'
+            'categoria_sugestao'
         );
     }
 }

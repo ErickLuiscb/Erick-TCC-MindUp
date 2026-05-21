@@ -12,8 +12,11 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'usuarios';
+
     protected $primaryKey = 'id';
-    public $timestamps = false;
+
+    // Agora usamos timestamps do Laravel
+    public $timestamps = true;
 
     protected $fillable = [
         'nome',
@@ -24,7 +27,6 @@ class User extends Authenticatable
         'tipo',
         'is_admin',
         'role',
-        'criado_em',
     ];
 
     protected $hidden = [
@@ -33,21 +35,44 @@ class User extends Authenticatable
     ];
 
     /**
-     * O Laravel precisa saber qual campo é a senha.
+     * Campo de senha personalizado
      */
     public function getAuthPassword()
     {
         return $this->senha;
     }
 
+    // =========================================
     // RELACIONAMENTOS
+    // =========================================
+
+    // ANOTAÇÕES
+    public function anotacoes()
+    {
+        return $this->hasMany(Anotacao::class, 'usuario_id');
+    }
+
+    // VÍDEOS
     public function videos()
     {
         return $this->hasMany(Video::class, 'autor_id');
     }
 
-    public function anotacoes()
+    // ARTIGOS
+    public function artigos()
     {
-        return $this->hasMany(Anotacao::class, 'usuario_id');
+        return $this->hasMany(Artigo::class, 'autor_id');
+    }
+
+    // SUGESTÕES
+    public function sugestoes()
+    {
+        return $this->hasMany(Sugestao::class, 'autor_id');
+    }
+
+    // AUTOAJUDA
+    public function autoajudas()
+    {
+        return $this->hasMany(Autoajuda::class, 'autor_id');
     }
 }

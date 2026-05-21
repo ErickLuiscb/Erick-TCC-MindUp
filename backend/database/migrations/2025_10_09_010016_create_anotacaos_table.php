@@ -21,7 +21,7 @@ return new class extends Migration
         $table->string('titulo', 100);
         $table->text('texto');
 
-        $table->timestamp('data_criacao')->useCurrent();
+        $table->timestamps();
     });
 }
 
