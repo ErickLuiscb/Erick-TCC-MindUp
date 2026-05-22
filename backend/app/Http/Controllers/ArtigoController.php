@@ -2,37 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Video;
+use App\Models\Artigo;
 use App\Models\User;
 use App\Models\Categoria;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class VideoController extends Controller
+class ArtigoController extends Controller
 {
     // LISTAR
     public function index()
     {
-        $videos = Video::with([
+        $artigos = Artigo::with([
             'autor',
             'categorias'
         ])
         ->latest()
         ->get();
 
-        return view('videos.index', compact('videos'));
+        return view('artigos.index', compact('artigos'));
     }
 
     // FORM CREATE
     public function create()
     {
-        $usuarios = User::where('tipo', 'psicologo')->get();
+        $usuarios = User::where(
+            'tipo',
+            'psicologo'
+        )->get();
 
-        $categorias = Categoria::where('ativo', true)
-            ->orderBy('nome')
-            ->get();
+        $categorias = Categoria::where(
+            'ativo',
+            true
+        )
+        ->orderBy('nome')
+        ->get();
 
-        return view('videos.create', compact(
+        return view('artigos.create', compact(
             'usuarios',
             'categorias'
         ));
@@ -44,9 +51,10 @@ class VideoController extends Controller
     {
         $request->validate([
             'titulo' => 'required|string|max:150',
+
             'descricao' => 'nullable|string',
 
-            'arquivo_video' => 'required|file|mimes:mp4,mov,avi,webm|max:51200',
+            'arquivo_pdf' => 'required|file|mimes:pdf|max:10240',
 
             'thumbnail' => 'nullable|image|max:2048',
 
@@ -56,29 +64,29 @@ class VideoController extends Controller
             'categorias.*' => 'exists:categorias,id',
         ]);
 
+        // UPLOAD PDF
 
-        // UPLOAD DO VÍDEO
-
-        $arquivoVideo = $request
-            ->file('arquivo_video')
-            ->store('videos', 'public');
+        $arquivoPdf = $request
+            ->file('arquivo_pdf')
+            ->store('artigos/pdf', 'public');
 
         // UPLOAD THUMBNAIL
 
         $thumbnail = null;
 
         if ($request->hasFile('thumbnail')) {
+
             $thumbnail = $request
                 ->file('thumbnail')
-                ->store('thumbnails', 'public');
+                ->store('artigos/thumbnails', 'public');
         }
 
-        // CRIAR VÍDEO
+        // CRIAR ARTIGO
 
-        $video = Video::create([
+        $artigo = Artigo::create([
             'titulo' => $request->titulo,
             'descricao' => $request->descricao,
-            'arquivo_video' => $arquivoVideo,
+            'arquivo_pdf' => $arquivoPdf,
             'thumbnail' => $thumbnail,
             'autor_id' => $request->autor_id,
             'ativo' => true,
@@ -86,33 +94,33 @@ class VideoController extends Controller
 
         // CATEGORIAS
 
-        $video->categorias()->sync(
+        $artigo->categorias()->sync(
             $request->categorias
         );
 
         return redirect()
-            ->route('videos.index')
+            ->route('artigos.index')
             ->with(
                 'success',
-                'Vídeo criado com sucesso!'
+                'Artigo criado com sucesso!'
             );
     }
 
     // SHOW
     public function show($id)
     {
-        $video = Video::with([
+        $artigo = Artigo::with([
             'autor',
             'categorias'
         ])->findOrFail($id);
 
-        return view('videos.show', compact('video'));
+        return view('artigos.show', compact('artigo'));
     }
 
     // FORM EDIT
     public function edit($id)
     {
-        $video = Video::with('categorias')
+        $artigo = Artigo::with('categorias')
             ->findOrFail($id);
 
         $usuarios = User::where(
@@ -127,8 +135,8 @@ class VideoController extends Controller
         ->orderBy('nome')
         ->get();
 
-        return view('videos.edit', compact(
-            'video',
+        return view('artigos.edit', compact(
+            'artigo',
             'usuarios',
             'categorias'
         ));
@@ -137,13 +145,14 @@ class VideoController extends Controller
     // UPDATE
     public function update(Request $request, $id)
     {
-        $video = Video::findOrFail($id);
+        $artigo = Artigo::findOrFail($id);
 
         $request->validate([
             'titulo' => 'required|string|max:150',
+
             'descricao' => 'nullable|string',
 
-            'arquivo_video' => 'nullable|file|mimes:mp4,mov,avi,webm|max:51200',
+            'arquivo_pdf' => 'nullable|file|mimes:pdf|max:10240',
 
             'thumbnail' => 'nullable|image|max:2048',
 
@@ -153,40 +162,43 @@ class VideoController extends Controller
             'categorias.*' => 'exists:categorias,id',
         ]);
 
-        // NOVO VÍDEO
-        if ($request->hasFile('arquivo_video')) {
+        // NOVO PDF
 
-            if ($video->arquivo_video &&
-                Storage::disk('public')->exists($video->arquivo_video)) {
+        if ($request->hasFile('arquivo_pdf')) {
 
+            if (
+                $artigo->arquivo_pdf &&
+                Storage::disk('public')->exists($artigo->arquivo_pdf)
+            ) {
                 Storage::disk('public')
-                    ->delete($video->arquivo_video);
+                    ->delete($artigo->arquivo_pdf);
             }
 
-            $video->arquivo_video = $request
-                ->file('arquivo_video')
-                ->store('videos', 'public');
+            $artigo->arquivo_pdf = $request
+                ->file('arquivo_pdf')
+                ->store('artigos/pdf', 'public');
         }
 
         // NOVA THUMBNAIL
 
         if ($request->hasFile('thumbnail')) {
 
-            if ($video->thumbnail &&
-                Storage::disk('public')->exists($video->thumbnail)) {
-
+            if (
+                $artigo->thumbnail &&
+                Storage::disk('public')->exists($artigo->thumbnail)
+            ) {
                 Storage::disk('public')
-                    ->delete($video->thumbnail);
+                    ->delete($artigo->thumbnail);
             }
 
-            $video->thumbnail = $request
+            $artigo->thumbnail = $request
                 ->file('thumbnail')
-                ->store('thumbnails', 'public');
+                ->store('artigos/thumbnails', 'public');
         }
 
-        // UPDATE DADOS
+        // UPDATE
 
-        $video->update([
+        $artigo->update([
             'titulo' => $request->titulo,
             'descricao' => $request->descricao,
             'autor_id' => $request->autor_id,
@@ -194,54 +206,58 @@ class VideoController extends Controller
 
         // CATEGORIAS
 
-        $video->categorias()->sync(
+        $artigo->categorias()->sync(
             $request->categorias
         );
 
         return redirect()
-            ->route('videos.index')
+            ->route('artigos.index')
             ->with(
                 'success',
-                'Vídeo atualizado com sucesso!'
+                'Artigo atualizado com sucesso!'
             );
     }
 
     // REMOVE
     public function remove($id)
     {
-        $video = Video::findOrFail($id);
+        $artigo = Artigo::findOrFail($id);
 
-        return view('videos.remove', compact('video'));
+        return view('artigos.remove', compact('artigo'));
     }
 
     // DESTROY
     public function destroy($id)
     {
-        $video = Video::findOrFail($id);
+        $artigo = Artigo::findOrFail($id);
 
-        // DELETAR ARQUIVOS
+        // DELETE PDF
 
-        if ($video->arquivo_video &&
-            Storage::disk('public')->exists($video->arquivo_video)) {
-
+        if (
+            $artigo->arquivo_pdf &&
+            Storage::disk('public')->exists($artigo->arquivo_pdf)
+        ) {
             Storage::disk('public')
-                ->delete($video->arquivo_video);
+                ->delete($artigo->arquivo_pdf);
         }
 
-        if ($video->thumbnail &&
-            Storage::disk('public')->exists($video->thumbnail)) {
+        // DELETE THUMBNAIL
 
+        if (
+            $artigo->thumbnail &&
+            Storage::disk('public')->exists($artigo->thumbnail)
+        ) {
             Storage::disk('public')
-                ->delete($video->thumbnail);
+                ->delete($artigo->thumbnail);
         }
 
-        $video->delete();
+        $artigo->delete();
 
         return redirect()
-            ->route('videos.index')
+            ->route('artigos.index')
             ->with(
                 'success',
-                'Vídeo removido com sucesso!'
+                'Artigo removido com sucesso!'
             );
     }
 }
