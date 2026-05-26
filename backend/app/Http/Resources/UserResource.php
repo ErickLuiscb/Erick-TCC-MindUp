@@ -9,22 +9,25 @@ class UserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        // PARA SAIL: URL correta para storage
-        $imagemUrl = null;
-        if ($this->imagem_perfil) {
-            // Sail precisa desta estrutura
-            $imagemUrl = url('storage/' . $this->imagem_perfil);
-        }
-
         return [
             'id' => $this->id,
+
             'nome' => $this->nome,
+
             'email' => $this->email,
-            'imagem_perfil' => $imagemUrl,
+
+            'imagem_perfil' => $this->imagem_perfil
+                ? url('storage/' . $this->imagem_perfil)
+                : null,
+
             'crp' => $this->crp,
+
             'tipo' => $this->tipo,
-            'is_admin' => $this->is_admin ?? false,
-            'role' => $this->role ?? 'user',
+
+            'is_admin' => $this->is_admin,
+
+            'role' => $this->role,
+
             'criado_em' => $this->criado_em,
         ];
     }

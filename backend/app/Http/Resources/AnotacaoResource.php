@@ -11,14 +11,20 @@ class AnotacaoResource extends JsonResource
     {
         return [
             'id' => $this->id,
+
             'titulo' => $this->titulo,
+
             'texto' => $this->texto,
+
             'data_criacao' => $this->data_criacao,
-            'usuario' => [
-                'id' => $this->usuario->id ?? null,
-                'nome' => $this->usuario->nome ?? null,
-                'email' => $this->usuario->email ?? null,
-            ],
+
+            'usuario' => $this->whenLoaded('usuario', function () {
+                return [
+                    'id' => $this->usuario->id,
+                    'nome' => $this->usuario->nome,
+                    'email' => $this->usuario->email,
+                ];
+            }),
         ];
     }
 }
