@@ -12,65 +12,92 @@ use Illuminate\Http\Request;
 class AnotacaoApiController extends Controller
 {
     /**
-     * LISTAR — sempre apenas do usuário autenticado
+     * LISTAR ANOTAÇÕES DO USUÁRIO
      */
     public function index(Request $request)
     {
-        return AnotacaoResource::collection(
-            Anotacao::where('usuario_id', $request->user()->id)
-                ->with('usuario')
-                ->latest('data_criacao')
-                ->get()
-        );
+        $anotacoes = Anotacao::where(
+                'usuario_id',
+                $request->user()->id
+            )
+            ->with('usuario')
+            ->latest('data_criacao')
+            ->get();
+
+        return response()->json([
+            'data' => AnotacaoResource::collection($anotacoes)
+        ]);
     }
 
     /**
-     * VISUALIZAR — apenas se for dono
+     * VISUALIZAR ANOTAÇÃO
      */
     public function show(Request $request, Anotacao $anotacao)
     {
         if ($anotacao->usuario_id !== $request->user()->id) {
-            return response()->json(['error' => 'Acesso negado'], 403);
+            return response()->json([
+                'message' => 'Acesso negado.'
+            ], 403);
         }
 
-        return new AnotacaoResource($anotacao->load('usuario'));
+        return response()->json([
+            'data' => new AnotacaoResource(
+                $anotacao->load('usuario')
+            )
+        ]);
     }
 
     /**
-     * CRIAR — sempre para o usuário autenticado
+     * CRIAR ANOTAÇÃO
      */
     public function store(StoreAnotacaoRequest $request)
     {
         $anotacao = Anotacao::create([
-            'titulo'     => $request->titulo,
-            'texto'      => $request->texto,
+            'titulo' => $request->titulo,
+            'texto' => $request->texto,
             'usuario_id' => $request->user()->id,
         ]);
 
-        return new AnotacaoResource($anotacao);
+        return response()->json([
+            'message' => 'Anotação criada com sucesso.',
+            'data' => new AnotacaoResource(
+                $anotacao->load('usuario')
+            )
+        ], 201);
     }
 
     /**
-     * ATUALIZAR — apenas se for dono
+     * ATUALIZAR ANOTAÇÃO
      */
-    public function update(UpdateAnotacaoRequest $request, Anotacao $anotacao)
-    {
+    public function update(
+        UpdateAnotacaoRequest $request,
+        Anotacao $anotacao
+    ) {
         if ($anotacao->usuario_id !== $request->user()->id) {
-            return response()->json(['error' => 'Acesso negado'], 403);
+            return response()->json([
+                'message' => 'Acesso negado.'
+            ], 403);
         }
 
         $anotacao->update($request->validated());
 
-        return new AnotacaoResource($anotacao);
+        return response()->json([
+            'message' => 'Anotação atualizada com sucesso.',
+            'data' => new AnotacaoResource(
+                $anotacao->fresh()->load('usuario')
+            )
+        ]);
     }
 
     /**
-     * DELETAR — apenas se for dono
+     * REMOVER ANOTAÇÃO
      */
     public function destroy(Request $request, Anotacao $anotacao)
     {
         if ($anotacao->usuario_id !== $request->user()->id) {
-            return response()->json(['error' => 'Acesso negado'], 403);
+            return response()->json([
+                'message' => 'Acesso negado.'
+            ], 403);
         }
 
         $anotacao->delete();

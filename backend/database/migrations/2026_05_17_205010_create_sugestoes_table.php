@@ -29,8 +29,9 @@ return new class extends Migration
 
             // autor
             $table->foreignId('autor_id')
-                ->constrained('usuarios')
-                ->cascadeOnDelete();
+            ->nullable()
+            ->constrained('usuarios')
+            ->nullOnDelete();
 
             $table->boolean('ativo')->default(true);
 

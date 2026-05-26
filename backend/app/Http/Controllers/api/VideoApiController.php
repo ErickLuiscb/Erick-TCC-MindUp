@@ -13,41 +13,71 @@ use Illuminate\Support\Facades\Storage;
 class VideoApiController extends Controller
 {
     /**
-     * LISTAR VÍDEOS — público
+     * LISTAR TODOS OS VÍDEOS
+     * Público
      */
-    public function index()
+    public function index(Request $request)
     {
-        return VideoResource::collection(
-            Video::with('autor')
-                ->latest('data_criacao')
-                ->get()
-        );
+        $query = Video::with([
+            'autor',
+            'categorias'
+        ]);
+
+        // filtro por categoria
+        if ($request->has('categoria')) {
+
+            $query->whereHas('categorias', function ($q) use ($request) {
+                $q->where('categorias.id', $request->categoria);
+            });
+        }
+
+        $videos = $query
+            ->latest('data_criacao')
+            ->get();
+
+        return response()->json([
+            'data' => VideoResource::collection($videos)
+        ]);
     }
 
     /**
-     * VISUALIZAR UM VÍDEO — público
+     * VISUALIZAR UM VÍDEO
+     * Público
      */
     public function show(Video $video)
     {
-        return new VideoResource(
-            $video->load('autor')
-        );
+        return response()->json([
+            'data' => new VideoResource(
+                $video->load([
+                    'autor',
+                    'categorias'
+                ])
+            )
+        ]);
     }
 
     /**
-     * LISTAR VÍDEOS DO USUÁRIO LOGADO (Dashboard)
+     * LISTAR VÍDEOS DO AUTOR LOGADO
+     * Dashboard
      */
     public function meusVideos(Request $request)
     {
-        return VideoResource::collection(
-            Video::where('autor_id', $request->user()->id)
-                ->latest('data_criacao')
-                ->get()
-        );
+        $videos = Video::where(
+                'autor_id',
+                $request->user()->id
+            )
+            ->with('categorias')
+            ->latest('data_criacao')
+            ->get();
+
+        return response()->json([
+            'data' => VideoResource::collection($videos)
+        ]);
     }
 
     /**
-     * CRIAR VÍDEO — admin ou psicólogo
+     * CRIAR VÍDEO
+     * Psicólogo/Admin
      */
     public function store(StoreVideoRequest $request)
     {
@@ -55,66 +85,115 @@ class VideoApiController extends Controller
             !$request->user()->tokenCan('admin') &&
             !$request->user()->tokenCan('publicador')
         ) {
-            return response()->json(['error' => 'Acesso negado'], 403);
+            return response()->json([
+                'message' => 'Acesso negado.'
+            ], 403);
         }
 
         $data = $request->validated();
+
         $data['autor_id'] = $request->user()->id;
 
+        // upload do vídeo
         if ($request->hasFile('arquivo')) {
-            $nome = uniqid('video_', true) . '.' .
-                $request->file('arquivo')->getClientOriginalExtension();
 
-            $request->file('arquivo')->storeAs('videos', $nome, 'public');
+            $nome = uniqid('video_', true) . '.' .
+                $request->file('arquivo')
+                    ->getClientOriginalExtension();
+
+            $request->file('arquivo')
+                ->storeAs('videos', $nome, 'public');
 
             $data['arquivo'] = 'videos/' . $nome;
         }
 
+        // remove categorias do create
+        $categorias = $data['categorias'] ?? [];
+        unset($data['categorias']);
+
+        // cria vídeo
         $video = Video::create($data);
 
-        return new VideoResource(
-            $video->load('autor')
-        );
+        // sync categorias
+        if (!empty($categorias)) {
+            $video->categorias()->sync($categorias);
+        }
+
+        return response()->json([
+            'message' => 'Vídeo criado com sucesso.',
+            'data' => new VideoResource(
+                $video->load([
+                    'autor',
+                    'categorias'
+                ])
+            )
+        ], 201);
     }
 
     /**
-     * ATUALIZAR VÍDEO — admin ou dono
+     * ATUALIZAR VÍDEO
+     * Admin ou dono
      */
-    public function update(UpdateVideoRequest $request, Video $video)
-    {
+    public function update(
+        UpdateVideoRequest $request,
+        Video $video
+    ) {
         if (
             !$request->user()->tokenCan('admin') &&
             $request->user()->id !== $video->autor_id
         ) {
-            return response()->json(['error' => 'Acesso negado'], 403);
+            return response()->json([
+                'message' => 'Acesso negado.'
+            ], 403);
         }
 
         $data = $request->validated();
 
+        // upload novo vídeo
         if ($request->hasFile('arquivo')) {
 
-            // remove arquivo antigo
-            if ($video->arquivo && Storage::disk('public')->exists($video->arquivo)) {
+            // remove antigo
+            if (
+                $video->arquivo &&
+                Storage::disk('public')->exists($video->arquivo)
+            ) {
                 Storage::disk('public')->delete($video->arquivo);
             }
 
             $nome = uniqid('video_', true) . '.' .
-                $request->file('arquivo')->getClientOriginalExtension();
+                $request->file('arquivo')
+                    ->getClientOriginalExtension();
 
-            $request->file('arquivo')->storeAs('videos', $nome, 'public');
+            $request->file('arquivo')
+                ->storeAs('videos', $nome, 'public');
 
             $data['arquivo'] = 'videos/' . $nome;
         }
 
+        // categorias
+        $categorias = $data['categorias'] ?? [];
+        unset($data['categorias']);
+
+        // update vídeo
         $video->update($data);
 
-        return new VideoResource(
-            $video->fresh()->load('autor')
-        );
+        // sync categorias
+        $video->categorias()->sync($categorias);
+
+        return response()->json([
+            'message' => 'Vídeo atualizado com sucesso.',
+            'data' => new VideoResource(
+                $video->fresh()->load([
+                    'autor',
+                    'categorias'
+                ])
+            )
+        ]);
     }
 
     /**
-     * DELETAR VÍDEO — admin ou dono
+     * REMOVER VÍDEO
+     * Admin ou dono
      */
     public function destroy(Request $request, Video $video)
     {
@@ -122,17 +201,23 @@ class VideoApiController extends Controller
             !$request->user()->tokenCan('admin') &&
             $request->user()->id !== $video->autor_id
         ) {
-            return response()->json(['error' => 'Acesso negado'], 403);
+            return response()->json([
+                'message' => 'Acesso negado.'
+            ], 403);
         }
 
-        if ($video->arquivo && Storage::disk('public')->exists($video->arquivo)) {
+        // remove arquivo
+        if (
+            $video->arquivo &&
+            Storage::disk('public')->exists($video->arquivo)
+        ) {
             Storage::disk('public')->delete($video->arquivo);
         }
 
         $video->delete();
 
         return response()->json([
-            'message' => 'Vídeo removido com sucesso'
-        ]);
+            'message' => 'Vídeo removido com sucesso.'
+        ], 200);
     }
 }
