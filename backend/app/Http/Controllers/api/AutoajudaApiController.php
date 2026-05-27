@@ -14,41 +14,63 @@ class AutoajudaApiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Autoajuda::with(['autor', 'categorias'])
-            ->latest('data_criacao');
+        $query = Autoajuda::with([
+            'autor',
+            'categorias'
+        ]);
 
-        // filtro por categoria
-        if ($request->filled('categoria_id')) {
+        if ($request->filled('categoria')) {
+
             $query->whereHas('categorias', function ($q) use ($request) {
-                $q->where('categorias.id', $request->categoria_id);
+
+                $q->where('categorias.id', $request->categoria);
             });
         }
 
-        // filtro por tipo de mídia
         if ($request->filled('tipo_midia')) {
-            $query->where('tipo_midia', $request->tipo_midia);
+            $query->where(
+                'tipo_midia',
+                $request->tipo_midia
+            );
         }
 
-        return AutoajudaResource::collection(
-            $query->get()
-        );
+        $conteudos = $query
+            ->latest('data_criacao')
+            ->get();
+
+        return response()->json([
+            'data' => AutoajudaResource::collection($conteudos)
+        ]);
     }
 
     public function show(Autoajuda $autoajuda)
     {
-        return new AutoajudaResource(
-            $autoajuda->load(['autor', 'categorias'])
-        );
+        return response()->json([
+            'data' => new AutoajudaResource(
+                $autoajuda->load([
+                    'autor',
+                    'categorias'
+                ])
+            )
+        ]);
     }
 
     public function meusConteudos(Request $request)
     {
-        return AutoajudaResource::collection(
-            Autoajuda::where('autor_id', $request->user()->id)
-                ->with(['categorias'])
-                ->latest('data_criacao')
-                ->get()
-        );
+        $conteudos = Autoajuda::where(
+                'autor_id',
+                $request->user()->id
+            )
+            ->with([
+                'autor',
+                'categorias'
+            ])
+            ->latest('data_criacao')
+            ->get();
+
+        return response()->json([
+            'data' => AutoajudaResource::collection($conteudos)
+        ]);
     }
 
     public function store(StoreAutoajudaRequest $request)
@@ -58,7 +80,7 @@ class AutoajudaApiController extends Controller
             !$request->user()->tokenCan('publicador')
         ) {
             return response()->json([
-                'error' => 'Acesso negado'
+                'message' => 'Acesso negado.'
             ], 403);
         }
 
@@ -66,35 +88,37 @@ class AutoajudaApiController extends Controller
 
         $data['autor_id'] = $request->user()->id;
 
-        // upload da mídia
         if ($request->hasFile('midia')) {
 
-            $arquivo = $request->file('midia');
-
             $nome = uniqid('autoajuda_', true) . '.' .
-                $arquivo->getClientOriginalExtension();
+                $request->file('midia')
+                    ->getClientOriginalExtension();
 
-            $arquivo->storeAs(
-                'autoajuda',
-                $nome,
-                'public'
-            );
+            $request->file('midia')
+                ->storeAs('autoajuda', $nome, 'public');
 
             $data['midia'] = 'autoajuda/' . $nome;
         }
 
+        $categorias = $data['categorias'] ?? [];
+
+        unset($data['categorias']);
+
         $autoajuda = Autoajuda::create($data);
 
-        // categorias
-        if ($request->filled('categorias')) {
-            $autoajuda->categorias()->sync(
-                $request->categorias
-            );
+        if (!empty($categorias)) {
+            $autoajuda->categorias()->sync($categorias);
         }
 
-        return new AutoajudaResource(
-            $autoajuda->load(['autor', 'categorias'])
-        );
+        return response()->json([
+            'message' => 'Conteúdo criado com sucesso.',
+            'data' => new AutoajudaResource(
+                $autoajuda->load([
+                    'autor',
+                    'categorias'
+                ])
+            )
+        ], 201);
     }
 
     public function update(
@@ -106,13 +130,12 @@ class AutoajudaApiController extends Controller
             $request->user()->id !== $autoajuda->autor_id
         ) {
             return response()->json([
-                'error' => 'Acesso negado'
+                'message' => 'Acesso negado.'
             ], 403);
         }
 
         $data = $request->validated();
 
-        // troca mídia
         if ($request->hasFile('midia')) {
 
             if (
@@ -122,35 +145,33 @@ class AutoajudaApiController extends Controller
                 Storage::disk('public')->delete($autoajuda->midia);
             }
 
-            $arquivo = $request->file('midia');
-
             $nome = uniqid('autoajuda_', true) . '.' .
-                $arquivo->getClientOriginalExtension();
+                $request->file('midia')
+                    ->getClientOriginalExtension();
 
-            $arquivo->storeAs(
-                'autoajuda',
-                $nome,
-                'public'
-            );
+            $request->file('midia')
+                ->storeAs('autoajuda', $nome, 'public');
 
             $data['midia'] = 'autoajuda/' . $nome;
         }
 
+        $categorias = $data['categorias'] ?? [];
+
+        unset($data['categorias']);
+
         $autoajuda->update($data);
 
-        // atualizar categorias
-        if ($request->filled('categorias')) {
-            $autoajuda->categorias()->sync(
-                $request->categorias
-            );
-        }
+        $autoajuda->categorias()->sync($categorias);
 
-        return new AutoajudaResource(
-            $autoajuda->fresh()->load([
-                'autor',
-                'categorias'
-            ])
-        );
+        return response()->json([
+            'message' => 'Conteúdo atualizado com sucesso.',
+            'data' => new AutoajudaResource(
+                $autoajuda->fresh()->load([
+                    'autor',
+                    'categorias'
+                ])
+            )
+        ]);
     }
 
     public function destroy(
@@ -162,11 +183,10 @@ class AutoajudaApiController extends Controller
             $request->user()->id !== $autoajuda->autor_id
         ) {
             return response()->json([
-                'error' => 'Acesso negado'
+                'message' => 'Acesso negado.'
             ], 403);
         }
 
-        // remover mídia
         if (
             $autoajuda->midia &&
             Storage::disk('public')->exists($autoajuda->midia)
@@ -174,13 +194,10 @@ class AutoajudaApiController extends Controller
             Storage::disk('public')->delete($autoajuda->midia);
         }
 
-        // remover categorias da pivot
-        $autoajuda->categorias()->detach();
-
         $autoajuda->delete();
 
         return response()->json([
-            'message' => 'Conteúdo de autoajuda removido com sucesso.'
+            'message' => 'Conteúdo removido com sucesso.'
         ]);
     }
 }

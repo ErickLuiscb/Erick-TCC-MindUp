@@ -3,30 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoriaResource;
 use App\Models\Categoria;
-use Illuminate\Http\Request;
 
 class CategoriaApiController extends Controller
 {
-    /**
-     * LISTAR CATEGORIAS
-     */
     public function index()
     {
         $categorias = Categoria::orderBy('nome')->get();
 
         return response()->json([
-            'data' => $categorias
+            'data' => CategoriaResource::collection($categorias)
         ]);
     }
 
-    /**
-     * VISUALIZAR UMA CATEGORIA
-     */
     public function show(Categoria $categoria)
     {
         return response()->json([
-            'data' => $categoria
+            'data' => new CategoriaResource($categoria)
         ]);
     }
 }

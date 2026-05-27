@@ -3,19 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Video;
 use App\Http\Requests\StoreVideoRequest;
 use App\Http\Requests\UpdateVideoRequest;
 use App\Http\Resources\VideoResource;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class VideoApiController extends Controller
 {
-    /**
-     * LISTAR TODOS OS VÍDEOS
-     * Público
-     */
     public function index(Request $request)
     {
         $query = Video::with([
@@ -23,10 +19,10 @@ class VideoApiController extends Controller
             'categorias'
         ]);
 
-        // filtro por categoria
-        if ($request->has('categoria')) {
+        if ($request->filled('categoria')) {
 
             $query->whereHas('categorias', function ($q) use ($request) {
+
                 $q->where('categorias.id', $request->categoria);
             });
         }
@@ -40,10 +36,6 @@ class VideoApiController extends Controller
         ]);
     }
 
-    /**
-     * VISUALIZAR UM VÍDEO
-     * Público
-     */
     public function show(Video $video)
     {
         return response()->json([
@@ -56,17 +48,16 @@ class VideoApiController extends Controller
         ]);
     }
 
-    /**
-     * LISTAR VÍDEOS DO AUTOR LOGADO
-     * Dashboard
-     */
     public function meusVideos(Request $request)
     {
         $videos = Video::where(
                 'autor_id',
                 $request->user()->id
             )
-            ->with('categorias')
+            ->with([
+                'autor',
+                'categorias'
+            ])
             ->latest('data_criacao')
             ->get();
 
@@ -75,10 +66,6 @@ class VideoApiController extends Controller
         ]);
     }
 
-    /**
-     * CRIAR VÍDEO
-     * Psicólogo/Admin
-     */
     public function store(StoreVideoRequest $request)
     {
         if (
@@ -94,7 +81,6 @@ class VideoApiController extends Controller
 
         $data['autor_id'] = $request->user()->id;
 
-        // upload do vídeo
         if ($request->hasFile('arquivo')) {
 
             $nome = uniqid('video_', true) . '.' .
@@ -107,14 +93,12 @@ class VideoApiController extends Controller
             $data['arquivo'] = 'videos/' . $nome;
         }
 
-        // remove categorias do create
         $categorias = $data['categorias'] ?? [];
+
         unset($data['categorias']);
 
-        // cria vídeo
         $video = Video::create($data);
 
-        // sync categorias
         if (!empty($categorias)) {
             $video->categorias()->sync($categorias);
         }
@@ -130,10 +114,6 @@ class VideoApiController extends Controller
         ], 201);
     }
 
-    /**
-     * ATUALIZAR VÍDEO
-     * Admin ou dono
-     */
     public function update(
         UpdateVideoRequest $request,
         Video $video
@@ -149,10 +129,8 @@ class VideoApiController extends Controller
 
         $data = $request->validated();
 
-        // upload novo vídeo
         if ($request->hasFile('arquivo')) {
 
-            // remove antigo
             if (
                 $video->arquivo &&
                 Storage::disk('public')->exists($video->arquivo)
@@ -170,14 +148,12 @@ class VideoApiController extends Controller
             $data['arquivo'] = 'videos/' . $nome;
         }
 
-        // categorias
         $categorias = $data['categorias'] ?? [];
+
         unset($data['categorias']);
 
-        // update vídeo
         $video->update($data);
 
-        // sync categorias
         $video->categorias()->sync($categorias);
 
         return response()->json([
@@ -191,12 +167,10 @@ class VideoApiController extends Controller
         ]);
     }
 
-    /**
-     * REMOVER VÍDEO
-     * Admin ou dono
-     */
-    public function destroy(Request $request, Video $video)
-    {
+    public function destroy(
+        Request $request,
+        Video $video
+    ) {
         if (
             !$request->user()->tokenCan('admin') &&
             $request->user()->id !== $video->autor_id
@@ -206,7 +180,6 @@ class VideoApiController extends Controller
             ], 403);
         }
 
-        // remove arquivo
         if (
             $video->arquivo &&
             Storage::disk('public')->exists($video->arquivo)
@@ -218,6 +191,6 @@ class VideoApiController extends Controller
 
         return response()->json([
             'message' => 'Vídeo removido com sucesso.'
-        ], 200);
+        ]);
     }
 }

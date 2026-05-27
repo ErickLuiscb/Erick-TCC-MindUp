@@ -3,18 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Sugestao;
 use App\Http\Requests\StoreSugestaoRequest;
 use App\Http\Requests\UpdateSugestaoRequest;
 use App\Http\Resources\SugestaoResource;
+use App\Models\Sugestao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class SugestaoApiController extends Controller
 {
-    /**
-     * Listar sugestões
-     */
     public function index(Request $request)
     {
         $query = Sugestao::with([
@@ -22,25 +19,19 @@ class SugestaoApiController extends Controller
             'categorias'
         ]);
 
-        // filtro por tipo
-        if ($request->has('tipo')) {
+        if ($request->filled('tipo')) {
             $query->where('tipo', $request->tipo);
         }
 
-        // filtro por categoria
-        if ($request->has('categoria')) {
+        if ($request->filled('categoria')) {
 
             $query->whereHas('categorias', function ($q) use ($request) {
 
-                $q->where(
-                    'categorias.id',
-                    $request->categoria
-                );
+                $q->where('categorias.id', $request->categoria);
             });
         }
 
-        // busca por título
-        if ($request->has('busca')) {
+        if ($request->filled('busca')) {
 
             $query->where(
                 'titulo',
@@ -58,9 +49,6 @@ class SugestaoApiController extends Controller
         ]);
     }
 
-    /**
-     * Visualizar sugestão
-     */
     public function show(Sugestao $sugestao)
     {
         return response()->json([
@@ -73,16 +61,16 @@ class SugestaoApiController extends Controller
         ]);
     }
 
-    /**
-     * Sugestões do autor logado
-     */
     public function minhasSugestoes(Request $request)
     {
         $sugestoes = Sugestao::where(
                 'autor_id',
                 $request->user()->id
             )
-            ->with('categorias')
+            ->with([
+                'autor',
+                'categorias'
+            ])
             ->latest('data_criacao')
             ->get();
 
@@ -91,9 +79,6 @@ class SugestaoApiController extends Controller
         ]);
     }
 
-    /**
-     * Criar sugestão
-     */
     public function store(StoreSugestaoRequest $request)
     {
         if (
@@ -109,7 +94,6 @@ class SugestaoApiController extends Controller
 
         $data['autor_id'] = $request->user()->id;
 
-        // upload capa
         if ($request->hasFile('capa')) {
 
             $nome = uniqid('sugestao_', true) . '.' .
@@ -122,19 +106,14 @@ class SugestaoApiController extends Controller
             $data['capa'] = 'sugestoes/' . $nome;
         }
 
-        // categorias
         $categorias = $data['categorias'] ?? [];
 
         unset($data['categorias']);
 
-        // cria sugestão
         $sugestao = Sugestao::create($data);
 
-        // salva categorias
         if (!empty($categorias)) {
-
-            $sugestao->categorias()
-                ->sync($categorias);
+            $sugestao->categorias()->sync($categorias);
         }
 
         return response()->json([
@@ -148,9 +127,6 @@ class SugestaoApiController extends Controller
         ], 201);
     }
 
-    /**
-     * Atualizar sugestão
-     */
     public function update(
         UpdateSugestaoRequest $request,
         Sugestao $sugestao
@@ -166,10 +142,8 @@ class SugestaoApiController extends Controller
 
         $data = $request->validated();
 
-        // nova capa
         if ($request->hasFile('capa')) {
 
-            // remove antiga
             if (
                 $sugestao->capa &&
                 Storage::disk('public')->exists($sugestao->capa)
@@ -187,17 +161,13 @@ class SugestaoApiController extends Controller
             $data['capa'] = 'sugestoes/' . $nome;
         }
 
-        // categorias
         $categorias = $data['categorias'] ?? [];
 
         unset($data['categorias']);
 
-        // update
         $sugestao->update($data);
 
-        // atualiza categorias
-        $sugestao->categorias()
-            ->sync($categorias);
+        $sugestao->categorias()->sync($categorias);
 
         return response()->json([
             'message' => 'Sugestão atualizada com sucesso.',
@@ -210,9 +180,6 @@ class SugestaoApiController extends Controller
         ]);
     }
 
-    /**
-     * Remover sugestão
-     */
     public function destroy(
         Request $request,
         Sugestao $sugestao
@@ -226,7 +193,6 @@ class SugestaoApiController extends Controller
             ], 403);
         }
 
-        // remove capa
         if (
             $sugestao->capa &&
             Storage::disk('public')->exists($sugestao->capa)

@@ -3,19 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Artigo;
 use App\Http\Requests\StoreArtigoRequest;
 use App\Http\Requests\UpdateArtigoRequest;
 use App\Http\Resources\ArtigoResource;
+use App\Models\Artigo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ArtigoApiController extends Controller
 {
-    /**
-     * LISTAR TODOS OS ARTIGOS
-     * Público
-     */
     public function index(Request $request)
     {
         $query = Artigo::with([
@@ -23,10 +19,10 @@ class ArtigoApiController extends Controller
             'categorias'
         ]);
 
-        // filtro por categoria
-        if ($request->has('categoria')) {
+        if ($request->filled('categoria')) {
 
             $query->whereHas('categorias', function ($q) use ($request) {
+
                 $q->where('categorias.id', $request->categoria);
             });
         }
@@ -40,10 +36,6 @@ class ArtigoApiController extends Controller
         ]);
     }
 
-    /**
-     * VISUALIZAR UM ARTIGO
-     * Público
-     */
     public function show(Artigo $artigo)
     {
         return response()->json([
@@ -56,17 +48,16 @@ class ArtigoApiController extends Controller
         ]);
     }
 
-    /**
-     * LISTAR ARTIGOS DO AUTOR LOGADO
-     * Dashboard
-     */
     public function meusArtigos(Request $request)
     {
         $artigos = Artigo::where(
                 'autor_id',
                 $request->user()->id
             )
-            ->with('categorias')
+            ->with([
+                'autor',
+                'categorias'
+            ])
             ->latest('data_criacao')
             ->get();
 
@@ -75,10 +66,6 @@ class ArtigoApiController extends Controller
         ]);
     }
 
-    /**
-     * CRIAR ARTIGO
-     * Psicólogo/Admin
-     */
     public function store(StoreArtigoRequest $request)
     {
         if (
@@ -94,10 +81,6 @@ class ArtigoApiController extends Controller
 
         $data['autor_id'] = $request->user()->id;
 
-        /*
-         UPLOAD PDF
-        */
-
         if ($request->hasFile('arquivo_pdf')) {
 
             $nome = uniqid('artigo_', true) . '.' .
@@ -110,23 +93,11 @@ class ArtigoApiController extends Controller
             $data['arquivo_pdf'] = 'artigos/' . $nome;
         }
 
-        /*
-        CATEGORIAS
-        */
-
         $categorias = $data['categorias'] ?? [];
 
         unset($data['categorias']);
 
-        /*
-        | CRIA ARTIGO
-        */
-
         $artigo = Artigo::create($data);
-
-        /*
-    SYNC CATEGORIAS
-        */
 
         if (!empty($categorias)) {
             $artigo->categorias()->sync($categorias);
@@ -143,10 +114,6 @@ class ArtigoApiController extends Controller
         ], 201);
     }
 
-    /**
-     * ATUALIZAR ARTIGO
-     * Admin ou dono
-     */
     public function update(
         UpdateArtigoRequest $request,
         Artigo $artigo
@@ -162,13 +129,8 @@ class ArtigoApiController extends Controller
 
         $data = $request->validated();
 
-        /*
-        NOVO PDF
-        */
-
         if ($request->hasFile('arquivo_pdf')) {
 
-            // remove antigo
             if (
                 $artigo->arquivo_pdf &&
                 Storage::disk('public')->exists($artigo->arquivo_pdf)
@@ -186,23 +148,11 @@ class ArtigoApiController extends Controller
             $data['arquivo_pdf'] = 'artigos/' . $nome;
         }
 
-        /*
-        CATEGORIAS
-        */
-
         $categorias = $data['categorias'] ?? [];
 
         unset($data['categorias']);
 
-        /*
-        UPDATE
-        */
-
         $artigo->update($data);
-
-        /*
-        SYNC CATEGORIAS
-        */
 
         $artigo->categorias()->sync($categorias);
 
@@ -217,12 +167,10 @@ class ArtigoApiController extends Controller
         ]);
     }
 
-    /**
-     * REMOVER ARTIGO
-     * Admin ou dono
-     */
-    public function destroy(Request $request, Artigo $artigo)
-    {
+    public function destroy(
+        Request $request,
+        Artigo $artigo
+    ) {
         if (
             !$request->user()->tokenCan('admin') &&
             $request->user()->id !== $artigo->autor_id
@@ -231,10 +179,6 @@ class ArtigoApiController extends Controller
                 'message' => 'Acesso negado.'
             ], 403);
         }
-
-        /*
-         REMOVE PDF
-        */
 
         if (
             $artigo->arquivo_pdf &&
