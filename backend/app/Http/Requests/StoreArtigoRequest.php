@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreVideoRequest extends FormRequest
+class StoreArtigoRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,11 +15,11 @@ class StoreVideoRequest extends FormRequest
     {
         return [
 
-            'titulo' => 'required|string|max:100',
+            'titulo' => 'required|string|max:150',
 
             'descricao' => 'nullable|string|max:5000',
 
-            'arquivo' => 'required|file|mimes:mp4,mov,avi,wmv,webm,mkv|max:51200',
+            'arquivo_pdf' => 'required|file|mimes:pdf|max:10240',
 
             'categorias' => 'nullable|array|max:5',
 
