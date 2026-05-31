@@ -15,7 +15,8 @@ class StoreAnotacaoRequest extends FormRequest
     {
         return [
             'titulo' => 'required|string|max:100',
-            'texto' => 'required|string',
+
+            'texto' => 'required|string|max:5000',
         ];
     }
 }

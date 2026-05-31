@@ -15,13 +15,21 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'nome' => 'required|string|max:100',
+
             'email' => 'required|email|unique:usuarios,email',
+
             'senha' => 'required|string|min:6',
-            'tipo' => 'required|string|max:50',
+
+            'tipo' => 'required|in:usuario,psicologo',
+
             'imagem_perfil' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'crp' => 'nullable|string|max:20',
-            'is_admin' => 'boolean',
-            'role' => 'nullable|string|max:50',
+
+            'crp' => 'nullable|string|max:7',
+
+            'is_admin' => 'nullable|boolean',
+
+            'role' => 'nullable|in:user,publicador,admin',
+
         ];
     }
 }
