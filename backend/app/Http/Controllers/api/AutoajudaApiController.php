@@ -16,7 +16,8 @@ class AutoajudaApiController extends Controller
     {
         $query = Autoajuda::with([
             'autor',
-            'categorias'
+            'categorias',
+            'favoritos'
         ]);
 
         if ($request->filled('categoria')) {
@@ -49,7 +50,8 @@ class AutoajudaApiController extends Controller
             'data' => new AutoajudaResource(
                 $autoajuda->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ]);
@@ -63,7 +65,8 @@ class AutoajudaApiController extends Controller
             )
             ->with([
                 'autor',
-                'categorias'
+                'categorias',
+                'favoritos'
             ])
             ->latest('data_criacao')
             ->get();
@@ -115,7 +118,8 @@ class AutoajudaApiController extends Controller
             'data' => new AutoajudaResource(
                 $autoajuda->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ], 201);
@@ -168,7 +172,8 @@ class AutoajudaApiController extends Controller
             'data' => new AutoajudaResource(
                 $autoajuda->fresh()->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ]);

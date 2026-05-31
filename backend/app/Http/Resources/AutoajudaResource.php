@@ -24,6 +24,13 @@ class AutoajudaResource extends JsonResource
 
             'data_criacao' => $this->data_criacao,
 
+            'favoritado' => auth('sanctum')->check()
+                ? $this->favoritos->contains(
+                'usuario_id',
+                auth('sanctum')->id()
+           )
+           : false,
+
             'autor' => $this->whenLoaded('autor', function () {
                 return [
                     'id' => $this->autor->id,

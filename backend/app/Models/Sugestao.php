@@ -41,4 +41,14 @@ class Sugestao extends Model
             'categoria_sugestao'
         );
     }
+
+
+    //Relacionamento poliformico com Favoritos
+    public function favoritos()
+{
+    return $this->morphMany(
+        Favorito::class,
+        'favoritavel'
+    );
+}
 }

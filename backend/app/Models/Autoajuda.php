@@ -40,4 +40,13 @@ class Autoajuda extends Model
             'categoria_autoajuda'
         );
     }
+
+    //Relacionamento poliformico com Favoritos
+    public function favoritos()
+{
+    return $this->morphMany(
+        Favorito::class,
+        'favoritavel'
+    );
+}
 }

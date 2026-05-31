@@ -75,4 +75,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Autoajuda::class, 'autor_id');
     }
+
+    // FAVORITOS: O usuario pode favoritar os conteudos.
+    public function favoritos()
+{
+    return $this->hasMany(
+        Favorito::class,
+        'usuario_id'
+    );
+}
 }

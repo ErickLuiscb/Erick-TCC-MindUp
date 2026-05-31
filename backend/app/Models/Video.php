@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Favorito;
 
 class Video extends Model
 {
@@ -41,4 +42,13 @@ class Video extends Model
             'categoria_video'
         );
     }
+
+    //Relacionamento poliformico com Favoritos
+    public function favoritos()
+{
+    return $this->morphMany(
+        Favorito::class,
+        'favoritavel'
+    );
+}
 }

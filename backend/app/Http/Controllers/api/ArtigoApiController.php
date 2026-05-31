@@ -16,7 +16,8 @@ class ArtigoApiController extends Controller
     {
         $query = Artigo::with([
             'autor',
-            'categorias'
+            'categorias',
+            'favoritos'
         ]);
 
         if ($request->filled('categoria')) {
@@ -42,7 +43,8 @@ class ArtigoApiController extends Controller
             'data' => new ArtigoResource(
                 $artigo->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ]);
@@ -56,7 +58,8 @@ class ArtigoApiController extends Controller
             )
             ->with([
                 'autor',
-                'categorias'
+                'categorias',
+                'favoritos'
             ])
             ->latest('data_criacao')
             ->get();
@@ -108,7 +111,8 @@ class ArtigoApiController extends Controller
             'data' => new ArtigoResource(
                 $artigo->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ], 201);
@@ -161,7 +165,8 @@ class ArtigoApiController extends Controller
             'data' => new ArtigoResource(
                 $artigo->fresh()->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ]);

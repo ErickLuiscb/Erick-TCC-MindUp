@@ -16,7 +16,8 @@ class VideoApiController extends Controller
     {
         $query = Video::with([
             'autor',
-            'categorias'
+            'categorias',
+            'favoritos'
         ]);
 
         if ($request->filled('categoria')) {
@@ -42,7 +43,9 @@ class VideoApiController extends Controller
             'data' => new VideoResource(
                 $video->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
+
                 ])
             )
         ]);
@@ -56,7 +59,8 @@ class VideoApiController extends Controller
             )
             ->with([
                 'autor',
-                'categorias'
+                'categorias',
+                'favoritos'
             ])
             ->latest('data_criacao')
             ->get();
@@ -108,7 +112,8 @@ class VideoApiController extends Controller
             'data' => new VideoResource(
                 $video->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ], 201);
@@ -161,7 +166,8 @@ class VideoApiController extends Controller
             'data' => new VideoResource(
                 $video->fresh()->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ]);

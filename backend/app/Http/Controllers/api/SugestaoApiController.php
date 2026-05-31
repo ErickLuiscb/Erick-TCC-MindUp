@@ -16,7 +16,8 @@ class SugestaoApiController extends Controller
     {
         $query = Sugestao::with([
             'autor',
-            'categorias'
+            'categorias',
+            'favoritos'
         ]);
 
         if ($request->filled('tipo')) {
@@ -55,7 +56,8 @@ class SugestaoApiController extends Controller
             'data' => new SugestaoResource(
                 $sugestao->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ]);
@@ -69,7 +71,8 @@ class SugestaoApiController extends Controller
             )
             ->with([
                 'autor',
-                'categorias'
+                'categorias',
+                'favoritos'
             ])
             ->latest('data_criacao')
             ->get();
@@ -121,7 +124,8 @@ class SugestaoApiController extends Controller
             'data' => new SugestaoResource(
                 $sugestao->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ], 201);
@@ -174,7 +178,8 @@ class SugestaoApiController extends Controller
             'data' => new SugestaoResource(
                 $sugestao->fresh()->load([
                     'autor',
-                    'categorias'
+                    'categorias',
+                    'favoritos'
                 ])
             )
         ]);

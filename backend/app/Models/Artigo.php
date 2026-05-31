@@ -40,4 +40,13 @@ class Artigo extends Model
             'categoria_artigo'
         );
     }
+
+    //Relacionamento poliformico com Favoritos
+    public function favoritos()
+{
+    return $this->morphMany(
+        Favorito::class,
+        'favoritavel'
+    );
+}
 }
