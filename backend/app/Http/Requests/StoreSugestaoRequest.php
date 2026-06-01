@@ -15,7 +15,7 @@ class StoreSugestaoRequest extends FormRequest
     {
         return [
 
-            'tipo' => 'required|in:livro,filme,musica',
+            'tipo' => 'sometimes|required|in:livro,filme,serie,anime,musica,podcast,documentario',
 
             'titulo' => 'required|string|max:150',
 

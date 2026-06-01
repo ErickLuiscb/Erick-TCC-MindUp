@@ -18,6 +18,8 @@ class SugestaoResource extends JsonResource
 
             'descricao' => $this->descricao,
 
+            'link_externo' => $this->link_externo,
+
             'capa' => $this->capa
                 ? url('storage/' . $this->capa)
                 : null,
@@ -30,6 +32,8 @@ class SugestaoResource extends JsonResource
               auth('sanctum')->id()
             )
              : false,
+
+            'quantidade_favoritos' => $this->favoritos->count(),
 
             'autor' => $this->whenLoaded('autor', function () {
                 return [

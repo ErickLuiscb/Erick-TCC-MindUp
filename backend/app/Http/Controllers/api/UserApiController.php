@@ -121,29 +121,87 @@ class UserApiController extends Controller
      * REMOVER USUÁRIO
      */
     public function destroy(Request $request, User $user)
-    {
-        if (
-            !$request->user()->tokenCan('admin') &&
-            $request->user()->id !== $user->id
-        ) {
-            return response()->json([
-                'message' => 'Acesso negado.'
-            ], 403);
-        }
-
-        if (
-            $user->imagem_perfil &&
-            Storage::disk('public')->exists($user->imagem_perfil)
-        ) {
-            Storage::disk('public')->delete($user->imagem_perfil);
-        }
-
-        $user->delete();
-
+{
+    if (
+        !$request->user()->tokenCan('admin') &&
+        $request->user()->id !== $user->id
+    ) {
         return response()->json([
-            'message' => 'Conta removida com sucesso.'
-        ], 200);
+            'message' => 'Acesso negado.'
+        ], 403);
     }
+    if (
+        $user->imagem_perfil &&
+        Storage::disk('public')->exists($user->imagem_perfil)
+    ) {
+        Storage::disk('public')->delete($user->imagem_perfil);
+    }
+
+    //VERIFICA SE DEVE MANTER CONTEÚDOS
+    $manterConteudos = filter_var(
+        $request->manter_conteudos,
+        FILTER_VALIDATE_BOOLEAN
+    );
+
+
+// SE NÃO MANTER:
+//REMOVE CONTEÚDOS + ARQUIVOS
+    if (!$manterConteudos) {
+        foreach ($user->videos as $video) {
+
+            if (
+                $video->arquivo &&
+                Storage::disk('public')->exists($video->arquivo)
+            ) {
+                Storage::disk('public')->delete($video->arquivo);
+            }
+
+            $video->delete();
+        }
+        foreach ($user->artigos as $artigo) {
+
+            if (
+                $artigo->arquivo_pdf &&
+                Storage::disk('public')->exists($artigo->arquivo_pdf)
+            ) {
+                Storage::disk('public')->delete($artigo->arquivo_pdf);
+            }
+
+            $artigo->delete();
+        }
+
+        foreach ($user->sugestoes as $sugestao) {
+
+            if (
+                $sugestao->capa &&
+                Storage::disk('public')->exists($sugestao->capa)
+            ) {
+                Storage::disk('public')->delete($sugestao->capa);
+            }
+
+            $sugestao->delete();
+        }
+
+        foreach ($user->autoajudas as $autoajuda) {
+
+            if (
+                $autoajuda->midia &&
+                Storage::disk('public')->exists($autoajuda->midia)
+            ) {
+                Storage::disk('public')->delete($autoajuda->midia);
+            }
+
+            $autoajuda->delete();
+        }
+    }
+    $user->favoritos()->delete();
+
+    $user->delete();
+
+    return response()->json([
+        'message' => 'Conta removida com sucesso.'
+    ], 200);
+}
 
     /**
      * HELPER — salvar imagem

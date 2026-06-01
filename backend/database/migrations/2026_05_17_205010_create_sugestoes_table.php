@@ -14,7 +14,11 @@ return new class extends Migration
             $table->enum('tipo', [
                 'livro',
                 'filme',
-                'musica'
+                'serie',
+                'anime',
+                'musica',
+                'podcast',
+                'documentario'
             ]);
 
             $table->string('titulo', 150);
