@@ -14,9 +14,16 @@ class UpdateVideoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'titulo'    => 'sometimes|required|string|max:100',
+
+            'titulo' => 'sometimes|required|string|max:100',
+
             'descricao' => 'sometimes|nullable|string',
-            'arquivo'   => 'sometimes|file|mimes:mp4,mov,avi,wmv|max:51200',
+
+            'arquivo' => 'sometimes|nullable|file|mimes:mp4,mov,avi,wmv|max:51200',
+
+            'categorias' => 'sometimes|array|max:5',
+
+            'categorias.*' => 'exists:categorias,id',
         ];
     }
 }

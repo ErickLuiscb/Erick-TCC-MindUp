@@ -17,11 +17,16 @@ class UpdateUserRequest extends FormRequest
 
         return [
             'nome' => 'sometimes|required|string|max:100',
+
             'email' => 'sometimes|required|email|unique:usuarios,email,' . ($user?->id),
-            'senha' => 'sometimes|required|string|min:6',
-            'tipo' => 'sometimes|string|in:usuario,psicologo',
+
+            'senha' => 'sometimes|string|min:6',
+
+            'tipo' => 'sometimes|required|in:usuario,psicologo',
+
             'imagem_perfil' => 'sometimes|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'crp' => 'nullable|string|max:20',
+
+            'crp' => 'nullable|string|max:7',
         ];
     }
 }
