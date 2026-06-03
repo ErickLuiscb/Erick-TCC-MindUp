@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('titulo', 150);
             $table->text('descricao')->nullable();
 
-            $table->string('arquivo_video', 255);
+            $table->string('arquivo', 255);
 
             $table->string('thumbnail', 255)->nullable();
 
