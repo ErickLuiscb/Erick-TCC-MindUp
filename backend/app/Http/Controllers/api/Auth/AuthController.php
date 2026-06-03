@@ -3,12 +3,18 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+
 class AuthController extends Controller
 {
+    /**
+     * LOGIN
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -16,101 +22,130 @@ class AuthController extends Controller
             'senha' => 'required|string'
         ]);
 
-        // Busca usuário
-        $user = User::where('email', $request->email)->first();
+        $user = User::where(
+            'email',
+            $request->email
+        )->first();
 
-        // Verifica email ou senha
-        if (!$user || !Hash::check($request->senha, $user->senha)) {
-            return response()->json(['error' => 'Credenciais inválidas'], 401);
+        if (
+            !$user ||
+            !Hash::check($request->senha, $user->senha)
+        ) {
+            return response()->json([
+                'message' => 'Credenciais inválidas.'
+            ], 401);
         }
 
-        // Determina abilities baseado no tipo
-        $abilities = match($user->tipo) {
-            'psicologo' => ['admin', 'publicador', 'premium'],
-            'usuario'   => ['premium'],
-            default     => [],
-        };
+        $abilities = [];
 
-        // Criar token
-        $token = $user->createToken('auth_token', $abilities)->plainTextToken;
+        if ($user->tipo === 'psicologo') {
+            $abilities[] = 'publicador';
+        }
+
+        if ($user->is_admin) {
+            $abilities[] = 'admin';
+        }
+
+        $token = $user->createToken(
+            'auth_token',
+            $abilities
+        )->plainTextToken;
 
         return response()->json([
-            'message'   => 'Login realizado',
-            'token'     => $token,
+            'message' => 'Login realizado com sucesso.',
+            'token' => $token,
             'abilities' => $abilities,
-            'user'      => [
-                'id'    => $user->id,
-                'nome'  => $user->nome,
-                'email' => $user->email,
-                'tipo'  => $user->tipo,
-                'crp'   => $user->crp,
-                'imagem_perfil' => url('storage/' . $user->imagem_perfil),
-            ]
+            'user' => new UserResource($user)
         ]);
     }
 
+    /**
+     * LOGOUT
+     */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Logout realizado']);
+        if ($request->user()?->currentAccessToken()) {
+
+            $request->user()
+                ->currentAccessToken()
+                ->delete();
+        }
+
+        return response()->json([
+            'message' => 'Logout realizado com sucesso.'
+        ]);
     }
 
+    /**
+     * LOGOUT DE TODOS OS DISPOSITIVOS
+     */
     public function logoutAll(Request $request)
     {
-        $request->user()->tokens()->delete();
-        return response()->json(['message' => 'Todos os tokens foram revogados']);
+        $request->user()
+            ->tokens()
+            ->delete();
+
+        return response()->json([
+            'message' => 'Todos os tokens foram revogados.'
+        ]);
     }
 
-    public function register(Request $request)
-    {
-        $request->validate([
-            'nome'  => 'required|string|max:100',
-            'email' => 'required|email|unique:usuarios,email',
-            'senha' => 'required|string|min:6',
-            'tipo'  => 'sometimes|string|in:usuario,psicologo',
-            'crp'   => 'sometimes|string|max:20',
-            'imagem_perfil' => 'sometimes|image|mimes:jpg,jpeg,png,webp|max:2048'
-        ]);
+    /**
+     * REGISTRO
+     */
+    public function register(
+        StoreUserRequest $request
+    ) {
+        $data = $request->validated();
 
-        $data = [
-            'nome'      => $request->nome,
-            'email'     => $request->email,
-            'senha'     => Hash::make($request->senha),
-            'tipo'      => $request->tipo ?? 'usuario',
-            'criado_em' => now(),
-        ];
+        $data['senha'] = Hash::make(
+            $data['senha']
+        );
 
-        // Se tem CRP → psicólogo
-        if ($request->filled('crp')) {
-            $data['crp'] = $request->crp;
+        $data['criado_em'] = now();
+
+        /*
+         Se possui CRP,
+         considera psicólogo
+        */
+        if (!empty($data['crp'])) {
             $data['tipo'] = 'psicologo';
         }
 
-        // Upload de imagem
+        /*
+         Upload imagem perfil
+        */
         if ($request->hasFile('imagem_perfil')) {
-            $file = $request->file('imagem_perfil');
-            $nome = uniqid('perfil_', true) . '.' . $file->getClientOriginalExtension();
-            $file->move(storage_path('app/public/perfil'), $nome);
-            $data['imagem_perfil'] = 'perfil/' . $nome;
+
+            $nome = uniqid('perfil_', true) . '.' .
+                $request->file('imagem_perfil')
+                    ->getClientOriginalExtension();
+
+            Storage::disk('public')->putFileAs(
+                'perfil',
+                $request->file('imagem_perfil'),
+                $nome
+            );
+
+            $data['imagem_perfil'] =
+                'perfil/' . $nome;
         }
 
         $user = User::create($data);
 
         return response()->json([
-            'message' => 'Usuário registrado com sucesso',
-            'user' => [
-                'id'    => $user->id,
-                'nome'  => $user->nome,
-                'email' => $user->email,
-                'tipo'  => $user->tipo,
-                'crp'   => $user->crp,
-                'imagem_perfil' => $user->imagem_perfil,
-            ]
+            'message' => 'Usuário registrado com sucesso.',
+            'user' => new UserResource($user)
         ], 201);
     }
 
+    /**
+     * USUÁRIO LOGADO
+     */
     public function me(Request $request)
-{
-    return new UserResource($request->user());
-}
+    {
+        return new UserResource(
+            $request->user()
+        );
+    }
 }

@@ -24,7 +24,7 @@ class StoreUserRequest extends FormRequest
 
             'imagem_perfil' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
 
-            'crp' => 'nullable|string|max:7',
+            'crp' => 'nullable|string|max:20',
 
             'is_admin' => 'nullable|boolean',
 

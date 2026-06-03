@@ -22,11 +22,9 @@ class UpdateUserRequest extends FormRequest
 
             'senha' => 'sometimes|string|min:6',
 
-            'tipo' => 'sometimes|required|in:usuario,psicologo',
-
             'imagem_perfil' => 'sometimes|image|mimes:jpg,jpeg,png,webp|max:2048',
 
-            'crp' => 'nullable|string|max:7',
+            'crp' => 'nullable|string|max:20',
         ];
     }
 }
