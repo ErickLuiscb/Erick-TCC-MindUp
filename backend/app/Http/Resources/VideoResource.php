@@ -20,7 +20,8 @@ class VideoResource extends JsonResource
                 ? url('storage/' . $this->arquivo)
                 : null,
 
-            'data_criacao' => $this->data_criacao,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
 
             'favoritado' => auth('sanctum')->check()
                 ? $this->favoritos->contains(
@@ -28,6 +29,7 @@ class VideoResource extends JsonResource
                 auth('sanctum')->id()
          )
         : false,
+        'quantidade_favoritos' => $this->favoritos->count(),
 
             'autor' => $this->whenLoaded('autor', function () {
                 return [

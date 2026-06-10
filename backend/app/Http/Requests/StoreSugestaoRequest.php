@@ -21,6 +21,8 @@ class StoreSugestaoRequest extends FormRequest
 
             'descricao' => 'nullable|string|max:5000',
 
+            'link' => 'sometimes|nullable|url|max:255',
+
             'capa' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
 
             'categorias' => 'nullable|array|max:5',

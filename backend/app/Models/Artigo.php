@@ -17,7 +17,6 @@ class Artigo extends Model
         'titulo',
         'descricao',
         'arquivo_pdf',
-        'thumbnail',
         'autor_id',
         'ativo',
     ];

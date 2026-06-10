@@ -18,9 +18,6 @@ return new class extends Migration
             // PDF do artigo
             $table->string('arquivo_pdf', 255);
 
-            // imagem de capa opcional
-            $table->string('thumbnail', 255)->nullable();
-
             // autor
             $table->foreignId('autor_id')
             ->nullable()

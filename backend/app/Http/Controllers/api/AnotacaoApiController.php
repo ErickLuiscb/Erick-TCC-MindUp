@@ -21,7 +21,7 @@ class AnotacaoApiController extends Controller
                 $request->user()->id
             )
             ->with('usuario')
-            ->latest('data_criacao')
+            ->latest()
             ->get();
 
         return response()->json([

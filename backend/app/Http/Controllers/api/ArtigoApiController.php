@@ -29,7 +29,7 @@ class ArtigoApiController extends Controller
         }
 
         $artigos = $query
-            ->latest('data_criacao')
+            ->latest()
             ->get();
 
         return response()->json([
@@ -61,7 +61,7 @@ class ArtigoApiController extends Controller
                 'categorias',
                 'favoritos'
             ])
-            ->latest('data_criacao')
+            ->latest()
             ->get();
 
         return response()->json([
@@ -152,13 +152,15 @@ class ArtigoApiController extends Controller
             $data['arquivo_pdf'] = 'artigos/' . $nome;
         }
 
-        $categorias = $data['categorias'] ?? [];
-
+        $categorias = $data['categorias'] ?? null;
         unset($data['categorias']);
 
         $artigo->update($data);
 
+        if ($categorias !== null) {
         $artigo->categorias()->sync($categorias);
+
+        }
 
         return response()->json([
             'message' => 'Artigo atualizado com sucesso.',

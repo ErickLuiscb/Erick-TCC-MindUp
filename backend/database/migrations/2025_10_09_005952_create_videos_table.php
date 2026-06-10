@@ -16,8 +16,6 @@ return new class extends Migration
 
             $table->string('arquivo', 255);
 
-            $table->string('thumbnail', 255)->nullable();
-
             $table->foreignId('autor_id')
             ->nullable()
             ->constrained('usuarios')

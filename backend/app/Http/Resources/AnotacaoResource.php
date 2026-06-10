@@ -16,7 +16,8 @@ class AnotacaoResource extends JsonResource
 
             'texto' => $this->texto,
 
-            'data_criacao' => $this->data_criacao,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
 
             'usuario' => $this->whenLoaded('usuario', function () {
                 return [

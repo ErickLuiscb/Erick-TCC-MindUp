@@ -29,7 +29,7 @@ class VideoApiController extends Controller
         }
 
         $videos = $query
-            ->latest('data_criacao')
+            ->latest()
             ->get();
 
         return response()->json([
@@ -62,7 +62,7 @@ class VideoApiController extends Controller
                 'categorias',
                 'favoritos'
             ])
-            ->latest('data_criacao')
+            ->latest()
             ->get();
 
         return response()->json([
@@ -153,13 +153,15 @@ class VideoApiController extends Controller
             $data['arquivo'] = 'videos/' . $nome;
         }
 
-        $categorias = $data['categorias'] ?? [];
+        $categorias = $data['categorias'] ?? null;
 
         unset($data['categorias']);
 
         $video->update($data);
 
-        $video->categorias()->sync($categorias);
+        if ($categorias !== null) {
+         $video->categorias()->sync($categorias);
+    }
 
         return response()->json([
             'message' => 'Vídeo atualizado com sucesso.',

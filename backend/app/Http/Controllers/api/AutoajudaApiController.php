@@ -36,7 +36,7 @@ class AutoajudaApiController extends Controller
         }
 
         $conteudos = $query
-            ->latest('data_criacao')
+            ->latest()
             ->get();
 
         return response()->json([
@@ -68,7 +68,7 @@ class AutoajudaApiController extends Controller
                 'categorias',
                 'favoritos'
             ])
-            ->latest('data_criacao')
+            ->latest()
             ->get();
 
         return response()->json([
@@ -159,13 +159,15 @@ class AutoajudaApiController extends Controller
             $data['midia'] = 'autoajuda/' . $nome;
         }
 
-        $categorias = $data['categorias'] ?? [];
+       $categorias = $data['categorias'] ?? null;
+       unset($data['categorias']);
 
-        unset($data['categorias']);
+       $autoajuda->update($data);
 
-        $autoajuda->update($data);
+       if ($categorias !== null) {
+       $autoajuda->categorias()->sync($categorias);
 
-        $autoajuda->categorias()->sync($categorias);
+        }
 
         return response()->json([
             'message' => 'Conteúdo atualizado com sucesso.',

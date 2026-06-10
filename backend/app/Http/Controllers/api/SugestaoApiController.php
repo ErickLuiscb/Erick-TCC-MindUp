@@ -42,7 +42,7 @@ class SugestaoApiController extends Controller
         }
 
         $sugestoes = $query
-            ->latest('data_criacao')
+            ->latest()
             ->get();
 
         return response()->json([
@@ -74,7 +74,7 @@ class SugestaoApiController extends Controller
                 'categorias',
                 'favoritos'
             ])
-            ->latest('data_criacao')
+            ->latest()
             ->get();
 
         return response()->json([
@@ -165,13 +165,15 @@ class SugestaoApiController extends Controller
             $data['capa'] = 'sugestoes/' . $nome;
         }
 
-        $categorias = $data['categorias'] ?? [];
-
+        $categorias = $data['categorias'] ?? null;
         unset($data['categorias']);
 
         $sugestao->update($data);
 
+        if ($categorias !== null) {
         $sugestao->categorias()->sync($categorias);
+
+        }
 
         return response()->json([
             'message' => 'Sugestão atualizada com sucesso.',

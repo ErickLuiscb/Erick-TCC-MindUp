@@ -19,7 +19,7 @@ class StoreArtigoRequest extends FormRequest
 
             'descricao' => 'nullable|string|max:5000',
 
-            'arquivo_pdf' => 'required|file|mimes:pdf|max:10240',
+            'arquivo_pdf' => 'required|file|mimes:pdf|max:20480',
 
             'categorias' => 'nullable|array|max:5',
 

@@ -53,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     | ANOTAÇÕES
     */
     Route::get('/anotacoes', [AnotacaoApiController::class, 'index']);
+    Route::get('/anotacoes/{anotacao}', [AnotacaoApiController::class, 'show']);
 
     Route::post('/anotacoes', [AnotacaoApiController::class, 'store']);
 
@@ -84,16 +85,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/videos/{video}', [VideoApiController::class, 'show']);
 
     Route::get('/dashboard/videos', [VideoApiController::class, 'meusVideos'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::post('/videos', [VideoApiController::class, 'store'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::put('/videos/{video}', [VideoApiController::class, 'update'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::delete('/videos/{video}', [VideoApiController::class, 'destroy'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     /*
     | ARTIGOS
@@ -103,16 +104,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/artigos/{artigo}', [ArtigoApiController::class, 'show']);
 
     Route::get('/dashboard/artigos', [ArtigoApiController::class, 'meusArtigos'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::post('/artigos', [ArtigoApiController::class, 'store'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::put('/artigos/{artigo}', [ArtigoApiController::class, 'update'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::delete('/artigos/{artigo}', [ArtigoApiController::class, 'destroy'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     /*
     | SUGESTÕES
@@ -122,16 +123,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/sugestoes/{sugestao}', [SugestaoApiController::class, 'show']);
 
     Route::get('/dashboard/sugestoes', [SugestaoApiController::class, 'minhasSugestoes'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::post('/sugestoes', [SugestaoApiController::class, 'store'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::put('/sugestoes/{sugestao}', [SugestaoApiController::class, 'update'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::delete('/sugestoes/{sugestao}', [SugestaoApiController::class, 'destroy'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     /*
     | AUTOAJUDA
@@ -141,14 +142,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/autoajudas/{autoajuda}', [AutoajudaApiController::class, 'show']);
 
     Route::get('/dashboard/autoajudas', [AutoajudaApiController::class, 'meusConteudos'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::post('/autoajudas', [AutoajudaApiController::class, 'store'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::put('/autoajudas/{autoajuda}', [AutoajudaApiController::class, 'update'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 
     Route::delete('/autoajudas/{autoajuda}', [AutoajudaApiController::class, 'destroy'])
-        ->middleware('abilities:admin,publicador');
+        ->middleware('ability:admin,publicador');
 });

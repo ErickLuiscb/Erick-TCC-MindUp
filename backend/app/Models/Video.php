@@ -19,7 +19,6 @@ class Video extends Model
         'titulo',
         'descricao',
         'arquivo',
-        'thumbnail',
         'autor_id',
         'ativo',
     ];
