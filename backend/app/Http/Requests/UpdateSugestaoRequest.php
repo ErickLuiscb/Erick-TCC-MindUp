@@ -21,9 +21,11 @@ class UpdateSugestaoRequest extends FormRequest
 
             'tipo' => 'sometimes|required|in:livro,filme,serie,anime,musica,podcast,documentario',
 
-            'link' => 'sometimes|nullable|url|max:255',
+            'link_externo' => 'sometimes|nullable|url|max:255',
 
             'capa' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+
+            'ativo' => 'sometimes|required|boolean',
 
             'categorias' => 'sometimes|array|max:5',
 

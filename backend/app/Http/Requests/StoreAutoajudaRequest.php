@@ -31,6 +31,8 @@ class StoreAutoajudaRequest extends FormRequest
                 //Onde ele aceita qualquer formato de imagem ou video.
             ],
 
+            'ativo' => 'sometimes|required|boolean',
+
             'categorias' => 'nullable|array|max:5',
 
             'categorias.*' => 'exists:categorias,id',

@@ -21,6 +21,8 @@ class StoreArtigoRequest extends FormRequest
 
             'arquivo_pdf' => 'required|file|mimes:pdf|max:20480',
 
+            'ativo' => 'sometimes|required|boolean',
+
             'categorias' => 'nullable|array|max:5',
 
             'categorias.*' => 'exists:categorias,id',

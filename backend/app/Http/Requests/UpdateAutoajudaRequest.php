@@ -25,6 +25,8 @@ class UpdateAutoajudaRequest extends FormRequest
 
             'midia' => 'sometimes|nullable|file|max:51200',
 
+            'ativo' => 'sometimes|required|boolean',
+
             'categorias' => 'sometimes|array|max:5',
 
             'categorias.*' => 'exists:categorias,id',

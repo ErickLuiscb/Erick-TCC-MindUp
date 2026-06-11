@@ -21,6 +21,8 @@ class UpdateArtigoRequest extends FormRequest
 
             'arquivo_pdf' => 'sometimes|nullable|file|mimes:pdf|max:20480',
 
+            'ativo' => 'sometimes|required|boolean',
+
             'categorias' => 'sometimes|array|max:5',
 
             'categorias.*' => 'exists:categorias,id',

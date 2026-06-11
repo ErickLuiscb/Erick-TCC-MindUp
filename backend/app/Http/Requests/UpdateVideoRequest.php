@@ -21,6 +21,8 @@ class UpdateVideoRequest extends FormRequest
 
             'arquivo' => 'sometimes|nullable|file|mimes:mp4,mov,avi,wmv,webm,mkv|max:51200',
 
+            'ativo' => 'sometimes|required|boolean',
+
             'categorias' => 'sometimes|array|max:5',
 
             'categorias.*' => 'exists:categorias,id',

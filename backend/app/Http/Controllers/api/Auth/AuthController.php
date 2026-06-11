@@ -93,52 +93,37 @@ class AuthController extends Controller
     /**
      * REGISTRO
      */
-    public function register(
-        StoreUserRequest $request
-    ) {
-        $data = $request->validated();
+    public function register(StoreUserRequest $request)
+{
+    $data = $request->validated();
 
-        $data['senha'] = Hash::make(
-            $data['senha']
-        );
+    $data['senha'] = Hash::make($data['senha']);
 
-        $data['criado_em'] = now();
-
-        /*
-         Se possui CRP,
-         considera psicólogo
-        */
-        if (!empty($data['crp'])) {
-            $data['tipo'] = 'psicologo';
-        }
-
-        /*
-         Upload imagem perfil
-        */
-        if ($request->hasFile('imagem_perfil')) {
-
-            $nome = uniqid('perfil_', true) . '.' .
-                $request->file('imagem_perfil')
-                    ->getClientOriginalExtension();
-
-            Storage::disk('public')->putFileAs(
-                'perfil',
-                $request->file('imagem_perfil'),
-                $nome
-            );
-
-            $data['imagem_perfil'] =
-                'perfil/' . $nome;
-        }
-
-        $user = User::create($data);
-
-        return response()->json([
-            'message' => 'Usuário registrado com sucesso.',
-            'user' => new UserResource($user)
-        ], 201);
+    /*
+     Se possui CRP, considera psicólogo
+    */
+    if (!empty($data['crp'])) {
+        $data['tipo'] = 'psicologo';
     }
 
+    /*
+     Upload imagem perfil
+    */
+    if ($request->hasFile('imagem_perfil')) {
+        // Salva o arquivo na pasta 'perfil' dentro do disco public de forma limpa
+        $caminho = $request->file('imagem_perfil')->store('perfil', 'public');
+
+        // Injeta o caminho correto diretamente no array que vai para o banco
+        $data['imagem_perfil'] = $caminho;
+    }
+
+    $user = User::create($data);
+
+    return response()->json([
+        'message' => 'Usuário registrado com sucesso.',
+        'user' => new UserResource($user)
+    ], 201);
+}
     /**
      * USUÁRIO LOGADO
      */

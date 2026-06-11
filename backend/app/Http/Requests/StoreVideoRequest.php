@@ -21,6 +21,8 @@ class StoreVideoRequest extends FormRequest
 
             'arquivo' => 'required|file|mimes:mp4,mov,avi,wmv,webm,mkv|max:51200',
 
+            'ativo' => 'sometimes|required|boolean',
+
             'categorias' => 'nullable|array|max:5',
 
             'categorias.*' => 'exists:categorias,id',
