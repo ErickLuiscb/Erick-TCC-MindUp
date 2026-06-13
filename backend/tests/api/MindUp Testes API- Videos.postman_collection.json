@@ -1,0 +1,287 @@
+{
+  "info": {
+    "_postman_id": "182691f6-08d9-493b-96ca-880b7a61809d",
+    "name": "MindUp Testes API: Videos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49840729",
+    "_collection_link": "https://go.postman.co/collection/49840729-182691f6-08d9-493b-96ca-880b7a61809d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Ver videos dahboard",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "7|ozY1xO5J13j9tbDpXF6h5VxjZ7UJgJiPES6nwRA8c050793d",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/dashboard/videos",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "dashboard",
+            "videos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar video",
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {}
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "15|lqYjYTwYCQdSRIo7y4IGJOCk5MVvaOmlCbS3T4ST181758a4",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "titulo",
+              "value": "sobre depressão",
+              "type": "text",
+              "uuid": "adfbe003-d090-4b5b-af9d-218fd7a5b805"
+            },
+            {
+              "key": "descricao",
+              "value": "testando video 2",
+              "type": "text",
+              "uuid": "9cc3046e-9fe2-414f-82bd-0a95e1fafbe2"
+            },
+            {
+              "key": "arquivo",
+              "type": "file",
+              "uuid": "805a5413-8043-4ed7-9b00-85072ff36026",
+              "src": "postman-cloud:///1f1645a2-a72d-4900-8304-52c90db387ec"
+            },
+            {
+              "key": "categorias[0]",
+              "value": "9",
+              "type": "text",
+              "uuid": "25b0da13-2c9a-40b4-b1d3-2fd2c97625f2"
+            },
+            {
+              "key": "categorias[1]",
+              "value": "12",
+              "type": "text",
+              "uuid": "df6663d4-19a2-48eb-835f-46b0b491fb95"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/videos",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "videos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Editar Video",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "6|NtPx3La3Yzov2YGP1WBLkidLh99NIP3PoWnYklg28ad29660",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "titulo",
+              "value": "video teste editado3",
+              "type": "text",
+              "uuid": "adfbe003-d090-4b5b-af9d-218fd7a5b805"
+            },
+            {
+              "key": "descricao",
+              "value": "testando editado3",
+              "type": "text",
+              "uuid": "9cc3046e-9fe2-414f-82bd-0a95e1fafbe2"
+            },
+            {
+              "key": "arquivo",
+              "type": "file",
+              "uuid": "805a5413-8043-4ed7-9b00-85072ff36026",
+              "src": "postman-cloud:///1f16473e-7945-4270-afa6-77ad2dffa994"
+            },
+            {
+              "key": "categorias[0]",
+              "value": "19",
+              "type": "text",
+              "uuid": "25b0da13-2c9a-40b4-b1d3-2fd2c97625f2"
+            },
+            {
+              "key": "_method",
+              "value": "PUT",
+              "type": "text",
+              "uuid": "23db020e-5fb4-43bf-aec4-2867e70a522b"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/videos/3",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "videos",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Deletar Video",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "7|ozY1xO5J13j9tbDpXF6h5VxjZ7UJgJiPES6nwRA8c050793d",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/videos/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "videos",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ver Videos Comum",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "6|NtPx3La3Yzov2YGP1WBLkidLh99NIP3PoWnYklg28ad29660",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/videos/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "videos",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

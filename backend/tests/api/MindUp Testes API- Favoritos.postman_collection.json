@@ -1,0 +1,153 @@
+{
+  "info": {
+    "_postman_id": "ab8a1f63-2c21-48a5-8dd3-a33f5fdf90c1",
+    "name": "MindUp Testes API: Favoritos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49840729",
+    "_collection_link": "https://go.postman.co/collection/49840729-ab8a1f63-2c21-48a5-8dd3-a33f5fdf90c1?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Adicionar favorito",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "17|eYJJyxgWr2eS3COtt2aQ2wvqX9KDgp9axPVBwWue8091846d",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"tipo\": \"video\",\r\n    \"favoritavel_id\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/favoritos",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "favoritos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ver favoritos",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "17|eYJJyxgWr2eS3COtt2aQ2wvqX9KDgp9axPVBwWue8091846d",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/favoritos",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "favoritos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Remover Favorito",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "17|eYJJyxgWr2eS3COtt2aQ2wvqX9KDgp9axPVBwWue8091846d",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/favoritos/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "favoritos",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

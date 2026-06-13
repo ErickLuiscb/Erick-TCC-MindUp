@@ -1,0 +1,292 @@
+{
+  "info": {
+    "_postman_id": "7b8cd8e2-4485-4c29-bfbe-86a4ce7c4321",
+    "name": "MindUp Testes API: Autoajuda",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49840729",
+    "_collection_link": "https://go.postman.co/collection/49840729-7b8cd8e2-4485-4c29-bfbe-86a4ce7c4321?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Ver Autoajudas dashboard",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "12|H8vINdQF2r8UuABZJ3lpJjIBO3eR1scJknMGk0QV9ff0fe52",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/dashboard/autoajudas",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "dashboard",
+            "autoajudas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Autoajuda",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "15|lqYjYTwYCQdSRIo7y4IGJOCk5MVvaOmlCbS3T4ST181758a4",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "titulo",
+              "value": "Autoajuda3",
+              "type": "text",
+              "uuid": "524df3c3-8040-4216-801c-400be94ea639"
+            },
+            {
+              "key": "descricao",
+              "value": "Testando autoajuda criacao3",
+              "type": "text",
+              "uuid": "8357fb21-e79b-4ea8-a693-cb8fbaa36b4a"
+            },
+            {
+              "key": "tipo_midia",
+              "value": "imagem",
+              "type": "text",
+              "uuid": "559ff296-ac23-4016-991b-6c383992f78e"
+            },
+            {
+              "key": "midia",
+              "type": "file",
+              "uuid": "bc3b03e9-bc6a-4f3a-afe6-0960ec10982d",
+              "src": "postman-cloud:///1f1654a6-fa47-4470-984c-d06eed28f67b"
+            },
+            {
+              "key": "categorias[0]",
+              "value": "82",
+              "type": "text",
+              "uuid": "d00a80f1-47b5-42a7-91e3-e3eb26416cd9"
+            },
+            {
+              "key": "categorias[1]",
+              "value": "44",
+              "type": "text",
+              "uuid": "17039641-9f78-47dd-9790-4cc19893a8eb"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/autoajudas",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "autoajudas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Editar Autoajuda",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "12|H8vINdQF2r8UuABZJ3lpJjIBO3eR1scJknMGk0QV9ff0fe52",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "titulo",
+              "value": "Autoajuda editado2",
+              "type": "text",
+              "uuid": "524df3c3-8040-4216-801c-400be94ea639"
+            },
+            {
+              "key": "descricao",
+              "value": "Testando edicao do autoajuda2",
+              "type": "text",
+              "uuid": "8357fb21-e79b-4ea8-a693-cb8fbaa36b4a"
+            },
+            {
+              "key": "tipo_midia",
+              "value": "imagem",
+              "type": "text",
+              "uuid": "559ff296-ac23-4016-991b-6c383992f78e"
+            },
+            {
+              "key": "midia",
+              "type": "file",
+              "uuid": "bc3b03e9-bc6a-4f3a-afe6-0960ec10982d",
+              "src": "postman-cloud:///1f1654a6-fa47-4470-984c-d06eed28f67b"
+            },
+            {
+              "key": "categorias[0]",
+              "value": "55",
+              "type": "text",
+              "uuid": "d00a80f1-47b5-42a7-91e3-e3eb26416cd9"
+            },
+            {
+              "key": "categorias[1]",
+              "value": "66",
+              "type": "text",
+              "uuid": "17039641-9f78-47dd-9790-4cc19893a8eb"
+            },
+            {
+              "key": "_method",
+              "value": "PUT",
+              "type": "text",
+              "uuid": "0e114cac-fda8-49cd-85e1-a8abdbb64836"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/autoajudas/1",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "autoajudas",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Excluir Autoajuda",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "14|g6pPpjxN6Rsv8nsrhnsE8L51R3MMZcbL6apYn7Iqc1186674",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/autoajudas/5",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "autoajudas",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ver Autoajudas Comum",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "12|H8vINdQF2r8UuABZJ3lpJjIBO3eR1scJknMGk0QV9ff0fe52",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/autoajudas/1",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "autoajudas",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

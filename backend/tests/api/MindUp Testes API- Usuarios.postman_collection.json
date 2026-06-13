@@ -1,0 +1,233 @@
+{
+  "info": {
+    "_postman_id": "0aabf297-bccf-4e91-8c60-406ea13a7f70",
+    "name": "MindUp Testes API: Usuarios",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49840729",
+    "_collection_link": "https://go.postman.co/collection/49840729-0aabf297-bccf-4e91-8c60-406ea13a7f70?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Listar users(admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "18|uNhOY0Ct4fhY1Zirh2MPv3GFg0fryYTQfPr5doPG26b8ce0e",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/usuarios",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "usuarios"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ver user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "18|uNhOY0Ct4fhY1Zirh2MPv3GFg0fryYTQfPr5doPG26b8ce0e",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "aplic",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/usuarios/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "usuarios",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Editar User",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "14|QwV503zJfCqlEAseg6f2oxmnsAn2wN7tWS6zPXMH6c4a8817",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"nome\": \"Luis Atualizado\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/usuarios/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "usuarios",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Excluir User",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "9|0Qus62Rmm0lCZUC3dFDvWk2132Og4PlkwyufhWzE22a6af95",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/usuarios/9",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "usuarios",
+            "9"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Editar imagem_perfil",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "6|67NAFQ3Q9GewYnfVCkDWCdXUaKtXdrIwIUUwfsOS4006fec7",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "_method",
+              "value": "PUT",
+              "type": "text",
+              "uuid": "5cec8964-5dfe-4d02-9942-ee3a95a36498"
+            },
+            {
+              "key": "imagem_perfil",
+              "type": "file",
+              "uuid": "96561740-1d87-4778-9aa7-1aefc473b9b0",
+              "src": "postman-cloud:///1f1654a6-fa47-4470-984c-d06eed28f67b"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/usuarios/9",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "usuarios",
+            "9"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

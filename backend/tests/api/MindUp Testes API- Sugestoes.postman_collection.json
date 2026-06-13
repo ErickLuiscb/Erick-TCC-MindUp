@@ -1,0 +1,328 @@
+{
+  "info": {
+    "_postman_id": "ee1565c9-7039-4452-9e6d-622e8eaf3b38",
+    "name": "MindUp Testes API: Sugestoes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49840729",
+    "_collection_link": "https://go.postman.co/collection/49840729-ee1565c9-7039-4452-9e6d-622e8eaf3b38?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Criar Sugestao",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "15|lqYjYTwYCQdSRIo7y4IGJOCk5MVvaOmlCbS3T4ST181758a4",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "tipo",
+              "value": "filme",
+              "type": "text",
+              "uuid": "9bf56bdc-9f64-4d8e-9cda-85e3371d1a5a"
+            },
+            {
+              "key": "titulo",
+              "value": "Lucy",
+              "type": "text",
+              "uuid": "b281f93d-f1bd-4c08-a775-45f3e32cafef"
+            },
+            {
+              "key": "descricao",
+              "value": "Um excelente filme sobre Evolucao humana",
+              "type": "text",
+              "uuid": "19e2967e-1d51-4b03-aa18-0d212f253db8"
+            },
+            {
+              "key": "link_externo",
+              "value": "https://www.imdb.com/pt/title/tt2872732/?ref_=fn_i_1",
+              "type": "text",
+              "uuid": "2b81f9ce-c879-41f8-aa5b-a3f979da96d2"
+            },
+            {
+              "key": "capa",
+              "type": "file",
+              "uuid": "9e39ce0a-71b4-42b8-8a00-c45357728b75",
+              "src": "postman-cloud:///1f1654a6-fa47-4470-984c-d06eed28f67b"
+            },
+            {
+              "key": "categorias[0]",
+              "value": "44",
+              "type": "text",
+              "uuid": "7fb0eabe-eb4d-4929-8051-20e7f8b0ac07"
+            },
+            {
+              "key": "categorias[1]",
+              "value": "15",
+              "type": "text",
+              "uuid": "d91f200b-6174-4fc2-a184-7eaabb5df28a"
+            },
+            {
+              "key": "categorias[2]",
+              "value": "29",
+              "type": "text",
+              "uuid": "7760cd52-4b64-48b0-b89a-3baec3d102cc"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/sugestoes",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "sugestoes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Editar Sugestao",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "3|GAJlyROMwQxJPg7yfvwszkomJfjwckLO7tQGOM9h9ef80b3b",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "tipo",
+              "value": "livro",
+              "type": "text",
+              "uuid": "9bf56bdc-9f64-4d8e-9cda-85e3371d1a5a"
+            },
+            {
+              "key": "titulo",
+              "value": "MindSet",
+              "type": "text",
+              "uuid": "b281f93d-f1bd-4c08-a775-45f3e32cafef"
+            },
+            {
+              "key": "descricao",
+              "value": "um bom livro para repensar a mente",
+              "type": "text",
+              "uuid": "19e2967e-1d51-4b03-aa18-0d212f253db8"
+            },
+            {
+              "key": "link_externo",
+              "value": "https://www.amazon.com.br/s?k=livro+mindset&crid=33G3I0KI49APC&sprefix=livro+mindse%2Caps%2C259&ref=nb_sb_ss_ts-doa-p_1_12",
+              "type": "text",
+              "uuid": "2b81f9ce-c879-41f8-aa5b-a3f979da96d2"
+            },
+            {
+              "key": "capa",
+              "type": "file",
+              "uuid": "9e39ce0a-71b4-42b8-8a00-c45357728b75",
+              "src": "postman-cloud:///1f1654bd-9676-42e0-8f43-92ec597067f8"
+            },
+            {
+              "key": "categorias[0]",
+              "value": "49",
+              "type": "text",
+              "uuid": "7fb0eabe-eb4d-4929-8051-20e7f8b0ac07"
+            },
+            {
+              "key": "categorias[1]",
+              "value": "16",
+              "type": "text",
+              "uuid": "d91f200b-6174-4fc2-a184-7eaabb5df28a"
+            },
+            {
+              "key": "categorias[2]",
+              "value": "34",
+              "type": "text",
+              "uuid": "7760cd52-4b64-48b0-b89a-3baec3d102cc"
+            },
+            {
+              "key": "_method",
+              "value": "PUT",
+              "type": "text",
+              "uuid": "4b18a54f-0ccf-4353-ad2a-46af631f9cc1"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/sugestoes/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "sugestoes",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ver Sugestoes dashboard",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "7|oQynPdcAI0vyImr1QPAbwiRfqnFoBpTdSMM7kMBe5e08e6ef",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/dashboard/sugestoes",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "dashboard",
+            "sugestoes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ver Sugestoes Comum",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "3|GAJlyROMwQxJPg7yfvwszkomJfjwckLO7tQGOM9h9ef80b3b",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/sugestoes",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "sugestoes"
+          ],
+          "query": [
+            {
+              "key": "tipo",
+              "value": "livro",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Excluir Sugestao",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "3|GAJlyROMwQxJPg7yfvwszkomJfjwckLO7tQGOM9h9ef80b3b",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/sugestoes/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "sugestoes",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

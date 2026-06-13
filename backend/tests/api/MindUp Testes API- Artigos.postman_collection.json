@@ -1,0 +1,329 @@
+{
+  "info": {
+    "_postman_id": "3a63fb65-fda2-4232-a103-19b39ba81bbd",
+    "name": "MindUp Testes API: Artigos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49840729",
+    "_collection_link": "https://go.postman.co/collection/49840729-3a63fb65-fda2-4232-a103-19b39ba81bbd?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Ver Artigos da dashboard",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "13|DLx8RyjCmUzyiFbfHKwn8JY53tdNE5aYBLtNdcUp6914018b",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/dashboard/artigos",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "dashboard",
+            "artigos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Artigo",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "15|lqYjYTwYCQdSRIo7y4IGJOCk5MVvaOmlCbS3T4ST181758a4",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "titulo",
+              "value": "teste2",
+              "type": "text",
+              "uuid": "c608d70a-13b9-4269-bce6-dd1c43841db9"
+            },
+            {
+              "key": "descricao",
+              "value": "testando criacao 2 artigo",
+              "type": "text",
+              "uuid": "25df26d0-2de7-4ebf-bb67-d68d1d7eec83"
+            },
+            {
+              "key": "categorias[0]",
+              "value": "30",
+              "type": "text",
+              "uuid": "b986e1a5-df31-4565-bc75-0552ba309efd"
+            },
+            {
+              "key": "categorias[1]",
+              "value": "32",
+              "type": "text",
+              "uuid": "f3b0063e-1564-4a95-bf8f-f02d6d599ee8"
+            },
+            {
+              "key": "arquivo_pdf",
+              "type": "file",
+              "uuid": "ea5261ce-1f72-40bf-8746-785da8bbd323",
+              "src": "postman-cloud:///1f16482d-fbd3-4080-a2a6-26d235652573"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/artigos",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "artigos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Editar Artigo",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "13|DLx8RyjCmUzyiFbfHKwn8JY53tdNE5aYBLtNdcUp6914018b",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "_method",
+              "value": "PUT",
+              "type": "text",
+              "uuid": "dc4d99b9-afd7-46f8-8a1d-d73f25839bf2"
+            },
+            {
+              "key": "titulo",
+              "value": "titulo editado artigo",
+              "type": "text",
+              "uuid": "7d3e0106-3b58-47b6-a12e-dbb714aa54fc"
+            },
+            {
+              "key": "descricao",
+              "value": "descricao editada artigo",
+              "type": "text",
+              "uuid": "9f0e14b2-0bcb-4a6b-95fb-d7c1f5da191c"
+            },
+            {
+              "key": "arquivo_pdf",
+              "type": "file",
+              "uuid": "ca86320b-bb65-4ea4-bb5b-3fc0c6a0f0b4",
+              "src": "postman-cloud:///1f16483e-9dc5-4360-a4c7-41419616def9"
+            },
+            {
+              "key": "categorias[0]",
+              "value": "24",
+              "type": "text",
+              "uuid": "518a87b6-7ee3-435e-b985-f52ec288fba9"
+            },
+            {
+              "key": "categorias[1]",
+              "value": "28",
+              "type": "text",
+              "uuid": "570e9c2b-de1e-4165-9bb9-44c1b26cc32d"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/artigos/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "artigos",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Deletar Artigo",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "13|DLx8RyjCmUzyiFbfHKwn8JY53tdNE5aYBLtNdcUp6914018b",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/artigos/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "artigos",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ver Artigos Comum",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "13|DLx8RyjCmUzyiFbfHKwn8JY53tdNE5aYBLtNdcUp6914018b",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "titulo",
+              "value": "teste1",
+              "type": "text",
+              "uuid": "c608d70a-13b9-4269-bce6-dd1c43841db9"
+            },
+            {
+              "key": "descricao",
+              "value": "testando criacao 1 artigo",
+              "type": "text",
+              "uuid": "25df26d0-2de7-4ebf-bb67-d68d1d7eec83"
+            },
+            {
+              "key": "categorias[0]",
+              "value": "20",
+              "type": "text",
+              "uuid": "b986e1a5-df31-4565-bc75-0552ba309efd"
+            },
+            {
+              "key": "categorias[1]",
+              "value": "18",
+              "type": "text",
+              "uuid": "f3b0063e-1564-4a95-bf8f-f02d6d599ee8"
+            },
+            {
+              "key": "arquivo_pdf",
+              "type": "file",
+              "uuid": "ea5261ce-1f72-40bf-8746-785da8bbd323",
+              "src": "postman-cloud:///1f16482d-fbd3-4080-a2a6-26d235652573"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/artigos/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "artigos",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

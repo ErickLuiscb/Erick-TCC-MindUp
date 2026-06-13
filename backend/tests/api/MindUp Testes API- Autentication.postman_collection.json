@@ -1,0 +1,220 @@
+{
+  "info": {
+    "_postman_id": "f0f7bab6-30a7-4923-bbab-dcfd707b5426",
+    "name": "MindUp Testes API: Autentication",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49840729",
+    "_collection_link": "https://go.postman.co/collection/49840729-f0f7bab6-30a7-4923-bbab-dcfd707b5426?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "nome",
+              "value": "psicologo2",
+              "type": "text",
+              "uuid": "5cec8964-5dfe-4d02-9942-ee3a95a36498"
+            },
+            {
+              "key": "email",
+              "value": "psicologo2@teste.com",
+              "type": "text",
+              "uuid": "c8c78355-6417-4ecd-9797-dde88a30d2da"
+            },
+            {
+              "key": "senha",
+              "value": "123456",
+              "type": "text",
+              "uuid": "48bb3e9a-cff7-428c-832c-90ff1e2b5268"
+            },
+            {
+              "key": "tipo",
+              "value": "psicologo",
+              "type": "text",
+              "uuid": "1ee0693d-06ae-44f8-8d53-7bf9372a9f67"
+            },
+            {
+              "key": "imagem_perfil",
+              "type": "file",
+              "uuid": "96561740-1d87-4778-9aa7-1aefc473b9b0",
+              "src": "postman-cloud:///1f1654aa-dbfc-4ed0-92c0-729afd0e347e",
+              "disabled": true
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/register",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"usuario@teste.com\",\r\n    \"senha\": \"123456\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/login",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Me",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "3|QVjVCSYjHcCJrGRUE0QjeRnEpSNfetVqSLeYdzZ420b68e2b",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/me",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "Nesta etapa vamos testar todas as funcionalidades CRUD de Autoajuda, e como os Usuarios e os Psicologos os manipula e os gerencia.",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/logout",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Logout All",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "Nesta etapa vamos testar todas as funcionalidades CRUD de Autoajuda, e como os Usuarios e os Psicologos os manipula e os gerencia.",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/logout/all",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "logout",
+            "all"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

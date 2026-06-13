@@ -1,0 +1,188 @@
+{
+  "info": {
+    "_postman_id": "bcacab0b-5912-414d-8759-f5b31bbd2d0a",
+    "name": "MindUp Testes API: Anotacoes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49840729",
+    "_collection_link": "https://go.postman.co/collection/49840729-bcacab0b-5912-414d-8759-f5b31bbd2d0a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Ver anotacoes",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "10|FamTcQ9pqgiH6vXNmiPCen3IPnSkolHDlsTX78AU26e7ef30",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/anotacoes/3",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "anotacoes",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Anotacao",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "9|pR0oyQkDsnYjYHFb3jOXC5T3HFVEJuEjBmWRcvVMf992a837",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"titulo\": \"Teste anotacao psicologo\",\r\n    \"texto\": \"Meu paciente\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/anotacoes",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "anotacoes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Editar Anotacao",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "9|pR0oyQkDsnYjYHFb3jOXC5T3HFVEJuEjBmWRcvVMf992a837",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"titulo\": \"Teste anotacao editado\",\r\n    \"texto\": \"texto editado\"\r\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/anotacoes/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "anotacoes",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Deletar Anotacao",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "9|pR0oyQkDsnYjYHFb3jOXC5T3HFVEJuEjBmWRcvVMf992a837",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/anotacoes/2",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "anotacoes",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

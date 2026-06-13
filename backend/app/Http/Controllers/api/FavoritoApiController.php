@@ -58,9 +58,8 @@ class FavoritoApiController extends Controller
         PEGA MODEL
         */
 
-        $modelClass = $tipos[
-            $request->favoritavel_type
-        ];
+        $modelClass = $tipos[$request->tipo];
+
 
         /*
         BUSCA CONTEÚDO
