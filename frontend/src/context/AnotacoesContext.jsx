@@ -15,8 +15,10 @@ export function AnotacoesProvider({ children }) {
   // ======================
   const carregarAnotacoes = async () => {
     try {
-      const resp = await api.get("/anotacoesapi");
-     setAnotacoes(resp.data.data ?? []);
+      setCarregando(true);
+      const resp = await api.get("/anotacoes");
+      // Mapeia de forma segura capturando a estrutura do JsonResource do Laravel
+      setAnotacoes(resp.data.data ?? resp.data ?? []);
     } catch (error) {
       console.error("Erro ao carregar anotações:", error);
     } finally {
@@ -28,36 +30,65 @@ export function AnotacoesProvider({ children }) {
   // CRIAR
   // ======================
   async function criarAnotacao({ titulo, texto }) {
-  const resp = await api.post("/anotacoesapi", { titulo, texto });
+    try {
+      const resp = await api.post("/anotacoes", { titulo, texto });
+      const novaAnotacao = resp.data.data || resp.data;
 
-  // Laravel Resource → resp.data.data
-  setAnotacoes((prev) => [...prev, resp.data.data]);
-}
-
+      setAnotacoes((prev) => [...prev, novaAnotacao]);
+      return { sucesso: true };
+    } catch (error) {
+      console.error("Erro ao criar anotação:", error);
+      return {
+        sucesso: false,
+        mensagem: error.response?.data?.message || "Erro ao salvar anotação.",
+      };
+    }
+  }
 
   // ======================
   // EDITAR
   // ======================
   const editarAnotacao = async (id, dados) => {
-    const resp = await api.put(`/anotacoesapi/${id}`, dados);
-    setAnotacoes((prev) =>
-      prev.map((a) => (a.id === id ? resp.data : a))
-    );
+    try {
+      const resp = await api.put(`/anotacoes/${id}`, dados);
+      const anotacaoAtualizada = resp.data.data || resp.data;
+
+      // Corrige o bug de mapeamento injetando o objeto extraído do Resource do Laravel
+      setAnotacoes((prev) =>
+        prev.map((a) => (a.id === id ? anotacaoAtualizada : a)),
+      );
+      return { sucesso: true };
+    } catch (error) {
+      console.error("Erro ao editar anotação:", error);
+      return {
+        sucesso: false,
+        mensagem:
+          error.response?.data?.message || "Erro ao atualizar anotação.",
+      };
+    }
   };
 
   // ======================
   // DELETAR
   // ======================
   const deletarAnotacao = async (id) => {
-    await api.delete(`/anotacoesapi/${id}`);
-    setAnotacoes((prev) => prev.filter((a) => a.id !== id));
+    try {
+      await api.delete(`/anotacoes/${id}`);
+      setAnotacoes((prev) => prev.filter((a) => a.id !== id));
+      return { sucesso: true };
+    } catch (error) {
+      console.error("Erro ao deletar anotação:", error);
+      return {
+        sucesso: false,
+        mensagem: error.response?.data?.message || "Erro ao excluir anotação.",
+      };
+    }
   };
 
   // ======================
   // BUSCAR LOCAL
   // ======================
-  const buscarAnotacaoPorId = (id) =>
-    anotacoes.find((a) => a.id == id);
+  const buscarAnotacaoPorId = (id) => anotacoes.find((a) => a.id == id);
 
   // ======================
   // CARREGAR AO LOGAR
@@ -65,6 +96,8 @@ export function AnotacoesProvider({ children }) {
   useEffect(() => {
     if (autenticado) {
       carregarAnotacoes();
+    } else {
+      setAnotacoes([]);
     }
   }, [autenticado]);
 
@@ -77,6 +110,7 @@ export function AnotacoesProvider({ children }) {
         editarAnotacao,
         deletarAnotacao,
         buscarAnotacaoPorId,
+        carregarAnotacoes,
       }}
     >
       {children}

@@ -7,16 +7,14 @@ export default function RotaProtegida() {
   // ainda carregando do localStorage → evita redirecionar errado
   if (carregando) {
     return (
-      <div className="text-white text-center mt-10 text-xl">
-        Carregando...
-      </div>
+      <div className="text-white text-center mt-10 text-xl">Carregando...</div>
     );
   }
 
   // se não estiver logado → manda para login
-if (!autenticado) {
-  return <Navigate to="/login" replace />;
-}
+  if (!autenticado) {
+    return <Navigate to="/login" replace />;
+  }
 
   // se estiver logado → libera rotas internas
   return <Outlet />;

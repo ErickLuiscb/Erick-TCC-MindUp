@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
 export default function RotaPsicologo() {
-  const { autenticado, carregando, usuario } = useAuth();
+  const { autenticado, carregando, abilities } = useAuth();
 
   if (carregando) {
     return <p className="text-white text-center mt-10">Carregando...</p>;
@@ -12,7 +12,10 @@ export default function RotaPsicologo() {
     return <Navigate to="/login" replace />;
   }
 
-  if (usuario?.tipo !== "psicologo" && !usuario?.is_admin) {
+  const eProfissional =
+    abilities.includes("publicador") || abilities.includes("admin");
+
+  if (!eProfissional) {
     return <Navigate to="/inicial" replace />;
   }
 
