@@ -40,7 +40,7 @@ export default function Header() {
                        hover:bg-[#ff5722] transition 
                        text-sm font-bold flex items-center gap-2"
           >
-            📊 <span>Minha Dashboard</span>
+            📊 <span>Meu Painel</span>
           </button>
         )}
 

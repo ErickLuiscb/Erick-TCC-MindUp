@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import api from "../../../service/api";
-import { useVideos } from "../../../context/VideosContext"; // Reaproveita as categorias já carregadas globalmente
+import { useVideos } from "../../../context/VideosContext";
 import {
   ArrowLeft,
   Save,
@@ -9,53 +9,38 @@ import {
   Eye,
   EyeOff,
   FileText,
+  Search,
+  X,
 } from "lucide-react";
 
 export default function CriarArtigo() {
   const navigate = useNavigate();
-  const { categorias = [] } = useVideos(); // Lista de categorias vindas do banco PostgreSQL
+  const { categorias = [] } = useVideos();
 
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [arquivoPdf, setArquivoPdf] = useState(null);
   const [ativo, setAtivo] = useState(true);
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
+  const [buscaCategoria, setBuscaCategoria] = useState("");
 
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
 
-  // Organiza e agrupa as categorias por assunto baseado no hífen do nome
-  const obterCategoriasAgrupadas = () => {
-    const grupos = {};
-    categorias.forEach((cat) => {
-      const assunto = cat.nome.includes("-")
-        ? cat.nome.split("-")[0].trim()
-        : "Geral / Outros";
-      if (!grupos[assunto]) {
-        grupos[assunto] = [];
-      }
-      grupos[assunto].push(cat);
-    });
-    return grupos;
-  };
+  const categoriasFiltradas = categorias.filter((cat) =>
+    cat.nome.toLowerCase().includes(buscaCategoria.toLowerCase()),
+  );
 
-  const categoriesAgrupadas = obterCategoriasAgrupadas();
-
-  // Gerencia a seleção aplicando a trava estrita de máximo 5 categorias requisitada no TCC
   const handleCheckboxChange = (id) => {
     setErro("");
     setCategoriasSelecionadas((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((catId) => catId !== id);
-      }
-
+      if (prev.includes(id)) return prev.filter((catId) => catId !== id);
       if (prev.length >= 5) {
         setErro(
           "⚠️ Limite atingido: Você só pode selecionar no máximo 5 categorias por conteúdo.",
         );
         return prev;
       }
-
       return [...prev, id];
     });
   };
@@ -74,24 +59,15 @@ export default function CriarArtigo() {
     const formData = new FormData();
     formData.append("titulo", titulo);
     formData.append("descricao", descricao);
-    formData.append("arquivo_pdf", arquivoPdf); // Chave exata validada no seu StoreArtigoRequest do backend
+    formData.append("arquivo_pdf", arquivoPdf);
     formData.append("ativo", ativo ? "1" : "0");
-
-    // Anexa as chaves de array de categorias esperadas pelo Laravel
-    categoriasSelecionadas.forEach((id) => {
-      formData.append("categorias[]", id);
-    });
+    categoriasSelecionadas.forEach((id) => formData.append("categorias[]", id));
 
     try {
       setSalvando(true);
-
-      // Consome a rota oficial de criação cadastrada no api.php
       await api.post("/artigos", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
       navigate("/dashboard/artigos");
     } catch (error) {
       console.error(error);
@@ -107,7 +83,6 @@ export default function CriarArtigo() {
 
   return (
     <div className="max-w-3xl mx-auto p-2 text-black animate-fadeIn">
-      {/* Botão Superior de Voltar */}
       <button
         type="button"
         onClick={() => navigate("/dashboard/artigos")}
@@ -121,7 +96,6 @@ export default function CriarArtigo() {
         <span>Voltar para Meus Artigos</span>
       </button>
 
-      {/* Banner de Erros ou Alertas Dinâmicos */}
       {erro && (
         <div className="p-4 bg-red-100 border border-red-200 text-red-700 font-bold rounded-xl mb-6 shadow-xs animate-fadeIn flex items-center gap-2">
           <AlertTriangle size={18} className="shrink-0" />
@@ -129,7 +103,6 @@ export default function CriarArtigo() {
         </div>
       )}
 
-      {/* Caixa do Formulário Administrativo Web */}
       <div className="bg-white rounded-2xl shadow-2xl p-8 border border-purple-100">
         <header className="mb-6 border-b border-gray-100 pb-4">
           <h1 className="text-2xl font-black text-purple-950 tracking-wide">
@@ -142,7 +115,6 @@ export default function CriarArtigo() {
         </header>
 
         <form onSubmit={salvar} className="space-y-5">
-          {/* TÍTULO */}
           <div>
             <label className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider">
               Título do Artigo:
@@ -158,7 +130,6 @@ export default function CriarArtigo() {
             />
           </div>
 
-          {/* DESCRIÇÃO */}
           <div>
             <label className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider">
               Resumo Acadêmico / Apresentação:
@@ -172,7 +143,6 @@ export default function CriarArtigo() {
             />
           </div>
 
-          {/* SELETOR DE VISIBILIDADE OPERACIONAL */}
           <div className="bg-purple-50/50 border border-purple-100 p-4 rounded-xl flex items-center justify-between gap-4">
             <div>
               <p className="text-xs font-bold text-purple-950 uppercase tracking-wider flex items-center gap-1">
@@ -199,58 +169,102 @@ export default function CriarArtigo() {
             </select>
           </div>
 
-          {/* CATEGORIAS AGRUPADAS POR ASSUNTO */}
+          {/* SELETOR DE CATEGORIAS COM BUSCADOR */}
           <div className="bg-gray-50 p-5 rounded-xl border border-gray-200">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-200 pb-2 mb-4 gap-1">
-              <label className="text-xs font-black text-purple-950 uppercase tracking-wider">
-                Vincular Categorias Temáticas:
-              </label>
-              <span className="text-[10px] font-black uppercase text-purple-600 bg-purple-100 px-2 py-0.5 rounded-md w-fit">
-                MÁXIMO: {categoriasSelecionadas.length} / 5 Selecionadas
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-200 pb-3 mb-4 gap-1">
+              <div>
+                <label className="text-xs font-black text-purple-950 uppercase tracking-wider block">
+                  Vincular Categorias Temáticas:
+                </label>
+                <p className="text-[10px] text-gray-400 mt-0.5">
+                  Pesquise e marque os temas relacionados ao conteúdo.
+                </p>
+              </div>
+              <span className="text-[10px] font-black uppercase text-purple-600 bg-purple-100 px-2 py-0.5 rounded-md w-fit shrink-0">
+                {categoriasSelecionadas.length} / 5 selecionadas
               </span>
             </div>
 
-            <div className="space-y-4 max-h-60 overflow-y-auto pr-1">
-              {Object.keys(categoriesAgrupadas).map((assunto) => (
-                <div
-                  key={assunto}
-                  className="border-b border-gray-100 pb-3 last:border-0 last:pb-0"
+            {/* Barra de pesquisa */}
+            <div className="relative mb-3">
+              <input
+                type="text"
+                placeholder="Pesquisar categoria... (ex: Ansiedade, Luto)"
+                value={buscaCategoria}
+                onChange={(e) => setBuscaCategoria(e.target.value)}
+                disabled={salvando}
+                className="w-full pl-9 pr-9 py-2.5 bg-white border border-gray-300 rounded-xl text-xs font-semibold text-black focus:outline-purple-600 placeholder-gray-400"
+              />
+              <Search
+                size={14}
+                className="absolute left-3 top-3 text-purple-400"
+              />
+              {buscaCategoria && (
+                <button
+                  type="button"
+                  onClick={() => setBuscaCategoria("")}
+                  className="absolute right-3 top-2.5 text-gray-400 hover:text-red-500 cursor-pointer"
                 >
-                  <h4 className="text-[11px] font-black text-purple-700 uppercase tracking-wider mb-2 bg-purple-50 px-2 py-0.5 rounded w-fit">
-                    📁 {assunto}
-                  </h4>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-2">
-                    {categoriesAgrupadas[assunto].map((cat) => (
-                      <label
-                        key={cat.id}
-                        className={`flex items-center gap-2.5 p-2 rounded-lg border text-xs font-semibold cursor-pointer select-none transition ${
-                          categoriasSelecionadas.includes(cat.id)
-                            ? "bg-purple-100 border-purple-300 text-purple-950 font-bold"
-                            : "bg-white border-gray-200 text-gray-700 hover:bg-gray-100"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={categoriasSelecionadas.includes(cat.id)}
-                          onChange={() => handleCheckboxChange(cat.id)}
-                          disabled={salvando}
-                          className="rounded text-purple-700 focus:ring-purple-600"
-                        />
-                        <span>
-                          {cat.nome.includes("-")
-                            ? cat.nome.split("-")[1].trim()
-                            : cat.nome}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                  <X size={14} />
+                </button>
+              )}
             </div>
+
+            {/* Lista filtrada */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-52 overflow-y-auto pr-1">
+              {categoriasFiltradas.length === 0 ? (
+                <p className="col-span-full text-xs text-center text-gray-400 py-4">
+                  Nenhuma categoria encontrada com esse termo.
+                </p>
+              ) : (
+                categoriasFiltradas.map((cat) => (
+                  <label
+                    key={cat.id}
+                    className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-xs font-semibold cursor-pointer select-none transition ${
+                      categoriasSelecionadas.includes(cat.id)
+                        ? "bg-purple-100 border-purple-300 text-purple-950 font-black"
+                        : "bg-white border-gray-200 text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={categoriasSelecionadas.includes(cat.id)}
+                      onChange={() => handleCheckboxChange(cat.id)}
+                      disabled={salvando}
+                      className="rounded text-purple-700 focus:ring-purple-600"
+                    />
+                    <span className="truncate">{cat.nome}</span>
+                  </label>
+                ))
+              )}
+            </div>
+
+            {/* Tags das selecionadas */}
+            {categoriasSelecionadas.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-gray-200 flex flex-wrap gap-1.5">
+                {categoriasSelecionadas.map((id) => {
+                  const cat = categorias.find((c) => c.id === id);
+                  return cat ? (
+                    <span
+                      key={id}
+                      className="flex items-center gap-1 bg-purple-700 text-white text-[10px] font-black px-2.5 py-1 rounded-lg"
+                    >
+                      {cat.nome}
+                      <button
+                        type="button"
+                        onClick={() => handleCheckboxChange(id)}
+                        className="hover:text-red-300 cursor-pointer"
+                      >
+                        <X size={10} />
+                      </button>
+                    </span>
+                  ) : null;
+                })}
+              </div>
+            )}
           </div>
 
-          {/* ARQUIVO DIGITAL PDF */}
+          {/* ARQUIVO PDF */}
           <div>
             <label className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider">
               Anexar Documento Digital (.pdf):
@@ -260,32 +274,31 @@ export default function CriarArtigo() {
               <input
                 type="file"
                 accept="application/pdf"
-                onChange={(e) => setArquivoPdf(e.target.files[0])} // Captura de forma limpa o índice zero do arquivo físico
+                onChange={(e) => setArquivoPdf(e.target.files[0])}
                 className="w-full text-xs text-gray-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-purple-100 file:text-purple-700 hover:file:bg-purple-200 cursor-pointer"
-                requireddisabled={salvando}
+                required
+                disabled={salvando}
               />
-              {/* BOTÕES DE ENVIO */}
-              <button
-                type="button"
-                onClick={() => navigate("/dashboard/artigos")}
-              >
-                <div
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition"
-                  disabled={salvando}
-                >
-                  Cancelar
-                  {salvando ? "Fazendo Upload..." : "Publicar Artigo"}{" "}
-                </div>
-              </button>
             </div>
+          </div>
 
+          {/* BOTÕES DE AÇÃO */}
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+            <button
+              type="button"
+              onClick={() => navigate("/dashboard/artigos")}
+              className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition"
+              disabled={salvando}
+            >
+              Cancelar
+            </button>
             <button
               type="submit"
               disabled={salvando}
-              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition"
+              className="bg-[#ff7300] hover:bg-[#ff8c00] text-white font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider transition flex items-center gap-2 shadow-md shadow-orange-950/10 disabled:opacity-50 cursor-pointer"
             >
-              <Save size={16} />
-              {salvando ? "Fazendo Upload..." : "Publicar Artigo"}
+              <Save size={14} />
+              <span>{salvando ? "Fazendo Upload..." : "Publicar Artigo"}</span>
             </button>
           </div>
         </form>
