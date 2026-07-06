@@ -2,18 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\api\Auth\AuthController;
 
-use App\Http\Controllers\Api\UserApiController;
-use App\Http\Controllers\Api\AnotacaoApiController;
+use App\Http\Controllers\api\UserApiController;
+use App\Http\Controllers\api\AnotacaoApiController;
 
-use App\Http\Controllers\Api\VideoApiController;
-use App\Http\Controllers\Api\ArtigoApiController;
-use App\Http\Controllers\Api\SugestaoApiController;
-use App\Http\Controllers\Api\AutoajudaApiController;
+use App\Http\Controllers\api\VideoApiController;
+use App\Http\Controllers\api\ArtigoApiController;
+use App\Http\Controllers\api\SugestaoApiController;
+use App\Http\Controllers\api\AutoajudaApiController;
 
-use App\Http\Controllers\Api\CategoriaApiController;
-use App\Http\Controllers\Api\FavoritoApiController;
+use App\Http\Controllers\api\CategoriaApiController;
+use App\Http\Controllers\api\FavoritoApiController;
 
 /*
 | ROTAS PÚBLICAS
