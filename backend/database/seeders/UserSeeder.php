@@ -11,23 +11,27 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Psicólogo / Admin
-        User::create([
-            'nome'      => 'Erick',
-            'email'     => 'erick@gmail.com',
-            'senha'     => Hash::make('123456'),
-            'tipo'      => 'psicologo',
-            'is_admin'  => true,
-            'role'      => 'admin',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'erick@gmail.com'],
+            [
+                'nome'      => 'Erick',
+                'senha'     => Hash::make('123456'),
+                'tipo'      => 'psicologo',
+                'is_admin'  => true,
+                'role'      => 'admin',
+            ]
+        );
 
         // Usuário comum
-        User::create([
-            'nome'      => 'Luis',
-            'email'     => 'luis@gmail.com',
-            'senha'     => Hash::make('123456'),
-            'tipo'      => 'usuario',
-            'is_admin'  => false,
-            'role'      => 'user',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'luis@gmail.com'],
+            [
+                'nome'      => 'Luis',
+                'senha'     => Hash::make('123456'),
+                'tipo'      => 'usuario',
+                'is_admin'  => false,
+                'role'      => 'user',
+            ]
+        );
     }
 }

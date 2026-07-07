@@ -119,6 +119,6 @@ class CategoriaSeeder extends Seeder
             ['nome' => 'Esperança'],
         ];
 
-        DB::table('categorias')->insert($categorias);
+        DB::table('categorias')->insertOrIgnore($categorias);
     }
 }
