@@ -60,6 +60,22 @@ return [
             'report' => false,
         ],
 
+        'cloudinary' => [
+            'driver' => 'cloudinary',
+            'api_key' => env('CLOUDINARY_API_KEY'),
+            'api_secret' => env('CLOUDINARY_API_SECRET'),
+            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+            'secure' => env('CLOUDINARY_SECURE', true),
+            'resource_types' => [
+                // imagens: foto de perfil e capa de sugestão
+                'image' => ['png', 'jpg', 'jpeg', 'webp'],
+                // vídeos: vídeos do app e mídia de autoajuda
+                'video' => ['mp4', 'mov', 'avi', 'wmv', 'webm', 'mkv'],
+                // arquivos "crus": PDFs de artigos
+                'raw' => ['pdf'],
+            ],
+        ],
+
     ],
 
     /*

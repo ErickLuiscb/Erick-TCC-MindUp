@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class VideoResource extends JsonResource
@@ -17,7 +18,7 @@ class VideoResource extends JsonResource
             'descricao' => $this->descricao,
 
             'arquivo' => $this->arquivo
-                ? url('storage/' . $this->arquivo)
+                ? Storage::disk(config('filesystems.default'))->url($this->arquivo)
                 : null,
 
             'created_at' => $this->created_at,

@@ -104,7 +104,7 @@ class SugestaoApiController extends Controller
                     ->getClientOriginalExtension();
 
             $request->file('capa')
-                ->storeAs('sugestoes', $nome, 'public');
+                ->storeAs('sugestoes', $nome, config('filesystems.default'));
 
             $data['capa'] = 'sugestoes/' . $nome;
         }
@@ -150,9 +150,9 @@ class SugestaoApiController extends Controller
 
             if (
                 $sugestao->capa &&
-                Storage::disk('public')->exists($sugestao->capa)
+                Storage::disk(config('filesystems.default'))->exists($sugestao->capa)
             ) {
-                Storage::disk('public')->delete($sugestao->capa);
+                Storage::disk(config('filesystems.default'))->delete($sugestao->capa);
             }
 
             $nome = uniqid('sugestao_', true) . '.' .
@@ -160,7 +160,7 @@ class SugestaoApiController extends Controller
                     ->getClientOriginalExtension();
 
             $request->file('capa')
-                ->storeAs('sugestoes', $nome, 'public');
+                ->storeAs('sugestoes', $nome, config('filesystems.default'));
 
             $data['capa'] = 'sugestoes/' . $nome;
         }
@@ -202,9 +202,9 @@ class SugestaoApiController extends Controller
 
         if (
             $sugestao->capa &&
-            Storage::disk('public')->exists($sugestao->capa)
+            Storage::disk(config('filesystems.default'))->exists($sugestao->capa)
         ) {
-            Storage::disk('public')->delete($sugestao->capa);
+            Storage::disk(config('filesystems.default'))->delete($sugestao->capa);
         }
 
         $sugestao->delete();

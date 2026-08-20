@@ -92,7 +92,7 @@ class VideoApiController extends Controller
                     ->getClientOriginalExtension();
 
             $request->file('arquivo')
-                ->storeAs('videos', $nome, 'public');
+                ->storeAs('videos', $nome, config('filesystems.default'));
 
             $data['arquivo'] = 'videos/' . $nome;
         }
@@ -138,9 +138,9 @@ class VideoApiController extends Controller
 
             if (
                 $video->arquivo &&
-                Storage::disk('public')->exists($video->arquivo)
+                Storage::disk(config('filesystems.default'))->exists($video->arquivo)
             ) {
-                Storage::disk('public')->delete($video->arquivo);
+                Storage::disk(config('filesystems.default'))->delete($video->arquivo);
             }
 
             $nome = uniqid('video_', true) . '.' .
@@ -148,7 +148,7 @@ class VideoApiController extends Controller
                     ->getClientOriginalExtension();
 
             $request->file('arquivo')
-                ->storeAs('videos', $nome, 'public');
+                ->storeAs('videos', $nome, config('filesystems.default'));
 
             $data['arquivo'] = 'videos/' . $nome;
         }
@@ -190,9 +190,9 @@ class VideoApiController extends Controller
 
         if (
             $video->arquivo &&
-            Storage::disk('public')->exists($video->arquivo)
+            Storage::disk(config('filesystems.default'))->exists($video->arquivo)
         ) {
-            Storage::disk('public')->delete($video->arquivo);
+            Storage::disk(config('filesystems.default'))->delete($video->arquivo);
         }
 
         $video->delete();

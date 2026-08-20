@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AutoajudaResource extends JsonResource
@@ -19,7 +20,7 @@ class AutoajudaResource extends JsonResource
             'tipo_midia' => $this->tipo_midia,
 
             'midia' => $this->midia
-                ? url('storage/' . $this->midia)
+                ? Storage::disk(config('filesystems.default'))->url($this->midia)
                 : null,
 
             'created_at' => $this->created_at,

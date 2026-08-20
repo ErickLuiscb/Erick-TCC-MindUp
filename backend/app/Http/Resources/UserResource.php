@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -17,7 +18,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
 
             'imagem_perfil' => $this->imagem_perfil
-                ? url('storage/' . $this->imagem_perfil)
+                ? Storage::disk(config('filesystems.default'))->url($this->imagem_perfil)
                 : null,
 
             'crp' => $this->crp,

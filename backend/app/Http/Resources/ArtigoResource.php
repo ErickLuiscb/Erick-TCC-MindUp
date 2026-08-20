@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ArtigoResource extends JsonResource
@@ -17,7 +18,7 @@ class ArtigoResource extends JsonResource
             'descricao' => $this->descricao,
 
             'arquivo_pdf' => $this->arquivo_pdf
-                ? url('storage/' . $this->arquivo_pdf)
+                ? Storage::disk(config('filesystems.default'))->url($this->arquivo_pdf)
                 : null,
 
             'created_at' => $this->created_at,

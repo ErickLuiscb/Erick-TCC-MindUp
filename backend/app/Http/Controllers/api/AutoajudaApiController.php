@@ -98,7 +98,7 @@ class AutoajudaApiController extends Controller
                     ->getClientOriginalExtension();
 
             $request->file('midia')
-                ->storeAs('autoajuda', $nome, 'public');
+                ->storeAs('autoajuda', $nome, config('filesystems.default'));
 
             $data['midia'] = 'autoajuda/' . $nome;
         }
@@ -144,9 +144,9 @@ class AutoajudaApiController extends Controller
 
             if (
                 $autoajuda->midia &&
-                Storage::disk('public')->exists($autoajuda->midia)
+                Storage::disk(config('filesystems.default'))->exists($autoajuda->midia)
             ) {
-                Storage::disk('public')->delete($autoajuda->midia);
+                Storage::disk(config('filesystems.default'))->delete($autoajuda->midia);
             }
 
             $nome = uniqid('autoajuda_', true) . '.' .
@@ -154,7 +154,7 @@ class AutoajudaApiController extends Controller
                     ->getClientOriginalExtension();
 
             $request->file('midia')
-                ->storeAs('autoajuda', $nome, 'public');
+                ->storeAs('autoajuda', $nome, config('filesystems.default'));
 
             $data['midia'] = 'autoajuda/' . $nome;
         }
@@ -196,9 +196,9 @@ class AutoajudaApiController extends Controller
 
         if (
             $autoajuda->midia &&
-            Storage::disk('public')->exists($autoajuda->midia)
+            Storage::disk(config('filesystems.default'))->exists($autoajuda->midia)
         ) {
-            Storage::disk('public')->delete($autoajuda->midia);
+            Storage::disk(config('filesystems.default'))->delete($autoajuda->midia);
         }
 
         $autoajuda->delete();

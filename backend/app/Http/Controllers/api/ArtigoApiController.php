@@ -91,7 +91,7 @@ class ArtigoApiController extends Controller
                     ->getClientOriginalExtension();
 
             $request->file('arquivo_pdf')
-                ->storeAs('artigos', $nome, 'public');
+                ->storeAs('artigos', $nome, config('filesystems.default'));
 
             $data['arquivo_pdf'] = 'artigos/' . $nome;
         }
@@ -137,9 +137,9 @@ class ArtigoApiController extends Controller
 
             if (
                 $artigo->arquivo_pdf &&
-                Storage::disk('public')->exists($artigo->arquivo_pdf)
+                Storage::disk(config('filesystems.default'))->exists($artigo->arquivo_pdf)
             ) {
-                Storage::disk('public')->delete($artigo->arquivo_pdf);
+                Storage::disk(config('filesystems.default'))->delete($artigo->arquivo_pdf);
             }
 
             $nome = uniqid('artigo_', true) . '.' .
@@ -147,7 +147,7 @@ class ArtigoApiController extends Controller
                     ->getClientOriginalExtension();
 
             $request->file('arquivo_pdf')
-                ->storeAs('artigos', $nome, 'public');
+                ->storeAs('artigos', $nome, config('filesystems.default'));
 
             $data['arquivo_pdf'] = 'artigos/' . $nome;
         }
@@ -189,9 +189,9 @@ class ArtigoApiController extends Controller
 
         if (
             $artigo->arquivo_pdf &&
-            Storage::disk('public')->exists($artigo->arquivo_pdf)
+            Storage::disk(config('filesystems.default'))->exists($artigo->arquivo_pdf)
         ) {
-            Storage::disk('public')->delete($artigo->arquivo_pdf);
+            Storage::disk(config('filesystems.default'))->delete($artigo->arquivo_pdf);
         }
 
         $artigo->delete();

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SugestaoResource extends JsonResource
@@ -21,7 +22,7 @@ class SugestaoResource extends JsonResource
             'link_externo' => $this->link_externo,
 
             'capa' => $this->capa
-                ? url('storage/' . $this->capa)
+                ? Storage::disk(config('filesystems.default'))->url($this->capa)
                 : null,
 
             'created_at' => $this->created_at,

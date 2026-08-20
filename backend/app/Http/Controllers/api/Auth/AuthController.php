@@ -111,7 +111,7 @@ class AuthController extends Controller
     */
     if ($request->hasFile('imagem_perfil')) {
         // Salva o arquivo na pasta 'perfil' dentro do disco public de forma limpa
-        $caminho = $request->file('imagem_perfil')->store('perfil', 'public');
+        $caminho = $request->file('imagem_perfil')->store('perfil', config('filesystems.default'));
 
         // Injeta o caminho correto diretamente no array que vai para o banco
         $data['imagem_perfil'] = $caminho;

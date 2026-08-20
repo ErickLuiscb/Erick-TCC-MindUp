@@ -99,9 +99,9 @@ class UserApiController extends Controller
 
             if (
                 $user->imagem_perfil &&
-                Storage::disk('public')->exists($user->imagem_perfil)
+                Storage::disk(config('filesystems.default'))->exists($user->imagem_perfil)
             ) {
-                Storage::disk('public')->delete($user->imagem_perfil);
+                Storage::disk(config('filesystems.default'))->delete($user->imagem_perfil);
             }
 
             $data['imagem_perfil'] = $this->salvarImagem(
@@ -132,9 +132,9 @@ class UserApiController extends Controller
     }
     if (
         $user->imagem_perfil &&
-        Storage::disk('public')->exists($user->imagem_perfil)
+        Storage::disk(config('filesystems.default'))->exists($user->imagem_perfil)
     ) {
-        Storage::disk('public')->delete($user->imagem_perfil);
+        Storage::disk(config('filesystems.default'))->delete($user->imagem_perfil);
     }
 
     //VERIFICA SE DEVE MANTER CONTEÚDOS
@@ -151,9 +151,9 @@ class UserApiController extends Controller
 
             if (
                 $video->arquivo &&
-                Storage::disk('public')->exists($video->arquivo)
+                Storage::disk(config('filesystems.default'))->exists($video->arquivo)
             ) {
-                Storage::disk('public')->delete($video->arquivo);
+                Storage::disk(config('filesystems.default'))->delete($video->arquivo);
             }
 
             $video->delete();
@@ -162,9 +162,9 @@ class UserApiController extends Controller
 
             if (
                 $artigo->arquivo_pdf &&
-                Storage::disk('public')->exists($artigo->arquivo_pdf)
+                Storage::disk(config('filesystems.default'))->exists($artigo->arquivo_pdf)
             ) {
-                Storage::disk('public')->delete($artigo->arquivo_pdf);
+                Storage::disk(config('filesystems.default'))->delete($artigo->arquivo_pdf);
             }
 
             $artigo->delete();
@@ -174,9 +174,9 @@ class UserApiController extends Controller
 
             if (
                 $sugestao->capa &&
-                Storage::disk('public')->exists($sugestao->capa)
+                Storage::disk(config('filesystems.default'))->exists($sugestao->capa)
             ) {
-                Storage::disk('public')->delete($sugestao->capa);
+                Storage::disk(config('filesystems.default'))->delete($sugestao->capa);
             }
 
             $sugestao->delete();
@@ -186,9 +186,9 @@ class UserApiController extends Controller
 
             if (
                 $autoajuda->midia &&
-                Storage::disk('public')->exists($autoajuda->midia)
+                Storage::disk(config('filesystems.default'))->exists($autoajuda->midia)
             ) {
-                Storage::disk('public')->delete($autoajuda->midia);
+                Storage::disk(config('filesystems.default'))->delete($autoajuda->midia);
             }
 
             $autoajuda->delete();
@@ -211,7 +211,7 @@ class UserApiController extends Controller
         $nome = uniqid('perfil_', true) . '.' .
             $file->getClientOriginalExtension();
 
-        Storage::disk('public')->putFileAs(
+        Storage::disk(config('filesystems.default'))->putFileAs(
             'perfil',
             $file,
             $nome
