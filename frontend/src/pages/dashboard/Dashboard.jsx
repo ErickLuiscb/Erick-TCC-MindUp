@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
-import { Video, BookOpen, Lightbulb, HeartPulse } from "lucide-react";
+import { Video, BookOpen, Lightbulb, HeartPulse, Tags } from "lucide-react";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -92,22 +92,26 @@ export default function Dashboard() {
             </p>
           </button>
 
-          {/* SUGESTÕES CULTURAIS (Módulo adiado conforme o plano) */}
-          <div className="bg-gray-800/40 p-6 rounded-2xl border border-white/5 opacity-40 select-none flex flex-col justify-between cursor-not-allowed">
-            <div>
-              <Lightbulb size={36} className="text-gray-400 mb-4" />
-              <h2 className="text-xl font-black text-gray-300 tracking-wide mb-2">
-                Sugestões
-              </h2>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                Módulo de indicações de mídias, livros e filmes para
-                enriquecimento terapêutico.
-              </p>
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 mt-4 bg-gray-900/50 px-2 py-0.5 rounded-md w-fit">
-              Em breve
-            </span>
-          </div>
+          {/* GERENCIAR SUGESTÕES (ATIVADO) */}
+          <button
+            onClick={() => navigate("/dashboard/sugestoes")}
+            className="group bg-linear-to-br from-purple-700 to-purple-900
+                       p-6 rounded-2xl shadow-xl text-left border border-purple-500/20
+                       hover:scale-105 hover:shadow-purple-500/30 cursor-pointer
+                       transition-all duration-300"
+          >
+            <Lightbulb
+              size={36}
+              className="text-[#ffb300] mb-4 group-hover:scale-110 transition-transform"
+            />
+            <h2 className="text-xl font-black text-white tracking-wide mb-2">
+              Sugestões
+            </h2>
+            <p className="text-xs text-teal-100 leading-relaxed opacity-90">
+              Indique livros, filmes, séries, músicas e podcasts para
+              enriquecimento terapêutico.
+            </p>
+          </button>
 
           {/* GUIDES DE AUTOAJUDA (Módulo adiado conforme o plano) */}
           <div className="bg-gray-800/40 p-6 rounded-2xl border border-white/5 opacity-40 select-none flex flex-col justify-between cursor-not-allowed">
@@ -126,6 +130,28 @@ export default function Dashboard() {
             </span>
           </div>
         </div>
+
+        {/* AÇÃO SECUNDÁRIA: CONSULTA DE CATEGORIAS (não é um CRUD, é referência) */}
+        <button
+          onClick={() => navigate("/dashboard/categorias")}
+          className="group mt-6 w-full bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl px-6 py-4 flex items-center justify-between transition-all cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            <Tags size={22} className="text-purple-300" />
+            <div className="text-left">
+              <h3 className="text-sm font-black text-white tracking-wide">
+                Categorias do Sistema
+              </h3>
+              <p className="text-[11px] text-gray-400">
+                Consulte as categorias disponíveis para classificar seus
+                conteúdos.
+              </p>
+            </div>
+          </div>
+          <span className="text-[10px] font-black uppercase tracking-widest text-purple-300 group-hover:text-white transition">
+            Ver todas →
+          </span>
+        </button>
       </div>
     </div>
   );

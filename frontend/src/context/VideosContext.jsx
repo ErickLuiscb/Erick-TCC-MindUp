@@ -27,14 +27,21 @@ export function VideosProvider({ children }) {
   };
 
   // ==========================================
-  // CARREGAR CATEGORIAS DO SISTEMA
+  // CARREGAR CATEGORIAS DO SISTEMA (com retry automático)
   // ==========================================
-  const carregarCategorias = async () => {
+  const carregarCategorias = async (tentativas = 2) => {
     try {
       const resp = await api.get("/categorias");
-      setCategorias(resp.data.data ?? resp.data ?? []);
+      const lista = resp.data.data ?? resp.data ?? [];
+      setCategorias(lista);
     } catch (err) {
       console.error("Erro ao carregar categorias:", err);
+
+      // Se ainda restam tentativas, tenta de novo depois de um pequeno delay
+      // (cobre casos de backend "acordando" no Render logo após o login)
+      if (tentativas > 0) {
+        setTimeout(() => carregarCategorias(tentativas - 1), 2000);
+      }
     }
   };
 

@@ -100,6 +100,9 @@ class CategoriaSeeder extends Seeder
             ['nome' => 'Músicas'],
             ['nome' => 'Exercícios Práticos'],
             ['nome' => 'Autoajuda'],
+            ['nome' => 'Mente e Corpo'],
+            ['nome' => 'Psicologia'],
+            ['nome' => 'Neurociência'],
 
             // TEMAS MODERNOS
             ['nome' => 'Redes Sociais'],
