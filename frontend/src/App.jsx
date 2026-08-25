@@ -6,6 +6,7 @@ import { AnotacoesProvider } from "./context/AnotacoesContext";
 import { VideosProvider } from "./context/VideosContext";
 import { ArtigosProvider } from "./context/ArtigosContext";
 import { SugestoesProvider } from "./context/SugestoesContext";
+import { BootstrapProvider } from "./context/BootstrapContext";
 
 import Layout from "./components/Layout";
 import RotaProtegida from "./components/RotaProtegida";
@@ -66,138 +67,151 @@ export default function App() {
       <VideosProvider>
         <ArtigosProvider>
           <SugestoesProvider>
-            <AnotacoesProvider>
-              <BrowserRouter>
-                <Routes>
-                  {/* Rota inicial */}
-                  <Route path="/" element={<Navigate to="/login" replace />} />
+            <BootstrapProvider>
+              <AnotacoesProvider>
+                <BrowserRouter>
+                  <Routes>
+                    {/* Rota inicial */}
+                    <Route
+                      path="/"
+                      element={<Navigate to="/login" replace />}
+                    />
 
-                  {/* Públicas */}
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/cadastro" element={<Cadastro />} />
+                    {/* Públicas */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/cadastro" element={<Cadastro />} />
 
-                  {/* =========================
+                    {/* =========================
                   ROTAS PROTEGIDAS (USUÁRIO)
               ========================= */}
-                  <Route element={<RotaProtegida />}>
-                    <Route element={<Layout />}>
-                      <Route path="/inicial" element={<Inicial />} />
+                    <Route element={<RotaProtegida />}>
+                      <Route element={<Layout />}>
+                        <Route path="/inicial" element={<Inicial />} />
 
-                      {/* Perfil */}
-                      <Route path="/perfil" element={<Perfil />} />
+                        {/* Perfil */}
+                        <Route path="/perfil" element={<Perfil />} />
 
-                      {/* Vídeos */}
-                      <Route path="/videos" element={<Videos />} />
-                      <Route path="/videos/:id" element={<Ver_Videos />} />
+                        {/* Vídeos */}
+                        <Route path="/videos" element={<Videos />} />
+                        <Route path="/videos/:id" element={<Ver_Videos />} />
 
-                      {/* Artigos */}
-                      <Route path="/artigos" element={<Artigos />} />
-                      <Route path="/artigos/:id" element={<Ver_Artigo />} />
+                        {/* Artigos */}
+                        <Route path="/artigos" element={<Artigos />} />
+                        <Route path="/artigos/:id" element={<Ver_Artigo />} />
 
-                      {/* Anotações */}
-                      <Route path="/anotacoes" element={<Anotacoes />} />
-                      <Route
-                        path="/anotacoes/criar"
-                        element={<CriarAnotacao />}
-                      />
-                      <Route
-                        path="/anotacoes/editar/:id"
-                        element={<Editar_Anotacao />}
-                      />
-                      <Route path="/anotacoes/:id" element={<Ver_Anotacao />} />
+                        {/* Anotações */}
+                        <Route path="/anotacoes" element={<Anotacoes />} />
+                        <Route
+                          path="/anotacoes/criar"
+                          element={<CriarAnotacao />}
+                        />
+                        <Route
+                          path="/anotacoes/editar/:id"
+                          element={<Editar_Anotacao />}
+                        />
+                        <Route
+                          path="/anotacoes/:id"
+                          element={<Ver_Anotacao />}
+                        />
 
-                      {/* Sugestões */}
-                      <Route path="/sugestoes" element={<Sugestoes />} />
-                      <Route path="/sugestoes/:id" element={<Ver_Sugestao />} />
+                        {/* Sugestões */}
+                        <Route path="/sugestoes" element={<Sugestoes />} />
+                        <Route
+                          path="/sugestoes/:id"
+                          element={<Ver_Sugestao />}
+                        />
 
-                      {/* Módulos adiados (Em construção) */}
-                      <Route
-                        path="/autoajuda"
-                        element={<div>Guias de Autoajuda (Em construção)</div>}
-                      />
-                      <Route
-                        path="/mapa"
-                        element={
-                          <div>
-                            Mapa de Consultórios e Farmácias (Em construção)
-                          </div>
-                        }
-                      />
+                        {/* Módulos adiados (Em construção) */}
+                        <Route
+                          path="/autoajuda"
+                          element={
+                            <div>Guias de Autoajuda (Em construção)</div>
+                          }
+                        />
+                        <Route
+                          path="/mapa"
+                          element={
+                            <div>
+                              Mapa de Consultórios e Farmácias (Em construção)
+                            </div>
+                          }
+                        />
+                      </Route>
                     </Route>
-                  </Route>
 
-                  {/* =========================
+                    {/* =========================
                   ROTAS EXCLUSIVAS PSICÓLOGO / ADMIN
               ========================= */}
-                  <Route element={<RotaPsicologo />}>
-                    <Route element={<Layout />}>
-                      <Route path="/dashboard" element={<Dashboard />} />
+                    <Route element={<RotaPsicologo />}>
+                      <Route element={<Layout />}>
+                        <Route path="/dashboard" element={<Dashboard />} />
 
-                      {/* Dashboard - Gerenciamento de Vídeos */}
-                      <Route
-                        path="/dashboard/videos"
-                        element={<MeusVideos />}
-                      />
-                      <Route
-                        path="/dashboard/videos/criar"
-                        element={<CriarVideo />}
-                      />
-                      <Route
-                        path="/dashboard/videos/editar/:id"
-                        element={<EditarVideo />}
-                      />
+                        {/* Dashboard - Gerenciamento de Vídeos */}
+                        <Route
+                          path="/dashboard/videos"
+                          element={<MeusVideos />}
+                        />
+                        <Route
+                          path="/dashboard/videos/criar"
+                          element={<CriarVideo />}
+                        />
+                        <Route
+                          path="/dashboard/videos/editar/:id"
+                          element={<EditarVideo />}
+                        />
 
-                      {/* Dashboard - Gerenciamento de Artigos */}
-                      <Route
-                        path="/dashboard/artigos"
-                        element={<MeusArtigos />}
-                      />
-                      <Route
-                        path="/dashboard/artigos/criar"
-                        element={<CriarArtigo />}
-                      />
-                      <Route
-                        path="/dashboard/artigos/editar/:id"
-                        element={<EditarArtigo />}
-                      />
+                        {/* Dashboard - Gerenciamento de Artigos */}
+                        <Route
+                          path="/dashboard/artigos"
+                          element={<MeusArtigos />}
+                        />
+                        <Route
+                          path="/dashboard/artigos/criar"
+                          element={<CriarArtigo />}
+                        />
+                        <Route
+                          path="/dashboard/artigos/editar/:id"
+                          element={<EditarArtigo />}
+                        />
 
-                      {/* Dashboard - Categorias do sistema (somente visualização) */}
-                      <Route
-                        path="/dashboard/categorias"
-                        element={<Categorias />}
-                      />
+                        {/* Dashboard - Categorias do sistema (somente visualização) */}
+                        <Route
+                          path="/dashboard/categorias"
+                          element={<Categorias />}
+                        />
 
-                      {/* Dashboard - Gerenciamento de Sugestões */}
-                      <Route
-                        path="/dashboard/sugestoes"
-                        element={<MinhasSugestoes />}
-                      />
-                      <Route
-                        path="/dashboard/sugestoes/criar"
-                        element={<CriarSugestao />}
-                      />
-                      <Route
-                        path="/dashboard/sugestoes/editar/:id"
-                        element={<EditarSugestao />}
-                      />
+                        {/* Dashboard - Gerenciamento de Sugestões */}
+                        <Route
+                          path="/dashboard/sugestoes"
+                          element={<MinhasSugestoes />}
+                        />
+                        <Route
+                          path="/dashboard/sugestoes/criar"
+                          element={<CriarSugestao />}
+                        />
+                        <Route
+                          path="/dashboard/sugestoes/editar/:id"
+                          element={<EditarSugestao />}
+                        />
 
-                      {/* Dashboard - Gerenciamento de Autoajuda (Comentado/Adiado conforme o plano) */}
-                      {/* 
+                        {/* Dashboard - Gerenciamento de Autoajuda (Comentado/Adiado conforme o plano) */}
+                        {/* 
                   <Route path="/dashboard/autoajuda" element={<MeusConteudosAutoajuda />} />
                   <Route path="/dashboard/autoajuda/criar" element={<CriarAutoajuda />} />
                   <Route path="/dashboard/autoajuda/editar/:id" element={<EditarAutoajuda />} />
                   */}
+                      </Route>
                     </Route>
-                  </Route>
 
-                  {/* Fallback */}
-                  <Route
-                    path="*"
-                    element={<Navigate to="/inicial" replace />}
-                  />
-                </Routes>
-              </BrowserRouter>
-            </AnotacoesProvider>
+                    {/* Fallback */}
+                    <Route
+                      path="*"
+                      element={<Navigate to="/inicial" replace />}
+                    />
+                  </Routes>
+                </BrowserRouter>
+              </AnotacoesProvider>
+            </BootstrapProvider>
           </SugestoesProvider>
         </ArtigosProvider>
       </VideosProvider>

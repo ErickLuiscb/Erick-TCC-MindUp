@@ -112,13 +112,12 @@ export function VideosProvider({ children }) {
   const buscarVideoPorId = (id) => videos.find((v) => v.id == id);
 
   // ==========================================
-  // TRIGGER DE DADOS AO ENTRAR NO APP
+  // LIMPEZA AO DESLOGAR
+  // (o carregamento inicial agora é feito pelo BootstrapContext,
+  // que preenche este context via setVideos/setCategorias)
   // ==========================================
   useEffect(() => {
-    if (!carregandoAuth && autenticado) {
-      carregarVideos();
-      carregarCategorias();
-    } else if (!autenticado) {
+    if (!carregandoAuth && !autenticado) {
       setVideos([]);
       setCategorias([]);
     }
@@ -130,6 +129,9 @@ export function VideosProvider({ children }) {
         videos,
         categorias,
         carregando,
+        setVideos,
+        setCategorias,
+        setCarregando,
         carregarVideos,
         carregarCategorias,
         buscarVideoPorId,

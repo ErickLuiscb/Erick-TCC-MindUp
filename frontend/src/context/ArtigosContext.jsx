@@ -77,12 +77,12 @@ export function ArtigosProvider({ children }) {
   const buscarArtigoPorId = (id) => artigos.find((a) => a.id == id);
 
   // ==========================================
-  // TRIGGER AUTOMÁTICO DE SINCRO AO LOGAR
+  // LIMPEZA AO DESLOGAR
+  // (o carregamento inicial agora é feito pelo BootstrapContext,
+  // que preenche este context via setArtigos)
   // ==========================================
   useEffect(() => {
-    if (!carregandoAuth && autenticado) {
-      carregarArtigos();
-    } else if (!autenticado) {
+    if (!carregandoAuth && !autenticado) {
       setArtigos([]);
     }
   }, [autenticado, carregandoAuth]);
@@ -92,6 +92,8 @@ export function ArtigosProvider({ children }) {
       value={{
         artigos,
         carregando,
+        setArtigos,
+        setCarregando,
         carregarArtigos,
         buscarArtigoPorId,
         alternarFavoritoArtigo,

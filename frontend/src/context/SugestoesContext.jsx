@@ -76,12 +76,12 @@ export function SugestoesProvider({ children }) {
   const buscarSugestaoPorId = (id) => sugestoes.find((s) => s.id == id);
 
   // ==========================================
-  // TRIGGER AUTOMÁTICO DE SINCRO AO LOGAR
+  // LIMPEZA AO DESLOGAR
+  // (o carregamento inicial agora é feito pelo BootstrapContext,
+  // que preenche este context via setSugestoes)
   // ==========================================
   useEffect(() => {
-    if (!carregandoAuth && autenticado) {
-      carregarSugestoes();
-    } else if (!autenticado) {
+    if (!carregandoAuth && !autenticado) {
       setSugestoes([]);
     }
   }, [autenticado, carregandoAuth]);
@@ -91,6 +91,8 @@ export function SugestoesProvider({ children }) {
       value={{
         sugestoes,
         carregando,
+        setSugestoes,
+        setCarregando,
         carregarSugestoes,
         buscarSugestaoPorId,
         alternarFavoritoSugestao,

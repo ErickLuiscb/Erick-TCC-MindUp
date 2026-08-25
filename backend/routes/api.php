@@ -14,6 +14,7 @@ use App\Http\Controllers\api\AutoajudaApiController;
 
 use App\Http\Controllers\api\CategoriaApiController;
 use App\Http\Controllers\api\FavoritoApiController;
+use App\Http\Controllers\api\BootstrapApiController;
 
 /*
 | ROTAS PÚBLICAS
@@ -30,6 +31,11 @@ Route::middleware('auth:sanctum')->group(function () {
     | AUTH
     */
     Route::get('/me', [AuthController::class, 'me']);
+
+    /*
+    | BOOTSTRAP (carregamento único de todos os dados iniciais)
+    */
+    Route::get('/bootstrap', [BootstrapApiController::class, 'index']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/logout/all', [AuthController::class, 'logoutAll']);
