@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx - VERSÃO ATUALIZADA E ALINHADA COM O BACKEND
 import api from "../service/api";
 import { createContext, useContext, useState, useEffect } from "react";
 
@@ -7,7 +6,7 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   const [token, setToken] = useState(null);
-  const [abilities, setAbilities] = useState([]); // Nova linha: Armazena as permissões vindas do token do Sanctum
+  const [abilities, setAbilities] = useState([]); //Armazena as permissões vindas do token do Sanctum
   const [autenticado, setAutenticado] = useState(false);
   const [carregando, setCarregando] = useState(true);
 
@@ -130,6 +129,15 @@ export function AuthProvider({ children }) {
 
       return { sucesso: true };
     } catch (err) {
+      if (err.foiTimeout) {
+        return {
+          sucesso: false,
+          foiTimeout: true,
+          mensagem:
+            "O servidor demorou mais que o esperado para responder. Seu cadastro pode ter sido criado mesmo assim — tente fazer login antes de tentar cadastrar de novo.",
+        };
+      }
+
       return {
         sucesso: false,
         mensagem:

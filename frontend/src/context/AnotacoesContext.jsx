@@ -38,6 +38,16 @@ export function AnotacoesProvider({ children }) {
       return { sucesso: true };
     } catch (error) {
       console.error("Erro ao criar anotação:", error);
+
+      if (error.foiTimeout) {
+        return {
+          sucesso: false,
+          foiTimeout: true,
+          mensagem:
+            "O servidor demorou mais que o esperado. Sua anotação pode ter sido salva mesmo assim — confira na lista antes de tentar de novo.",
+        };
+      }
+
       return {
         sucesso: false,
         mensagem: error.response?.data?.message || "Erro ao salvar anotação.",
@@ -52,8 +62,6 @@ export function AnotacoesProvider({ children }) {
     try {
       const resp = await api.put(`/anotacoes/${id}`, dados);
       const anotacaoAtualizada = resp.data.data || resp.data;
-
-      // Corrige o bug de mapeamento injetando o objeto extraído do Resource do Laravel
       setAnotacoes((prev) =>
         prev.map((a) => (a.id === id ? anotacaoAtualizada : a)),
       );

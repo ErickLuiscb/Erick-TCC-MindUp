@@ -4,7 +4,7 @@ import { useAnotacoes } from "../../context/AnotacoesContext";
 import { ArrowLeft, Save } from "lucide-react";
 
 export default function CriarAnotacao() {
-  const { criarAnotacao } = useAnotacoes();
+  const { criarAnotacao, carregarAnotacoes } = useAnotacoes();
   const navigate = useNavigate();
 
   const [titulo, setTitulo] = useState("");
@@ -28,6 +28,12 @@ export default function CriarAnotacao() {
 
     if (resp?.sucesso) {
       navigate("/anotacoes");
+    } else if (resp?.foiTimeout) {
+      // O servidor pode ter processado mesmo sem a resposta chegar a tempo.
+      // Recarrega a lista de verdade em vez de simplesmente acusar erro.
+      await carregarAnotacoes();
+      setErro("⏱️ " + resp.mensagem);
+      setSalvando(false);
     } else {
       setErro(
         "❌ " +
