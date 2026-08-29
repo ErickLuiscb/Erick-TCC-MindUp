@@ -2,8 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 20000, // 20 segundos (era 10s — e por isso era curto demais e causava problemas
-  // de responsividade e usabilidade no Render)
+  timeout: 20000, // 20 segundos (era 10s — curto demais para o plano gratuito do Render)
   headers: {
     Accept: "application/json",
   },
@@ -26,7 +25,7 @@ api.interceptors.request.use(
       config.headers["Content-Type"] === "multipart/form-data";
 
     if (ehUpload) {
-      config.timeout = 60000; // 60 segundos para uploads
+      config.timeout = 120000; // 2 minutos para uploads (vídeos podem ser grandes)
     }
 
     return config;

@@ -74,8 +74,8 @@ export default function Dashboard() {
           {/* GERENCIAR ARTIGOS (ATIVADO - CONFORME APP.JSX) */}
           <button
             onClick={() => navigate("/dashboard/artigos")}
-            className="group bg-linear-to-br from-purple-700 to-purple-900
-                       p-6 rounded-2xl shadow-xl text-left border border-purple-500/20
+            className="group bg-linear-to-br from-orange-700 to-orange-900
+                       p-6 rounded-2xl shadow-xl text-left border border-orange-500/20
                        hover:scale-105 hover:shadow-purple-500/30 cursor-pointer
                        transition-all duration-300"
           >
@@ -95,9 +95,9 @@ export default function Dashboard() {
           {/* GERENCIAR SUGESTÕES (ATIVADO) */}
           <button
             onClick={() => navigate("/dashboard/sugestoes")}
-            className="group bg-linear-to-br from-purple-700 to-purple-900
-                       p-6 rounded-2xl shadow-xl text-left border border-purple-500/20
-                       hover:scale-105 hover:shadow-purple-500/30 cursor-pointer
+            className="group bg-linear-to-br from-teal-700 to-teal-900
+                       p-6 rounded-2xl shadow-xl text-left border border-teal-500/20
+                       hover:scale-105 hover:shadow-teal-500/30 cursor-pointer
                        transition-all duration-300"
           >
             <Lightbulb
@@ -113,22 +113,26 @@ export default function Dashboard() {
             </p>
           </button>
 
-          {/* GUIDES DE AUTOAJUDA (Módulo adiado conforme o plano) */}
-          <div className="bg-gray-800/40 p-6 rounded-2xl border border-white/5 opacity-40 select-none flex flex-col justify-between cursor-not-allowed">
-            <div>
-              <HeartPulse size={36} className="text-gray-400 mb-4" />
-              <h2 className="text-xl font-black text-gray-300 tracking-wide mb-2">
-                Autoajuda
-              </h2>
-              <p className="text-xs text-gray-400 leading-relaxed">
-                Módulo para criação de guias práticos de exercícios de
-                respiração e meditação.
-              </p>
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 mt-4 bg-gray-900/50 px-2 py-0.5 rounded-md w-fit">
-              Em breve
-            </span>
-          </div>
+          {/* GERENCIAR AUTOAJUDA (ATIVADO) */}
+          <button
+            onClick={() => navigate("/dashboard/autoajuda")}
+            className="group bg-linear-to-br from-sky-700 to-sky-900
+                       p-6 rounded-2xl shadow-xl text-left border border-sky-500/20
+                       hover:scale-105 hover:shadow-sky-500/30 cursor-pointer
+                       transition-all duration-300"
+          >
+            <HeartPulse
+              size={36}
+              className="text-[#ffb300] mb-4 group-hover:scale-110 transition-transform"
+            />
+            <h2 className="text-xl font-black text-white tracking-wide mb-2">
+              Autoajuda
+            </h2>
+            <p className="text-xs text-sky-100 leading-relaxed opacity-90">
+              Publique imagens e vídeos curtos de apoio rápido para momentos
+              difíceis e para vida diária.
+            </p>
+          </button>
         </div>
 
         {/* AÇÃO SECUNDÁRIA: CONSULTA DE CATEGORIAS (não é um CRUD, é referência) */}

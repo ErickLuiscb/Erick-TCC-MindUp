@@ -1,9 +1,15 @@
+//Este context foi criado com o proposito de no deploy do render, netlify, cloudnary e supabase
+// de trazer todos os dados de uma vez só, para que o backend não fique acordando a cada requisição,
+//  e sim apenas uma vez no login do usuário, dessa forma o usuario não terá que sempre dar uma F5 na pagina
+// para que o conteudo que ele deseja ver seja entregue pra ele.
+
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../service/api";
 import { useAuth } from "./AuthContext";
 import { useVideos } from "./VideosContext";
 import { useArtigos } from "./ArtigosContext";
 import { useSugestoes } from "./SugestoesContext";
+import { useAutoajuda } from "./AutoajudaContext";
 
 const BootstrapContext = createContext();
 
@@ -22,10 +28,11 @@ export function BootstrapProvider({ children }) {
   const { setArtigos, setCarregando: setCarregandoArtigos } = useArtigos();
   const { setSugestoes, setCarregando: setCarregandoSugestoes } =
     useSugestoes();
+  const { setAutoajudas, setCarregando: setCarregandoAutoajuda } =
+    useAutoajuda();
 
-  // Módulos que ainda não têm um context próprio (Autoajuda e Favoritos)
-  // já ficam prontos aqui, esperando as telas serem construídas.
-  const [autoajudas, setAutoajudas] = useState([]);
+  // Favoritos ainda não tem um context próprio (é o próximo módulo do plano),
+  // então continua guardado aqui até termos a tela pra ele.
   const [favoritos, setFavoritos] = useState([]);
 
   const [pronto, setPronto] = useState(false);
@@ -35,12 +42,14 @@ export function BootstrapProvider({ children }) {
     setCarregandoVideos(true);
     setCarregandoArtigos(true);
     setCarregandoSugestoes(true);
+    setCarregandoAutoajuda(true);
   };
 
   const desligarLoadings = () => {
     setCarregandoVideos(false);
     setCarregandoArtigos(false);
     setCarregandoSugestoes(false);
+    setCarregandoAutoajuda(false);
   };
 
   // ==========================================
@@ -95,8 +104,6 @@ export function BootstrapProvider({ children }) {
   return (
     <BootstrapContext.Provider
       value={{
-        autoajudas,
-        setAutoajudas,
         favoritos,
         setFavoritos,
         pronto,
