@@ -26,6 +26,26 @@ class FavoritoResource extends JsonResource
             default => 'desconhecido',
         };
 
+        /*
+        ENVOLVE O CONTEÚDO NO RESOURCE CORRETO
+        (garante URL de mídia via Storage::url() e o campo "favoritado",
+        exatamente como quando o conteúdo é buscado direto de /videos,
+        /artigos, /sugestoes ou /autoajudas)
+        */
+
+        $conteudo = match ($tipo) {
+
+            'video' => new VideoResource($this->favoritavel),
+
+            'artigo' => new ArtigoResource($this->favoritavel),
+
+            'sugestao' => new SugestaoResource($this->favoritavel),
+
+            'autoajuda' => new AutoajudaResource($this->favoritavel),
+
+            default => $this->favoritavel,
+        };
+
         return [
 
             'id' => $this->id,
@@ -42,7 +62,7 @@ class FavoritoResource extends JsonResource
             CONTEÚDO FAVORITADO
             */
 
-            'conteudo' => $this->favoritavel,
+            'conteudo' => $conteudo,
         ];
     }
 }

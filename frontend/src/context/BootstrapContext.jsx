@@ -1,8 +1,3 @@
-//Este context foi criado com o proposito de no deploy do render, netlify, cloudnary e supabase
-// de trazer todos os dados de uma vez só, para que o backend não fique acordando a cada requisição,
-//  e sim apenas uma vez no login do usuário, dessa forma o usuario não terá que sempre dar uma F5 na pagina
-// para que o conteudo que ele deseja ver seja entregue pra ele.
-
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../service/api";
 import { useAuth } from "./AuthContext";
@@ -10,6 +5,7 @@ import { useVideos } from "./VideosContext";
 import { useArtigos } from "./ArtigosContext";
 import { useSugestoes } from "./SugestoesContext";
 import { useAutoajuda } from "./AutoajudaContext";
+import { useFavoritos } from "./FavoritosContext";
 
 const BootstrapContext = createContext();
 
@@ -30,10 +26,8 @@ export function BootstrapProvider({ children }) {
     useSugestoes();
   const { setAutoajudas, setCarregando: setCarregandoAutoajuda } =
     useAutoajuda();
-
-  // Favoritos ainda não tem um context próprio (é o próximo módulo do plano),
-  // então continua guardado aqui até termos a tela pra ele.
-  const [favoritos, setFavoritos] = useState([]);
+  const { setFavoritos, setCarregando: setCarregandoFavoritos } =
+    useFavoritos();
 
   const [pronto, setPronto] = useState(false);
   const [erro, setErro] = useState(false);
@@ -43,6 +37,7 @@ export function BootstrapProvider({ children }) {
     setCarregandoArtigos(true);
     setCarregandoSugestoes(true);
     setCarregandoAutoajuda(true);
+    setCarregandoFavoritos(true);
   };
 
   const desligarLoadings = () => {
@@ -50,6 +45,7 @@ export function BootstrapProvider({ children }) {
     setCarregandoArtigos(false);
     setCarregandoSugestoes(false);
     setCarregandoAutoajuda(false);
+    setCarregandoFavoritos(false);
   };
 
   // ==========================================
@@ -93,8 +89,6 @@ export function BootstrapProvider({ children }) {
     if (!carregandoAuth && autenticado) {
       carregarTudo();
     } else if (!autenticado) {
-      setAutoajudas([]);
-      setFavoritos([]);
       setPronto(false);
       setErro(false);
     }
@@ -104,8 +98,6 @@ export function BootstrapProvider({ children }) {
   return (
     <BootstrapContext.Provider
       value={{
-        favoritos,
-        setFavoritos,
         pronto,
         erro,
         recarregarTudo: carregarTudo,

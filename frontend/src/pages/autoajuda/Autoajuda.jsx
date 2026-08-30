@@ -54,14 +54,23 @@ export default function Autoajuda() {
   return (
     <div className="max-w-6xl mx-auto p-2 animate-fadeIn text-black">
       {/* CABEÇALHO */}
-      <header className="mb-8 pb-4 border-b border-purple-300/30">
-        <h1 className="text-3xl font-black text-white tracking-wide drop-shadow-md">
-          Autoajuda 🌱
-        </h1>
-        <p className="text-purple-200 text-xs md:text-sm mt-1 font-medium">
-          Imagens e vídeos rápidos para te acompanhar em momentos difíceis do
-          dia a dia.
-        </p>
+      <header className="mb-8 pb-4 border-b border-purple-300/30 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-black text-white tracking-wide drop-shadow-md">
+            Autoajuda 🌱
+          </h1>
+          <p className="text-purple-200 text-xs md:text-sm mt-1 font-medium">
+            Imagens e vídeos rápidos para te acompanhar em momentos difíceis do
+            dia a dia.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate("/favoritos?tipo=autoajuda")}
+          className="flex items-center gap-1.5 text-xs font-bold text-purple-200 hover:text-white transition shrink-0"
+        >
+          <Heart size={14} className="fill-current" />
+          <span>Ver meus favoritos</span>
+        </button>
       </header>
 
       {/* FILTRO POR TIPO DE MÍDIA */}

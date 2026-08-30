@@ -1,14 +1,21 @@
 import { useNavigate } from "react-router";
-import { Home, User, Map, LogOut, BookOpen } from "lucide-react";
+import { Home, User, Map, LogOut, BookOpen, Heart } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useBootstrap } from "../context/BootstrapContext";
 
 export default function Header() {
   const { logout, abilities } = useAuth(); // Usando abilities do novo contexto para segurança
+  const { recarregarTudo } = useBootstrap();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const handleInicio = () => {
+    recarregarTudo();
+    navigate("/inicial");
   };
 
   // Verifica se o token tem permissão de publicador ou admin para renderizar o painel
@@ -24,7 +31,7 @@ export default function Header() {
       <div className="flex flex-wrap items-center gap-4 relative">
         {/* INÍCIO (CÁSA) */}
         <button
-          onClick={() => navigate("/inicial")}
+          onClick={handleInicio}
           className="bg-[#7a00c1] px-4 py-2 rounded-lg shadow-md 
                      hover:bg-[#8c00db] hover:text-[#ff7300] transition flex items-center gap-2 font-semibold text-sm"
         >
@@ -52,6 +59,16 @@ export default function Header() {
         >
           <BookOpen size={18} className="text-[#ff7300]" />
           <span>Anotações</span>
+        </button>
+
+        {/* FAVORITOS */}
+        <button
+          onClick={() => navigate("/favoritos")}
+          className="bg-[#7a00c1] px-4 py-2 rounded-lg shadow-md 
+                     hover:bg-[#8c00db] hover:text-[#ff7300] transition flex items-center gap-2 font-semibold text-sm"
+        >
+          <Heart size={18} className="text-[#ff7300]" />
+          <span>Favoritos</span>
         </button>
 
         {/* MAPAS */}
