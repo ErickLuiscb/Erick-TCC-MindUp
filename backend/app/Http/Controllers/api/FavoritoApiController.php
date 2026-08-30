@@ -33,7 +33,7 @@ class FavoritoApiController extends Controller
     }
 
     /**
-     * FAVORITAR CONTEÚDO
+     * FAVORITAR / DESFAVORITAR CONTEÚDO (toggle)
      */
     public function store(
         StoreFavoritoRequest $request
@@ -62,7 +62,7 @@ class FavoritoApiController extends Controller
 
 
         /*
-        BUSCA CONTEÚDO
+        BUSCA CONTEÚDO (garante que o conteúdo existe de verdade)
         */
 
         $conteudo = $modelClass::findOrFail(
@@ -70,21 +70,47 @@ class FavoritoApiController extends Controller
         );
 
         /*
-        EVITA DUPLICADOS
+        VERIFICA SE JÁ ESTÁ FAVORITADO
         */
 
-        $favorito = Favorito::firstOrCreate([
+        $favorito = Favorito::where('usuario_id', $request->user()->id)
+            ->where('favoritavel_id', $conteudo->id)
+            ->where('favoritavel_type', $modelClass)
+            ->first();
+
+        /*
+        JÁ EXISTE -> REMOVE (desfavoritar)
+        */
+
+        if ($favorito) {
+            $favorito->delete();
+
+            return response()->json([
+                'message' => 'Favorito removido com sucesso.',
+                'favoritado' => false,
+            ]);
+        }
+
+        /*
+        NÃO EXISTE -> CRIA (favoritar)
+        */
+
+        $favorito = Favorito::create([
 
             'usuario_id' => $request->user()->id,
 
             'favoritavel_id' => $conteudo->id,
 
             'favoritavel_type' => $modelClass,
+
+            'data_criacao' => now(),
         ]);
 
         return response()->json([
 
             'message' => 'Conteúdo favoritado com sucesso.',
+
+            'favoritado' => true,
 
             'data' => new FavoritoResource(
                 $favorito->load('favoritavel')
