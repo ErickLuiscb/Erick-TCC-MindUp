@@ -96,11 +96,7 @@ export default function Login() {
             <div className="text-right mt-2">
               <span
                 className="text-sm font-black text-purple-900 cursor-pointer hover:underline"
-                onClick={() =>
-                  alert(
-                    "Funcionalidade de recuperação enviada para o e-mail informado!",
-                  )
-                }
+                onClick={() => navigate("/esqueci-senha")}
               >
                 Esqueceu a senha?
               </span>

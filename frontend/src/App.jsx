@@ -18,6 +18,8 @@ import RotaPsicologo from "./components/RotaPsicologo";
 import Inicial from "./pages/inicial/Inicial";
 import Login from "./pages/login/Login";
 import Cadastro from "./pages/cadastro/Cadastro";
+import EsqueciSenha from "./pages/senha/EsqueciSenha";
+import RedefinirSenha from "./pages/senha/RedefinirSenha";
 
 // Perfil
 import Perfil from "./pages/perfil/Perfil";
@@ -94,6 +96,14 @@ export default function App() {
                         {/* Públicas */}
                         <Route path="/login" element={<Login />} />
                         <Route path="/cadastro" element={<Cadastro />} />
+                        <Route
+                          path="/esqueci-senha"
+                          element={<EsqueciSenha />}
+                        />
+                        <Route
+                          path="/redefinir-senha"
+                          element={<RedefinirSenha />}
+                        />
 
                         {/* =========================
                   ROTAS PROTEGIDAS (USUÁRIO)

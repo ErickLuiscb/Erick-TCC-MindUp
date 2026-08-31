@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\api\Auth\AuthController;
+use App\Http\Controllers\api\Auth\PasswordResetController;
 
 use App\Http\Controllers\api\UserApiController;
 use App\Http\Controllers\api\AnotacaoApiController;
@@ -21,6 +22,12 @@ use App\Http\Controllers\api\BootstrapApiController;
 */
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
+
+/*
+| REDEFINIÇÃO DE SENHA (pública — o usuário ainda não está logado)
+*/
+Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
 
 /*
 | ROTAS AUTENTICADAS:
