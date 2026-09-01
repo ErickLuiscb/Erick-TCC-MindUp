@@ -55,6 +55,7 @@ class AnotacaoApiController extends Controller
         $anotacao = Anotacao::create([
             'titulo' => $request->titulo,
             'texto' => $request->texto,
+            'humor' => $request->humor,
             'usuario_id' => $request->user()->id,
         ]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Humores;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAnotacaoRequest extends FormRequest
@@ -17,6 +18,8 @@ class StoreAnotacaoRequest extends FormRequest
             'titulo' => 'required|string|max:100',
 
             'texto' => 'required|string|max:5000',
+
+            'humor' => Humores::regraValidacao(),
         ];
     }
 }

@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router";
 import { useAnotacoes } from "../../context/AnotacoesContext";
+import { infoHumor } from "../../utils/humores";
 import { ArrowLeft, Calendar, BookOpen } from "lucide-react";
 
 export default function Ver_Anotacao() {
@@ -48,6 +49,8 @@ export default function Ver_Anotacao() {
     });
   };
 
+  const humor = infoHumor(anotacao.humor);
+
   return (
     <div className="max-w-3xl mx-auto p-2 animate-fadeIn text-black">
       {/* Botão de navegação superior para retorno rápido */}
@@ -72,8 +75,13 @@ export default function Ver_Anotacao() {
               <span>Registro Pessoal</span>
             </div>
 
-            <h1 className="text-3xl font-black text-purple-950 tracking-wide leading-tight">
+            <h1 className="text-3xl font-black text-purple-950 tracking-wide leading-tight flex items-center gap-3">
               {anotacao.titulo}
+              {humor && (
+                <span title={humor.label} className="text-3xl leading-none">
+                  {humor.emoji}
+                </span>
+              )}
             </h1>
 
             <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-3">

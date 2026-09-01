@@ -14,6 +14,8 @@ class AnotacaoResource extends JsonResource
 
             'titulo' => $this->titulo,
 
+            'humor' => $this->humor,
+
             'texto' => $this->texto,
 
             'created_at' => $this->created_at,

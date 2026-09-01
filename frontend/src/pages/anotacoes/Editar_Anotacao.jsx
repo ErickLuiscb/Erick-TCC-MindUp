@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useAnotacoes } from "../../context/AnotacoesContext";
+import { HUMORES } from "../../utils/humores";
 import { ArrowLeft, Save } from "lucide-react";
 
 export default function Editar_Anotacao() {
@@ -12,6 +13,7 @@ export default function Editar_Anotacao() {
 
   const [titulo, setTitulo] = useState("");
   const [texto, setTexto] = useState("");
+  const [humor, setHumor] = useState(null);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -19,6 +21,7 @@ export default function Editar_Anotacao() {
     if (anotacao) {
       setTitulo(anotacao.titulo || "");
       setTexto(anotacao.texto || "");
+      setHumor(anotacao.humor || null);
     }
   }, [anotacao]);
 
@@ -63,7 +66,7 @@ export default function Editar_Anotacao() {
     }
 
     // Envia a requisição PUT estruturada com segurança
-    const resp = await editarAnotacao(anotacao.id, { titulo, texto });
+    const resp = await editarAnotacao(anotacao.id, { titulo, texto, humor });
 
     if (resp?.sucesso) {
       navigate("/anotacoes");
@@ -105,7 +108,8 @@ export default function Editar_Anotacao() {
             Modificar Registro ✏️
           </h1>
           <p className="text-gray-500 text-xs mt-1">
-            Altere os dados desejados e salve para sincronizar as mudanças.
+            Altere os dados desejados e salve para sincronizar as mudanças com o
+            banco PostgreSQL.
           </p>
         </header>
 
@@ -122,6 +126,36 @@ export default function Editar_Anotacao() {
               maxLength={100}
               disabled={salvando}
             />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-xs font-bold text-purple-950 uppercase tracking-wider">
+              Como você está se sentindo?{" "}
+              <span className="normal-case text-gray-400 font-medium">
+                (opcional)
+              </span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {HUMORES.map((h) => (
+                <button
+                  key={h.valor}
+                  type="button"
+                  onClick={() => setHumor(humor === h.valor ? null : h.valor)}
+                  disabled={salvando}
+                  title={h.label}
+                  className={`flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl border transition cursor-pointer ${
+                    humor === h.valor
+                      ? "bg-purple-100 border-purple-400 scale-110 shadow-sm"
+                      : "bg-gray-50 border-gray-200 hover:bg-gray-100"
+                  }`}
+                >
+                  <span className="text-2xl leading-none">{h.emoji}</span>
+                  <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wide">
+                    {h.label}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div>

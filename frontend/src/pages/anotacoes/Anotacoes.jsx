@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { useAnotacoes } from "../../context/AnotacoesContext";
+import { infoHumor } from "../../utils/humores";
 import { Plus, Eye, Edit3, Trash2, Calendar } from "lucide-react";
 
 export default function Anotacoes() {
@@ -86,59 +87,70 @@ export default function Anotacoes() {
 
       {/* BLINGAGEM E GRID DE NOTAS PROFISSIONAIS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-        {anotacoes.map((a) => (
-          <div
-            key={a.id}
-            className="bg-white/95 text-gray-800 shadow-2xl rounded-2xl p-6 border border-purple-100 flex flex-col justify-between transition-all hover:shadow-purple-950/20 hover:scale-[1.02] duration-300 group"
-          >
-            <div>
-              {/* Header do Card com Título e Data */}
-              <div className="flex items-start justify-between gap-2 mb-3">
-                <h2 className="text-lg font-black text-purple-950 tracking-wide line-clamp-1 group-hover:text-purple-700 transition">
-                  {a.titulo}
-                </h2>
+        {anotacoes.map((a) => {
+          const humor = infoHumor(a.humor);
+          return (
+            <div
+              key={a.id}
+              className="bg-white/95 text-gray-800 shadow-2xl rounded-2xl p-6 border border-purple-100 flex flex-col justify-between transition-all hover:shadow-purple-950/20 hover:scale-[1.02] duration-300 group"
+            >
+              <div>
+                {/* Header do Card com Título e Data */}
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <h2 className="text-lg font-black text-purple-950 tracking-wide line-clamp-1 group-hover:text-purple-700 transition">
+                    {a.titulo}
+                  </h2>
+                  {humor && (
+                    <span
+                      title={humor.label}
+                      className="text-3xl leading-none shrink-0"
+                    >
+                      {humor.emoji}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1.5 text-[11px] text-gray-400 font-bold uppercase tracking-wider mb-4">
+                  <Calendar size={12} className="text-purple-500" />
+                  <span>{formatarData(a.created_at)}</span>
+                </div>
+
+                {/* Corpo de Texto Truncado para Usabilidade Limpa */}
+                <p className="text-sm text-gray-600 leading-relaxed line-clamp-4 bg-gray-50/50 p-3 rounded-xl border border-gray-100">
+                  {a.texto}
+                </p>
               </div>
 
-              <div className="flex items-center gap-1.5 text-[11px] text-gray-400 font-bold uppercase tracking-wider mb-4">
-                <Calendar size={12} className="text-purple-500" />
-                <span>{formatarData(a.created_at)}</span>
+              {/* BARRA DE AÇÕES MODERNA COM ÍCONES E BOTÕES */}
+              <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-100">
+                {/* CORRIGIDO: Modificado o fechamento de </Route> para </Link> */}
+                <Link
+                  to={`/anotacoes/${a.id}`}
+                  title="Visualizar por completo"
+                  className="p-2 text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors flex items-center justify-center shadow-xs"
+                >
+                  <Eye size={16} />
+                </Link>
+
+                <Link
+                  to={`/anotacoes/editar/${a.id}`}
+                  title="Editar conteúdo"
+                  className="p-2 text-[#ff7300] bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors flex items-center justify-center shadow-xs"
+                >
+                  <Edit3 size={16} />
+                </Link>
+
+                <button
+                  onClick={() => confirmarExclusao(a.id)}
+                  title="Apagar anotação"
+                  className="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors flex items-center justify-center shadow-xs cursor-pointer"
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
-
-              {/* Corpo de Texto Truncado para Usabilidade Limpa */}
-              <p className="text-sm text-gray-600 leading-relaxed line-clamp-4 bg-gray-50/50 p-3 rounded-xl border border-gray-100">
-                {a.texto}
-              </p>
             </div>
-
-            {/* BARRA DE AÇÕES MODERNA COM ÍCONES E BOTÕES */}
-            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-100">
-              {/* CORRIGIDO: Modificado o fechamento de </Route> para </Link> */}
-              <Link
-                to={`/anotacoes/${a.id}`}
-                title="Visualizar por completo"
-                className="p-2 text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors flex items-center justify-center shadow-xs"
-              >
-                <Eye size={16} />
-              </Link>
-
-              <Link
-                to={`/anotacoes/editar/${a.id}`}
-                title="Editar conteúdo"
-                className="p-2 text-[#ff7300] bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors flex items-center justify-center shadow-xs"
-              >
-                <Edit3 size={16} />
-              </Link>
-
-              <button
-                onClick={() => confirmarExclusao(a.id)}
-                title="Apagar anotação"
-                className="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors flex items-center justify-center shadow-xs cursor-pointer"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

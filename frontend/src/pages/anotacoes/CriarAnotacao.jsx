@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAnotacoes } from "../../context/AnotacoesContext";
+import { HUMORES } from "../../utils/humores";
 import { ArrowLeft, Save } from "lucide-react";
 
 export default function CriarAnotacao() {
@@ -9,6 +10,7 @@ export default function CriarAnotacao() {
 
   const [titulo, setTitulo] = useState("");
   const [texto, setTexto] = useState("");
+  const [humor, setHumor] = useState(null);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -24,7 +26,7 @@ export default function CriarAnotacao() {
       return;
     }
 
-    const resp = await criarAnotacao({ titulo, texto });
+    const resp = await criarAnotacao({ titulo, texto, humor });
 
     if (resp?.sucesso) {
       navigate("/anotacoes");
@@ -91,6 +93,36 @@ export default function CriarAnotacao() {
               maxLength={100}
               disabled={salvando}
             />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-xs font-bold text-purple-950 uppercase tracking-wider">
+              Como você está se sentindo?{" "}
+              <span className="normal-case text-gray-400 font-medium">
+                (opcional)
+              </span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {HUMORES.map((h) => (
+                <button
+                  key={h.valor}
+                  type="button"
+                  onClick={() => setHumor(humor === h.valor ? null : h.valor)}
+                  disabled={salvando}
+                  title={h.label}
+                  className={`flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl border transition cursor-pointer ${
+                    humor === h.valor
+                      ? "bg-purple-100 border-purple-400 scale-110 shadow-sm"
+                      : "bg-gray-50 border-gray-200 hover:bg-gray-100"
+                  }`}
+                >
+                  <span className="text-2xl leading-none">{h.emoji}</span>
+                  <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wide">
+                    {h.label}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div>

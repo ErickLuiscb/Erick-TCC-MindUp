@@ -19,6 +19,7 @@ class Anotacao extends Model
         'usuario_id',
         'titulo',
         'texto',
+        'humor',
     ];
 
     // =========================================

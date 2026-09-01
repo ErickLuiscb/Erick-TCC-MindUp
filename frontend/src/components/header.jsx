@@ -71,16 +71,6 @@ export default function Header() {
           <span>Favoritos</span>
         </button>
 
-        {/* MAPAS */}
-        <button
-          onClick={() => navigate("/mapa")}
-          className="bg-[#7a00c1] px-4 py-2 rounded-lg shadow-md 
-                     hover:bg-[#8c00db] hover:text-[#ff7300] transition flex items-center gap-2 font-semibold text-sm"
-        >
-          <Map size={18} className="text-[#ff7300]" />
-          <span>Mapas</span>
-        </button>
-
         {/* PERFIL */}
         <button
           onClick={() => navigate("/perfil")}

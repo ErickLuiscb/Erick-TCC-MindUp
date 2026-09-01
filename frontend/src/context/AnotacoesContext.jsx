@@ -29,9 +29,9 @@ export function AnotacoesProvider({ children }) {
   // ======================
   // CRIAR
   // ======================
-  async function criarAnotacao({ titulo, texto }) {
+  async function criarAnotacao({ titulo, texto, humor }) {
     try {
-      const resp = await api.post("/anotacoes", { titulo, texto });
+      const resp = await api.post("/anotacoes", { titulo, texto, humor });
       const novaAnotacao = resp.data.data || resp.data;
 
       setAnotacoes((prev) => [...prev, novaAnotacao]);
@@ -62,6 +62,8 @@ export function AnotacoesProvider({ children }) {
     try {
       const resp = await api.put(`/anotacoes/${id}`, dados);
       const anotacaoAtualizada = resp.data.data || resp.data;
+
+      // Corrige o bug de mapeamento injetando o objeto extraído do Resource do Laravel
       setAnotacoes((prev) =>
         prev.map((a) => (a.id === id ? anotacaoAtualizada : a)),
       );
