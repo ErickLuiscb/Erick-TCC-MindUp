@@ -1,10 +1,11 @@
 import React from "react";
-import { useParams, Link } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import { useAutoajuda } from "../../context/AutoajudaContext";
 import { ArrowLeft, Heart } from "lucide-react";
 
 export default function VerAutoajuda() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { buscarAutoajudaPorId, carregando, alternarFavoritoAutoajuda } =
     useAutoajuda();
 
@@ -28,28 +29,28 @@ export default function VerAutoajuda() {
           O conteúdo solicitado está inacessível ou foi ocultado pelo
           profissional.
         </p>
-        <Link
-          to="/autoajuda"
-          className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline"
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline cursor-pointer"
         >
-          Voltar para listagem
-        </Link>
+          Voltar
+        </button>
       </div>
     );
   }
 
   return (
     <div className="max-w-3xl mx-auto p-2 text-black animate-fadeIn">
-      <Link
-        to="/autoajuda"
-        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors"
+      <button
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
           className="transform group-hover:-translate-x-1 transition-transform"
         />
-        <span>Voltar para Autoajuda</span>
-      </Link>
+        <span>Voltar</span>
+      </button>
 
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-sky-100">
         {/* Mídia */}

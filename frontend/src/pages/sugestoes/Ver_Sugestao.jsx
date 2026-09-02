@@ -1,11 +1,12 @@
 import React from "react";
-import { useParams, Link } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import { useSugestoes } from "../../context/SugestoesContext";
 import { infoTipoSugestao, acaoExternaLabel } from "../../utils/sugestoes";
 import { ArrowLeft, Calendar, ExternalLink, Heart } from "lucide-react";
 
 export default function VerSugestao() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { buscarSugestaoPorId, carregando, alternarFavoritoSugestao } =
     useSugestoes();
 
@@ -29,12 +30,12 @@ export default function VerSugestao() {
           O conteúdo solicitado está inacessível ou foi ocultado pelo
           profissional.
         </p>
-        <Link
-          to="/sugestoes"
-          className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline"
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline cursor-pointer"
         >
-          Voltar para listagem
-        </Link>
+          Voltar
+        </button>
       </div>
     );
   }
@@ -52,16 +53,16 @@ export default function VerSugestao() {
 
   return (
     <div className="max-w-4xl mx-auto p-2 text-black animate-fadeIn">
-      <Link
-        to="/sugestoes"
-        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors"
+      <button
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
           className="transform group-hover:-translate-x-1 transition-transform"
         />
-        <span>Voltar para Sugestões</span>
-      </Link>
+        <span>Voltar</span>
+      </button>
 
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-teal-100">
         {/* Capa */}

@@ -1,9 +1,10 @@
-import { useParams, Link } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import { useVideos } from "../../context/VideosContext";
 import { ArrowLeft, Film, Calendar } from "lucide-react";
 
 export default function VerVideo() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { buscarVideoPorId, carregando } = useVideos();
 
   const video = buscarVideoPorId(id);
@@ -25,12 +26,12 @@ export default function VerVideo() {
         <p className="text-purple-200 text-xs mt-2">
           O conteúdo solicitado pode ter sido desativado pelo autor ou removido.
         </p>
-        <Link
-          to="/videos"
-          className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline"
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline cursor-pointer"
         >
-          Voltar para a galeria
-        </Link>
+          Voltar
+        </button>
       </div>
     );
   }
@@ -48,16 +49,16 @@ export default function VerVideo() {
   return (
     <div className="max-w-4xl mx-auto p-2 text-black animate-fadeIn">
       {/* Botão Superior de Voltar */}
-      <Link
-        to="/videos"
-        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors"
+      <button
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
           className="transform group-hover:-translate-x-1 transition-transform"
         />
-        <span>Voltar para a Galeria</span>
-      </Link>
+        <span>Voltar</span>
+      </button>
 
       {/* Container Principal do Player com Linguagem Moderna */}
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-purple-100 flex flex-col">

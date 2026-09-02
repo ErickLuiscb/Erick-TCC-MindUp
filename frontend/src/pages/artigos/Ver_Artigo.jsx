@@ -1,10 +1,11 @@
 import React from "react";
-import { useParams, Link } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import { useArtigos } from "../../context/ArtigosContext";
 import { ArrowLeft, BookOpen, Calendar, ShieldCheck } from "lucide-react";
 
 export default function VerArtigo() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { buscarArtigoPorId, carregando } = useArtigos();
 
   const artigo = buscarArtigoPorId(id);
@@ -27,12 +28,12 @@ export default function VerArtigo() {
           O arquivo solicitado está inacessível ou foi ocultado pelo
           profissional.
         </p>
-        <Link
-          to="/artigos"
-          className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline"
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline cursor-pointer"
         >
-          Voltar para listagem
-        </Link>
+          Voltar
+        </button>
       </div>
     );
   }
@@ -58,16 +59,16 @@ export default function VerArtigo() {
   return (
     <div className="max-w-4xl mx-auto p-2 text-black animate-fadeIn">
       {/* Botão de Voltar */}
-      <Link
-        to="/artigos"
-        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors"
+      <button
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
           className="transform group-hover:-translate-x-1 transition-transform"
         />
-        <span>Voltar para as Leituras</span>
-      </Link>
+        <span>Voltar</span>
+      </button>
 
       {/* Caixa do Artigo */}
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-purple-100 p-6 md:p-8 flex flex-col justify-between min-h-[450px]">
