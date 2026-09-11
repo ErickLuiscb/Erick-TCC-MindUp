@@ -7,8 +7,6 @@ import {
   ArrowLeft,
   Save,
   AlertTriangle,
-  Eye,
-  EyeOff,
   ImagePlus,
   Link2,
   Search,
@@ -26,7 +24,6 @@ export default function EditarSugestao() {
   const [linkExterno, setLinkExterno] = useState("");
   const [capaAtual, setCapaAtual] = useState(null);
   const [capa, setCapa] = useState(null);
-  const [ativo, setAtivo] = useState(true);
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
   const [buscaCategoria, setBuscaCategoria] = useState("");
 
@@ -46,7 +43,6 @@ export default function EditarSugestao() {
         setDescricao(sugestao.descricao ?? "");
         setLinkExterno(sugestao.link_externo ?? "");
         setCapaAtual(sugestao.capa ?? null);
-        setAtivo(sugestao.ativo === undefined ? true : Boolean(sugestao.ativo));
 
         if (sugestao.categorias && Array.isArray(sugestao.categorias)) {
           setCategoriasSelecionadas(sugestao.categorias.map((c) => c.id));
@@ -91,7 +87,6 @@ export default function EditarSugestao() {
     formData.append("descricao", descricao);
     formData.append("link_externo", linkExterno);
     if (capa) formData.append("capa", capa);
-    formData.append("ativo", ativo ? "1" : "0");
     categoriasSelecionadas.forEach((cid) =>
       formData.append("categorias[]", cid),
     );
@@ -221,28 +216,6 @@ export default function EditarSugestao() {
               placeholder="https://..."
               disabled={salvando}
             />
-          </div>
-
-          <div className="bg-teal-50/50 border border-teal-100 p-4 rounded-xl flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold text-purple-950 uppercase tracking-wider flex items-center gap-1">
-                {ativo ? (
-                  <Eye size={14} className="text-emerald-600" />
-                ) : (
-                  <EyeOff size={14} className="text-gray-500" />
-                )}
-                <span>Status de Visibilidade</span>
-              </p>
-            </div>
-            <select
-              value={ativo ? "1" : "0"}
-              onChange={(e) => setAtivo(e.target.value === "1")}
-              className="p-2 border border-gray-300 rounded-lg bg-white text-xs font-bold text-gray-700 focus:outline-teal-600 cursor-pointer"
-              disabled={salvando}
-            >
-              <option value="1">🟢 No Ar</option>
-              <option value="0">⚪ Oculto (Rascunho)</option>
-            </select>
           </div>
 
           {/* CATEGORIAS */}

@@ -2,15 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import api from "../../../service/api";
 import { useVideos } from "../../../context/VideosContext";
-import {
-  ArrowLeft,
-  Save,
-  AlertTriangle,
-  Eye,
-  EyeOff,
-  Search,
-  X,
-} from "lucide-react";
+import { ArrowLeft, Save, AlertTriangle, Search, X } from "lucide-react";
 
 export default function CriarVideo() {
   const navigate = useNavigate();
@@ -19,7 +11,6 @@ export default function CriarVideo() {
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [arquivo, setArquivo] = useState(null);
-  const [ativo, setAtivo] = useState(true);
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
   const [buscaCategoria, setBuscaCategoria] = useState("");
 
@@ -59,7 +50,6 @@ export default function CriarVideo() {
     formData.append("titulo", titulo);
     formData.append("descricao", descricao);
     formData.append("arquivo", arquivo);
-    formData.append("ativo", ativo ? "1" : "0");
     categoriasSelecionadas.forEach((id) => formData.append("categorias[]", id));
 
     try {
@@ -140,32 +130,6 @@ export default function CriarVideo() {
               placeholder="Descreva brevemente o que é abordado neste vídeo..."
               disabled={salvando}
             />
-          </div>
-
-          <div className="bg-purple-50/50 border border-purple-100 p-4 rounded-xl flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold text-purple-950 uppercase tracking-wider flex items-center gap-1">
-                {ativo ? (
-                  <Eye size={14} className="text-emerald-600" />
-                ) : (
-                  <EyeOff size={14} className="text-gray-500" />
-                )}
-                <span>Status de Visibilidade</span>
-              </p>
-              <p className="text-[10px] text-gray-500 mt-0.5">
-                Defina se a publicação nasce visível ("No Ar") ou oculta dos
-                pacientes.
-              </p>
-            </div>
-            <select
-              value={ativo ? "1" : "0"}
-              onChange={(e) => setAtivo(e.target.value === "1")}
-              className="p-2 border border-gray-300 rounded-lg bg-white text-xs font-bold text-gray-700 focus:outline-purple-600 cursor-pointer"
-              disabled={salvando}
-            >
-              <option value="1">🟢 Disponibilizar "No Ar"</option>
-              <option value="0">⚪ Manter Oculto (Rascunho)</option>
-            </select>
           </div>
 
           {/* SELETOR DE CATEGORIAS COM BUSCADOR */}

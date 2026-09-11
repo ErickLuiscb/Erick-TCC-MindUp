@@ -7,8 +7,6 @@ import {
   ArrowLeft,
   Save,
   AlertTriangle,
-  Eye,
-  EyeOff,
   UploadCloud,
   Search,
   X,
@@ -24,7 +22,6 @@ export default function EditarAutoajuda() {
   const [descricao, setDescricao] = useState("");
   const [midiaAtual, setMidiaAtual] = useState(null);
   const [midia, setMidia] = useState(null);
-  const [ativo, setAtivo] = useState(true);
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
   const [buscaCategoria, setBuscaCategoria] = useState("");
 
@@ -45,7 +42,6 @@ export default function EditarAutoajuda() {
         setTitulo(item.titulo || "");
         setDescricao(item.descricao ?? "");
         setMidiaAtual(item.midia ?? null);
-        setAtivo(item.ativo === undefined ? true : Boolean(item.ativo));
 
         if (item.categorias && Array.isArray(item.categorias)) {
           setCategoriasSelecionadas(item.categorias.map((c) => c.id));
@@ -107,7 +103,6 @@ export default function EditarAutoajuda() {
     formData.append("titulo", titulo);
     formData.append("descricao", descricao);
     if (midia) formData.append("midia", midia);
-    formData.append("ativo", ativo ? "1" : "0");
     categoriasSelecionadas.forEach((cid) =>
       formData.append("categorias[]", cid),
     );
@@ -240,28 +235,6 @@ export default function EditarAutoajuda() {
               disabled={salvando}
               maxLength={5000}
             />
-          </div>
-
-          <div className="bg-sky-50/50 border border-sky-100 p-4 rounded-xl flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold text-purple-950 uppercase tracking-wider flex items-center gap-1">
-                {ativo ? (
-                  <Eye size={14} className="text-emerald-600" />
-                ) : (
-                  <EyeOff size={14} className="text-gray-500" />
-                )}
-                <span>Status de Visibilidade</span>
-              </p>
-            </div>
-            <select
-              value={ativo ? "1" : "0"}
-              onChange={(e) => setAtivo(e.target.value === "1")}
-              className="p-2 border border-gray-300 rounded-lg bg-white text-xs font-bold text-gray-700 focus:outline-sky-600 cursor-pointer"
-              disabled={salvando}
-            >
-              <option value="1">🟢 No Ar</option>
-              <option value="0">⚪ Oculto (Rascunho)</option>
-            </select>
           </div>
 
           {/* CATEGORIAS */}

@@ -6,8 +6,6 @@ import {
   ArrowLeft,
   Save,
   AlertTriangle,
-  Eye,
-  EyeOff,
   FileText,
   Search,
   X,
@@ -20,7 +18,6 @@ export default function CriarArtigo() {
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [arquivoPdf, setArquivoPdf] = useState(null);
-  const [ativo, setAtivo] = useState(true);
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
   const [buscaCategoria, setBuscaCategoria] = useState("");
 
@@ -60,7 +57,6 @@ export default function CriarArtigo() {
     formData.append("titulo", titulo);
     formData.append("descricao", descricao);
     formData.append("arquivo_pdf", arquivoPdf);
-    formData.append("ativo", ativo ? "1" : "0");
     categoriasSelecionadas.forEach((id) => formData.append("categorias[]", id));
 
     try {
@@ -141,32 +137,6 @@ export default function CriarArtigo() {
               placeholder="Escreva uma breve introdução ou resumo do que é abordado neste material..."
               disabled={salvando}
             />
-          </div>
-
-          <div className="bg-purple-50/50 border border-purple-100 p-4 rounded-xl flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold text-purple-950 uppercase tracking-wider flex items-center gap-1">
-                {ativo ? (
-                  <Eye size={14} className="text-emerald-600" />
-                ) : (
-                  <EyeOff size={14} className="text-gray-500" />
-                )}
-                <span>Status de Visibilidade Inicial</span>
-              </p>
-              <p className="text-[10px] text-gray-500 mt-0.5">
-                Defina se o material entra direto no ar ou nasce arquivado como
-                rascunho.
-              </p>
-            </div>
-            <select
-              value={ativo ? "1" : "0"}
-              onChange={(e) => setAtivo(e.target.value === "1")}
-              className="p-2 border border-gray-300 rounded-lg bg-white text-xs font-bold text-gray-700 focus:outline-purple-600 cursor-pointer"
-              disabled={salvando}
-            >
-              <option value="1">🟢 Disponibilizar "No Ar"</option>
-              <option value="0">⚪ Manter Oculto (Rascunho)</option>
-            </select>
           </div>
 
           {/* SELETOR DE CATEGORIAS COM BUSCADOR */}

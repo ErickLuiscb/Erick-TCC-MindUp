@@ -7,8 +7,6 @@ import {
   ArrowLeft,
   Save,
   AlertTriangle,
-  Eye,
-  EyeOff,
   ImagePlus,
   Link2,
   Search,
@@ -24,7 +22,6 @@ export default function CriarSugestao() {
   const [descricao, setDescricao] = useState("");
   const [linkExterno, setLinkExterno] = useState("");
   const [capa, setCapa] = useState(null);
-  const [ativo, setAtivo] = useState(true);
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
   const [buscaCategoria, setBuscaCategoria] = useState("");
 
@@ -59,7 +56,6 @@ export default function CriarSugestao() {
     formData.append("descricao", descricao);
     if (linkExterno) formData.append("link_externo", linkExterno);
     if (capa) formData.append("capa", capa);
-    formData.append("ativo", ativo ? "1" : "0");
     categoriasSelecionadas.forEach((id) => formData.append("categorias[]", id));
 
     try {
@@ -181,33 +177,6 @@ export default function CriarSugestao() {
               placeholder="https://... (streaming, loja, plataforma de música, etc.)"
               disabled={salvando}
             />
-          </div>
-
-          {/* STATUS */}
-          <div className="bg-teal-50/50 border border-teal-100 p-4 rounded-xl flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold text-purple-950 uppercase tracking-wider flex items-center gap-1">
-                {ativo ? (
-                  <Eye size={14} className="text-emerald-600" />
-                ) : (
-                  <EyeOff size={14} className="text-gray-500" />
-                )}
-                <span>Status de Visibilidade Inicial</span>
-              </p>
-              <p className="text-[10px] text-gray-500 mt-0.5">
-                Defina se a sugestão entra direto no ar ou nasce arquivada como
-                rascunho.
-              </p>
-            </div>
-            <select
-              value={ativo ? "1" : "0"}
-              onChange={(e) => setAtivo(e.target.value === "1")}
-              className="p-2 border border-gray-300 rounded-lg bg-white text-xs font-bold text-gray-700 focus:outline-teal-600 cursor-pointer"
-              disabled={salvando}
-            >
-              <option value="1">🟢 Disponibilizar "No Ar"</option>
-              <option value="0">⚪ Manter Oculto (Rascunho)</option>
-            </select>
           </div>
 
           {/* CATEGORIAS */}

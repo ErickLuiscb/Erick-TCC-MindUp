@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import api from "../../../service/api";
 import { useVideos } from "../../../context/VideosContext";
-import {
-  ArrowLeft,
-  Save,
-  AlertTriangle,
-  Eye,
-  EyeOff,
-  Search,
-  X,
-} from "lucide-react";
+import { ArrowLeft, Save, AlertTriangle, Search, X } from "lucide-react";
 
 export default function EditarVideo() {
   const { id } = useParams();
@@ -20,7 +12,6 @@ export default function EditarVideo() {
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [arquivo, setArquivo] = useState(null);
-  const [ativo, setAtivo] = useState(true);
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
   const [buscaCategoria, setBuscaCategoria] = useState("");
 
@@ -37,7 +28,6 @@ export default function EditarVideo() {
 
         setTitulo(video.titulo || "");
         setDescricao(video.descricao ?? "");
-        setAtivo(video.ativo === undefined ? true : Boolean(video.ativo));
 
         if (video.categorias && Array.isArray(video.categorias)) {
           setCategoriasSelecionadas(video.categorias.map((c) => c.id));
@@ -80,7 +70,6 @@ export default function EditarVideo() {
     formData.append("_method", "PUT");
     formData.append("titulo", titulo);
     formData.append("descricao", descricao);
-    formData.append("ativo", ativo ? "1" : "0");
     if (arquivo) formData.append("arquivo", arquivo);
     categoriasSelecionadas.forEach((catId) =>
       formData.append("categorias[]", catId),
@@ -170,32 +159,6 @@ export default function EditarVideo() {
               className="w-full border border-gray-300 p-3 rounded-xl text-sm h-32 focus:outline-purple-600 text-black leading-relaxed"
               disabled={salvando}
             />
-          </div>
-
-          <div className="bg-purple-50/50 border border-purple-100 p-4 rounded-xl flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold text-purple-950 uppercase tracking-wider flex items-center gap-1">
-                {ativo ? (
-                  <Eye size={14} className="text-emerald-600" />
-                ) : (
-                  <EyeOff size={14} className="text-gray-500" />
-                )}
-                <span>Status de Visibilidade atual</span>
-              </p>
-              <p className="text-[10px] text-gray-500 mt-0.5">
-                Defina se a publicação fica disponível ("No Ar") ou oculta dos
-                pacientes.
-              </p>
-            </div>
-            <select
-              value={ativo ? "1" : "0"}
-              onChange={(e) => setAtivo(e.target.value === "1")}
-              className="p-2 border border-gray-300 rounded-lg bg-white text-xs font-bold text-gray-700 focus:outline-purple-600 cursor-pointer"
-              disabled={salvando}
-            >
-              <option value="1">🟢 Disponibilizar "No Ar"</option>
-              <option value="0">⚪ Manter Oculto (Rascunho)</option>
-            </select>
           </div>
 
           {/* SELETOR DE CATEGORIAS COM BUSCADOR */}

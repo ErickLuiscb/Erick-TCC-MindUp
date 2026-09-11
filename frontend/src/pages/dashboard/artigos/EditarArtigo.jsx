@@ -6,8 +6,6 @@ import {
   ArrowLeft,
   Save,
   AlertTriangle,
-  Eye,
-  EyeOff,
   FileText,
   Search,
   X,
@@ -21,7 +19,6 @@ export default function EditarArtigo() {
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [arquivoPdf, setArquivoPdf] = useState(null);
-  const [ativo, setAtivo] = useState(true);
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
   const [buscaCategoria, setBuscaCategoria] = useState("");
 
@@ -38,7 +35,6 @@ export default function EditarArtigo() {
 
         setTitulo(artigo.titulo || "");
         setDescricao(artigo.descricao ?? "");
-        setAtivo(artigo.ativo === undefined ? true : Boolean(artigo.ativo));
 
         if (artigo.categorias && Array.isArray(artigo.categorias)) {
           setCategoriasSelecionadas(artigo.categorias.map((c) => c.id));
@@ -81,7 +77,6 @@ export default function EditarArtigo() {
     formData.append("_method", "PUT");
     formData.append("titulo", titulo);
     formData.append("descricao", descricao);
-    formData.append("ativo", ativo ? "1" : "0");
     if (arquivoPdf) formData.append("arquivo_pdf", arquivoPdf);
     categoriasSelecionadas.forEach((catId) =>
       formData.append("categorias[]", catId),
@@ -171,32 +166,6 @@ export default function EditarArtigo() {
               className="w-full border border-gray-300 p-3 rounded-xl text-sm h-32 focus:outline-purple-600 text-black leading-relaxed"
               disabled={salvando}
             />
-          </div>
-
-          <div className="bg-purple-50/50 border border-purple-100 p-4 rounded-xl flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold text-purple-950 uppercase tracking-wider flex items-center gap-1">
-                {ativo ? (
-                  <Eye size={14} className="text-emerald-600" />
-                ) : (
-                  <EyeOff size={14} className="text-gray-500" />
-                )}
-                <span>Status de Visibilidade atual</span>
-              </p>
-              <p className="text-[10px] text-gray-500 mt-0.5">
-                Defina se a publicação fica disponível ("No Ar") ou oculta dos
-                pacientes.
-              </p>
-            </div>
-            <select
-              value={ativo ? "1" : "0"}
-              onChange={(e) => setAtivo(e.target.value === "1")}
-              className="p-2 border border-gray-300 rounded-lg bg-white text-xs font-bold text-gray-700 focus:outline-purple-600 cursor-pointer"
-              disabled={salvando}
-            >
-              <option value="1">🟢 Disponibilizar "No Ar"</option>
-              <option value="0">⚪ Manter Oculto (Rascunho)</option>
-            </select>
           </div>
 
           {/* SELETOR DE CATEGORIAS COM BUSCADOR */}
