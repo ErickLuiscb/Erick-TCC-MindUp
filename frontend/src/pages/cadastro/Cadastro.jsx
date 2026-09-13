@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
+import { CheckCircle2, XCircle, Mail } from "lucide-react";
 
 export default function Cadastro() {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ export default function Cadastro() {
   const [mensagem, setMensagem] = useState("");
   const [preview, setPreview] = useState(null);
   const [loadingCadastro, setLoadingCadastro] = useState(false);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [cadastroConcluido, setCadastroConcluido] = useState(false);
 
   useEffect(() => {
     if (!carregando && autenticado) {
@@ -43,6 +46,7 @@ export default function Cadastro() {
       // Validar tamanho (2MB)
       if (file.size > 2 * 1024 * 1024) {
         setMensagem("❌ A imagem deve ter no máximo 2MB");
+        setModalAberto(true);
         return;
       }
 
@@ -50,6 +54,7 @@ export default function Cadastro() {
       const tiposPermitidos = ["image/jpeg", "image/png", "image/webp"];
       if (!tiposPermitidos.includes(file.type)) {
         setMensagem("❌ Formato inválido. Use JPG, PNG ou WEBP");
+        setModalAberto(true);
         return;
       }
 
@@ -80,16 +85,19 @@ export default function Cadastro() {
     // Validações
     if (form.senha !== form.confirmar) {
       setMensagem("❌ As senhas não coincidem!");
+      setModalAberto(true);
       return;
     }
 
     if (form.senha.length < 6) {
       setMensagem("❌ A senha deve ter pelo menos 6 caracteres");
+      setModalAberto(true);
       return;
     }
 
     if (form.tipo === "psicologo" && !form.crp.trim()) {
       setMensagem("❌ Psicólogos devem informar o CRP");
+      setModalAberto(true);
       return;
     }
 
@@ -114,28 +122,28 @@ export default function Cadastro() {
 
     if (r.sucesso) {
       setMensagem(
-        "✅ Cadastro realizado! Enviamos um e-mail de confirmação — verifique sua caixa de entrada (e o spam) antes de fazer login.",
+        "Enviamos um e-mail de confirmação — verifique sua caixa de entrada (e o spam) antes de fazer login.",
       );
+      setCadastroConcluido(true);
+      setModalAberto(true);
       if (preview) URL.revokeObjectURL(preview);
-      setTimeout(() => navigate("/login"), 4000);
     } else {
       setMensagem("❌ " + r.mensagem);
+      setCadastroConcluido(false);
+      setModalAberto(true);
       setLoadingCadastro(false);
     }
+  };
+
+  const fecharModalEIrParaLogin = () => {
+    setModalAberto(false);
+    navigate("/login");
   };
 
   return (
     <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-xl max-w-[900px] w-full mx-auto my-12 p-4 text-black">
       <div className="flex-1 p-10">
         <h1 className="text-3xl text-purple-700 font-bold">Cadastre-se</h1>
-
-        {mensagem && (
-          <p
-            className={`mt-3 font-bold ${mensagem.includes("❌") ? "text-red-600" : "text-green-600"}`}
-          >
-            {mensagem}
-          </p>
-        )}
 
         <form onSubmit={handleSubmit}>
           <label className="block mt-4 font-bold text-purple-900">Nome:</label>
@@ -277,6 +285,55 @@ export default function Cadastro() {
           className="max-w-[280px] object-contain"
         />
       </div>
+
+      {/* MODAL — fica fixo no centro da tela, visível independente
+          de quanto o usuário tenha rolado o formulário, para garantir que o usuário veja a mensagem
+          de sucesso e instrução de confirmar email, ou mensagem de erro */}
+      {modalAberto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
+            {cadastroConcluido ? (
+              <>
+                <CheckCircle2
+                  size={48}
+                  className="text-green-600 mx-auto mb-4"
+                />
+                <h2 className="text-xl font-black text-purple-900 mb-2">
+                  Cadastro realizado!
+                </h2>
+                <div className="bg-purple-50 border border-purple-100 rounded-xl p-4 mb-6 flex items-start gap-3 text-left">
+                  <Mail size={20} className="text-purple-700 shrink-0 mt-0.5" />
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {mensagem}
+                  </p>
+                </div>
+                <button
+                  onClick={fecharModalEIrParaLogin}
+                  className="w-full bg-purple-900 text-white py-3 rounded-full font-bold shadow-md hover:bg-purple-950 transition cursor-pointer"
+                >
+                  Entendi, ir para o login
+                </button>
+              </>
+            ) : (
+              <>
+                <XCircle size={48} className="text-red-600 mx-auto mb-4" />
+                <h2 className="text-xl font-black text-purple-900 mb-2">
+                  Não foi possível cadastrar
+                </h2>
+                <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                  {mensagem.replace("❌ ", "")}
+                </p>
+                <button
+                  onClick={() => setModalAberto(false)}
+                  className="w-full bg-purple-100 text-purple-900 py-3 rounded-full font-bold hover:bg-purple-200 transition cursor-pointer"
+                >
+                  Entendi, vou corrigir
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
