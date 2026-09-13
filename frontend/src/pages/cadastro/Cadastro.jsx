@@ -113,9 +113,11 @@ export default function Cadastro() {
     const r = await registrar(fd);
 
     if (r.sucesso) {
-      setMensagem("✅ Cadastro realizado com sucesso!");
+      setMensagem(
+        "✅ Cadastro realizado! Enviamos um e-mail de confirmação — verifique sua caixa de entrada (e o spam) antes de fazer login.",
+      );
       if (preview) URL.revokeObjectURL(preview);
-      setTimeout(() => navigate("/login"), 2000);
+      setTimeout(() => navigate("/login"), 4000);
     } else {
       setMensagem("❌ " + r.mensagem);
       setLoadingCadastro(false);

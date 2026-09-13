@@ -36,6 +36,13 @@ class AuthController extends Controller
             ], 401);
         }
 
+        if (is_null($user->email_verified_at)) {
+            return response()->json([
+                'message' => 'Você precisa confirmar seu e-mail antes de entrar. Verifique sua caixa de entrada (e o spam).',
+                'email_nao_verificado' => true,
+            ], 403);
+        }
+
         $abilities = [];
 
         if ($user->tipo === 'psicologo') {
@@ -119,8 +126,10 @@ class AuthController extends Controller
 
     $user = User::create($data);
 
+    EmailVerificationController::enviarEmailVerificacao($user);
+
     return response()->json([
-        'message' => 'Usuário registrado com sucesso.',
+        'message' => 'Cadastro realizado com sucesso. Enviamos um e-mail de confirmação — verifique sua caixa de entrada antes de fazer login.',
         'user' => new UserResource($user)
     ], 201);
 }

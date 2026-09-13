@@ -18,8 +18,11 @@ import RotaPsicologo from "./components/RotaPsicologo";
 import Inicial from "./pages/inicial/Inicial";
 import Login from "./pages/login/Login";
 import Cadastro from "./pages/cadastro/Cadastro";
+
+// Páginas de senha e Confirmar email, dessa forma tendo apenas emails reais no sistema.
 import EsqueciSenha from "./pages/senha/EsqueciSenha";
 import RedefinirSenha from "./pages/senha/RedefinirSenha";
+import EmailVerificado from "./pages/senha/EmailVerificado";
 
 // Perfil
 import Perfil from "./pages/perfil/Perfil";
@@ -103,6 +106,10 @@ export default function App() {
                         <Route
                           path="/redefinir-senha"
                           element={<RedefinirSenha />}
+                        />
+                        <Route
+                          path="/email-verificado"
+                          element={<EmailVerificado />}
                         />
 
                         {/* =========================

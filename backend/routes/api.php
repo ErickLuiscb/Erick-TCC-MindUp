@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\api\Auth\AuthController;
 use App\Http\Controllers\api\Auth\PasswordResetController;
+use App\Http\Controllers\api\Auth\EmailVerificationController;
 
 use App\Http\Controllers\api\UserApiController;
 use App\Http\Controllers\api\AnotacaoApiController;
@@ -28,6 +29,15 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 */
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
+
+/*
+| VERIFICAÇÃO DE E-MAIL (pública)
+*/
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware('signed')
+    ->name('verification.verify');
+
+Route::post('/email/reenviar', [EmailVerificationController::class, 'reenviar']);
 
 /*
 | ROTAS AUTENTICADAS:

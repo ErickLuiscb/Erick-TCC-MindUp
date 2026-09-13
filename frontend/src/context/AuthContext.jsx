@@ -91,12 +91,41 @@ export function AuthProvider({ children }) {
       return { sucesso: true };
     } catch (err) {
       console.error("Erro login:", err.response?.data || err.message);
+
+      if (err.response?.data?.email_nao_verificado) {
+        return {
+          sucesso: false,
+          emailNaoVerificado: true,
+          mensagem: err.response.data.message,
+        };
+      }
+
       return {
         sucesso: false,
         mensagem:
           err.response?.data?.message ||
           err.response?.data?.error ||
           "Credenciais inválidas",
+      };
+    }
+  };
+
+  // =========================
+  // REENVIAR E-MAIL DE VERIFICAÇÃO
+  // =========================
+  const reenviarVerificacao = async (email) => {
+    try {
+      const resp = await api.post("/email/reenviar", { email });
+      return {
+        sucesso: true,
+        mensagem: resp.data?.message,
+      };
+    } catch (err) {
+      return {
+        sucesso: false,
+        mensagem:
+          err.response?.data?.message ||
+          "Não foi possível reenviar o e-mail agora. Tente novamente em instantes.",
       };
     }
   };
@@ -278,6 +307,7 @@ export function AuthProvider({ children }) {
         carregando,
         login,
         registrar,
+        reenviarVerificacao,
         updateUser,
         uploadFotoPerfil,
         logout,

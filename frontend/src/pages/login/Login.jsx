@@ -5,11 +5,13 @@ import { useAuth } from "../../context/AuthContext";
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, autenticado, carregando } = useAuth();
+  const { login, autenticado, carregando, reenviarVerificacao } = useAuth();
 
   const [form, setForm] = useState({ email: "", senha: "" });
   const [mensagem, setMensagem] = useState("");
   const [loadingRequisicao, setLoadingRequisicao] = useState(false);
+  const [emailNaoVerificado, setEmailNaoVerificado] = useState(false);
+  const [reenviando, setReenviando] = useState(false);
 
   const from = location.state?.from || "/inicial";
 
@@ -33,12 +35,14 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensagem(""); // Limpa erro antigo imediatamente ao clicar
+    setEmailNaoVerificado(false);
     setLoadingRequisicao(true); // Trava o botão para evitar requisições fantasmas
 
     const resp = await login(form.email, form.senha);
 
     if (!resp.sucesso) {
       setMensagem("❌ " + resp.mensagem);
+      setEmailNaoVerificado(!!resp.emailNaoVerificado);
       setLoadingRequisicao(false); // Libera o formulário apenas se der erro real
       return;
     }
@@ -47,6 +51,13 @@ export default function Login() {
     setTimeout(() => {
       navigate(from, { replace: true });
     }, 800);
+  };
+
+  const handleReenviar = async () => {
+    setReenviando(true);
+    const resp = await reenviarVerificacao(form.email);
+    setMensagem((resp.sucesso ? "✅ " : "❌ ") + resp.mensagem);
+    setReenviando(false);
   };
 
   return (
@@ -63,6 +74,17 @@ export default function Login() {
             >
               {mensagem}
             </p>
+          )}
+
+          {emailNaoVerificado && (
+            <button
+              type="button"
+              onClick={handleReenviar}
+              disabled={reenviando}
+              className="mt-2 text-sm font-bold text-purple-900 underline hover:text-purple-700 disabled:opacity-50 cursor-pointer"
+            >
+              {reenviando ? "Reenviando..." : "Reenviar e-mail de confirmação"}
+            </button>
           )}
 
           <form onSubmit={handleSubmit}>
