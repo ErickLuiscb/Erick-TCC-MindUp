@@ -278,7 +278,7 @@ export default function Cadastro() {
         </form>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-8 bg-gray-50 rounded-r-2xl md:rounded-l-none">
+      <div className="flex-1 flex items-center justify-center p-8 bg-white rounded-r-2xl md:rounded-l-none">
         <img
           src="/logo.png"
           alt="Logo MindUp"
