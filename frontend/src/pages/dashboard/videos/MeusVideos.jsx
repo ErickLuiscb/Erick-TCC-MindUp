@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router";
 import api from "../../../service/api";
-import {
-  Plus,
-  Edit3,
-  Trash2,
-  Film,
-  Eye,
-  EyeOff,
-  ArrowLeft,
-} from "lucide-react";
+import { Plus, Edit3, Trash2, Film, ArrowLeft } from "lucide-react";
 
 export default function MeusVideos() {
   const navigate = useNavigate();
@@ -85,8 +77,7 @@ export default function MeusVideos() {
             Gerenciar Vídeos 🎬
           </h1>
           <p className="text-purple-200 text-xs md:text-sm mt-1 font-medium">
-            Gerencie, modifique a visibilidade ou remova suas publicações de
-            psicoeducação.
+            Gerencie, edite ou remova suas publicações de psicoeducação.
           </p>
         </div>
 
@@ -125,18 +116,6 @@ export default function MeusVideos() {
                   size={32}
                   className="text-purple-300/30 absolute z-10 group-hover:scale-110 transition-transform"
                 />
-
-                {/* Badge de Status: Ativo/Inativo Dinâmico (Excelente para regras de negócio no TCC) */}
-                <div
-                  className={`absolute top-3 left-3 z-20 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-md flex items-center gap-1 text-white ${
-                    video.ativo
-                      ? "bg-emerald-600 border border-emerald-500"
-                      : "bg-gray-600 border border-gray-500"
-                  }`}
-                >
-                  {video.ativo ? <Eye size={12} /> : <EyeOff size={12} />}
-                  <span>{video.ativo ? "No Ar" : "Oculto"}</span>
-                </div>
 
                 <video
                   className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"

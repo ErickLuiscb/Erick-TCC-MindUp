@@ -6,8 +6,6 @@ import {
   Edit3,
   Trash2,
   BookOpen,
-  Eye,
-  EyeOff,
   ArrowLeft,
   Calendar,
 } from "lucide-react";
@@ -101,8 +99,8 @@ export default function MeusArtigos() {
             Gerenciar Artigos 📄
           </h1>
           <p className="text-purple-200 text-xs md:text-sm mt-1 font-medium">
-            Escreva resumos, anexe PDFs informativos e modifique a visibilidade
-            dos seus textos autorais.
+            Escreva resumos, anexe PDFs informativos e gerencie seus textos
+            autorais.
           </p>
         </div>
 
@@ -135,19 +133,8 @@ export default function MeusArtigos() {
             className="bg-white rounded-2xl shadow-2xl border border-purple-50 p-6 flex flex-col justify-between transition-all hover:shadow-purple-950/20 hover:scale-[1.02] duration-300 group"
           >
             <div>
-              {/* Header do card contendo o Status Operacional Ativo/Inativo e Data */}
-              <div className="flex items-center justify-between gap-4 mb-4 pb-2 border-b border-gray-50">
-                <div
-                  className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-xs flex items-center gap-1 text-white ${
-                    artigo.ativo
-                      ? "bg-emerald-600 border border-emerald-500"
-                      : "bg-gray-600 border border-gray-500"
-                  }`}
-                >
-                  {artigo.ativo ? <Eye size={11} /> : <EyeOff size={11} />}
-                  <span>{artigo.ativo ? "No Ar" : "Oculto"}</span>
-                </div>
-
+              {/* Header do card contendo a Data */}
+              <div className="flex items-center justify-end gap-4 mb-4 pb-2 border-b border-gray-50">
                 <div className="flex items-center gap-1 text-[11px] text-gray-400 font-bold tracking-wide">
                   <Calendar size={12} className="text-purple-500" />
                   <span>{formatarData(artigo.created_at)}</span>

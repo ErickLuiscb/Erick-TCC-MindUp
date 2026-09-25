@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router";
 import api from "../../../service/api";
 import { infoTipoSugestao } from "../../../utils/sugestoes";
-import {
-  Plus,
-  Edit3,
-  Trash2,
-  Lightbulb,
-  Eye,
-  EyeOff,
-  ArrowLeft,
-} from "lucide-react";
+import { Plus, Edit3, Trash2, Lightbulb, ArrowLeft } from "lucide-react";
 
 export default function MinhasSugestoes() {
   const navigate = useNavigate();
@@ -85,8 +77,7 @@ export default function MinhasSugestoes() {
             Gerenciar Sugestões 💡
           </h1>
           <p className="text-purple-200 text-xs md:text-sm mt-1 font-medium">
-            Gerencie, modifique a visibilidade ou remova suas indicações
-            culturais.
+            Gerencie, edite ou remova suas indicações culturais.
           </p>
         </div>
 
@@ -132,17 +123,6 @@ export default function MinhasSugestoes() {
                       className="text-teal-300/30 absolute z-10 group-hover:scale-110 transition-transform"
                     />
                   )}
-
-                  <div
-                    className={`absolute top-3 left-3 z-20 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-md flex items-center gap-1 text-white ${
-                      sugestao.ativo
-                        ? "bg-emerald-600 border border-emerald-500"
-                        : "bg-gray-600 border border-gray-500"
-                    }`}
-                  >
-                    {sugestao.ativo ? <Eye size={12} /> : <EyeOff size={12} />}
-                    <span>{sugestao.ativo ? "No Ar" : "Oculto"}</span>
-                  </div>
 
                   <div className="absolute top-3 right-3 z-20 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-md flex items-center gap-1 text-white bg-teal-700/90">
                     <span>{tipo.emoji}</span>

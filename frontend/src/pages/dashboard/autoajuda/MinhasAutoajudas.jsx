@@ -1,16 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router";
 import api from "../../../service/api";
-import {
-  Plus,
-  Edit3,
-  Trash2,
-  HeartPulse,
-  Eye,
-  EyeOff,
-  ArrowLeft,
-  Play,
-} from "lucide-react";
+import { Plus, Edit3, Trash2, HeartPulse, ArrowLeft, Play } from "lucide-react";
 
 export default function MinhasAutoajudas() {
   const navigate = useNavigate();
@@ -131,17 +122,6 @@ export default function MinhasAutoajudas() {
                     </video>
                   </>
                 )}
-
-                <div
-                  className={`absolute top-3 left-3 z-20 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-md flex items-center gap-1 text-white ${
-                    item.ativo
-                      ? "bg-emerald-600 border border-emerald-500"
-                      : "bg-gray-600 border border-gray-500"
-                  }`}
-                >
-                  {item.ativo ? <Eye size={12} /> : <EyeOff size={12} />}
-                  <span>{item.ativo ? "No Ar" : "Oculto"}</span>
-                </div>
 
                 <div className="absolute top-3 right-3 z-20 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-md flex items-center gap-1 text-white bg-sky-700/90">
                   <span>{item.tipo_midia === "imagem" ? "🖼️" : "🎬"}</span>
