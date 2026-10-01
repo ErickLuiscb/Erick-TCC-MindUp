@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useVideos } from "../../context/VideosContext";
-import { Search, Heart, Film, Filter, X } from "lucide-react";
+import { Search, Heart, Film, Filter, X, ArrowLeft } from "lucide-react";
 
 export default function Videos() {
   const navigate = useNavigate();
@@ -50,6 +50,18 @@ export default function Videos() {
 
   return (
     <div className="max-w-6xl mx-auto p-2 animate-fadeIn text-black">
+      {/* Botão de voltar à tela inicial */}
+      <button
+        onClick={() => navigate("/inicial")}
+        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+      >
+        <ArrowLeft
+          size={16}
+          className="transform group-hover:-translate-x-1 transition-transform"
+        />
+        <span>Voltar ao Início</span>
+      </button>
+
       {/* CABEÇALHO */}
       <header className="mb-8 pb-4 border-b border-purple-300/30 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>

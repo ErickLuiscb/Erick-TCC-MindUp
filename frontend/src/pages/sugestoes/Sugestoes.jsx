@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useSugestoes } from "../../context/SugestoesContext";
 import { useVideos } from "../../context/VideosContext";
 import { TIPOS_SUGESTAO } from "../../utils/sugestoes";
-import { Search, Heart, Lightbulb, Filter, X } from "lucide-react";
+import { Search, Heart, Lightbulb, Filter, X, ArrowLeft } from "lucide-react";
 
 export default function Sugestoes() {
   const navigate = useNavigate();
@@ -53,6 +53,18 @@ export default function Sugestoes() {
 
   return (
     <div className="max-w-6xl mx-auto p-2 animate-fadeIn text-black">
+      {/* Botão de voltar à tela inicial */}
+      <button
+        onClick={() => navigate("/inicial")}
+        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+      >
+        <ArrowLeft
+          size={16}
+          className="transform group-hover:-translate-x-1 transition-transform"
+        />
+        <span>Voltar ao Início</span>
+      </button>
+
       {/* CABEÇALHO */}
       <header className="mb-8 pb-4 border-b border-purple-300/30 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>

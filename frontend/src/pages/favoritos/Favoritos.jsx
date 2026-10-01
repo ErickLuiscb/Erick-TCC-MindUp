@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useFavoritos } from "../../context/FavoritosContext";
 import { useVideos } from "../../context/VideosContext";
-import { Heart, Filter, X, Play, Film } from "lucide-react";
+import { Heart, Filter, X, Play, Film, ArrowLeft } from "lucide-react";
 
 // Configuração visual por tipo — reaproveita a cor e o rótulo que cada
 // módulo já tem em sua própria tela, pra não inventar uma identidade nova.
@@ -89,6 +89,18 @@ export default function Favoritos() {
 
   return (
     <div className="max-w-6xl mx-auto p-2 animate-fadeIn text-black">
+      {/* Botão de voltar à tela inicial */}
+      <button
+        onClick={() => navigate("/inicial")}
+        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+      >
+        <ArrowLeft
+          size={16}
+          className="transform group-hover:-translate-x-1 transition-transform"
+        />
+        <span>Voltar ao Início</span>
+      </button>
+
       {/* CABEÇALHO */}
       <header className="mb-8 pb-4 border-b border-purple-300/30">
         <h1 className="text-3xl font-black text-white tracking-wide drop-shadow-md flex items-center gap-3">
