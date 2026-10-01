@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
-import { CheckCircle2, XCircle, Mail } from "lucide-react";
+import { CheckCircle2, XCircle, Mail, Eye, EyeOff } from "lucide-react";
 
 export default function Cadastro() {
   const navigate = useNavigate();
@@ -22,6 +22,8 @@ export default function Cadastro() {
   const [loadingCadastro, setLoadingCadastro] = useState(false);
   const [modalAberto, setModalAberto] = useState(false);
   const [cadastroConcluido, setCadastroConcluido] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarConfirmar, setMostrarConfirmar] = useState(false);
 
   useEffect(() => {
     if (!carregando && autenticado) {
@@ -171,29 +173,51 @@ export default function Cadastro() {
           <label className="block mt-4 font-bold text-purple-900">
             Senha (mínimo 6 caracteres):
           </label>
-          <input
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-purple-600"
-            type="password"
-            name="senha"
-            value={form.senha}
-            onChange={handleChange}
-            required
-            minLength={6}
-            disabled={loadingCadastro}
-          />
+          <div className="relative">
+            <input
+              className="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:outline-purple-600"
+              type={mostrarSenha ? "text" : "password"}
+              name="senha"
+              value={form.senha}
+              onChange={handleChange}
+              required
+              minLength={6}
+              disabled={loadingCadastro}
+            />
+            <button
+              type="button"
+              onClick={() => setMostrarSenha((v) => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
+              tabIndex={-1}
+              aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
 
           <label className="block mt-4 font-bold text-purple-900">
             Confirmar Senha:
           </label>
-          <input
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-purple-600"
-            type="password"
-            name="confirmar"
-            value={form.confirmar}
-            onChange={handleChange}
-            required
-            disabled={loadingCadastro}
-          />
+          <div className="relative">
+            <input
+              className="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:outline-purple-600"
+              type={mostrarConfirmar ? "text" : "password"}
+              name="confirmar"
+              value={form.confirmar}
+              onChange={handleChange}
+              required
+              disabled={loadingCadastro}
+            />
+            <button
+              type="button"
+              onClick={() => setMostrarConfirmar((v) => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
+              tabIndex={-1}
+              aria-label={mostrarConfirmar ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {mostrarConfirmar ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
 
           <label className="block mt-4 font-bold text-purple-900">
             Imagem de Perfil (opcional):
@@ -278,7 +302,7 @@ export default function Cadastro() {
         </form>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-8 bg-white rounded-r-2xl md:rounded-l-none">
+      <div className="flex-1 flex items-center justify-center p-8 bg-gray-50 rounded-r-2xl md:rounded-l-none">
         <img
           src="/logo.png"
           alt="Logo MindUp"

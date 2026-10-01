@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { useAuth } from "../../context/AuthContext";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function Login() {
   const [loadingRequisicao, setLoadingRequisicao] = useState(false);
   const [emailNaoVerificado, setEmailNaoVerificado] = useState(false);
   const [reenviando, setReenviando] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const from = location.state?.from || "/inicial";
 
@@ -104,15 +106,26 @@ export default function Login() {
             <label className="font-semibold block mt-4 text-purple-900">
               Senha:
             </label>
-            <input
-              className="w-full p-3 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
-              type="password"
-              name="senha"
-              value={form.senha}
-              onChange={handleChange}
-              required
-              disabled={loadingRequisicao}
-            />
+            <div className="relative">
+              <input
+                className="w-full p-3 pr-12 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
+                type={mostrarSenha ? "text" : "password"}
+                name="senha"
+                value={form.senha}
+                onChange={handleChange}
+                required
+                disabled={loadingRequisicao}
+              />
+              <button
+                type="button"
+                onClick={() => setMostrarSenha((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
+                tabIndex={-1}
+                aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+              >
+                {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
 
             {/* Link Esqueceu a Senha em Negrito e Destacado */}
             <div className="text-right mt-2">

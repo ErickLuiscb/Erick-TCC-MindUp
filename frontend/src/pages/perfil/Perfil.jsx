@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Perfil() {
   const { usuario, updateUser, deleteAccount } = useAuth();
@@ -10,6 +11,8 @@ export default function Perfil() {
   const [nome, setNome] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
   const [imagem, setImagem] = useState(null);
   const [preview, setPreview] = useState("");
   const [manterConteudos, setManterConteudos] = useState(true);
@@ -258,29 +261,65 @@ export default function Perfil() {
                     <label className="text-xs font-bold text-purple-950">
                       Nova Senha (mín. 6):
                     </label>
-                    <input
-                      type="password"
-                      value={senha}
-                      onChange={(e) => setSenha(e.target.value)}
-                      className="w-full p-3 mt-1 border border-gray-300 rounded-xl focus:outline-purple-600 text-sm text-black"
-                      placeholder="••••••••"
-                      minLength={6}
-                      disabled={carregando}
-                    />
+                    <div className="relative">
+                      <input
+                        type={mostrarSenha ? "text" : "password"}
+                        value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
+                        className="w-full p-3 pr-12 mt-1 border border-gray-300 rounded-xl focus:outline-purple-600 text-sm text-black"
+                        placeholder="••••••••"
+                        minLength={6}
+                        disabled={carregando}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setMostrarSenha((v) => !v)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
+                        tabIndex={-1}
+                        aria-label={
+                          mostrarSenha ? "Ocultar senha" : "Mostrar senha"
+                        }
+                      >
+                        {mostrarSenha ? (
+                          <EyeOff size={17} />
+                        ) : (
+                          <Eye size={17} />
+                        )}
+                      </button>
+                    </div>
                   </div>
 
                   <div>
                     <label className="text-xs font-bold text-purple-950">
                       Confirmar Nova Senha:
                     </label>
-                    <input
-                      type="password"
-                      value={confirmarSenha}
-                      onChange={(e) => setConfirmarSenha(e.target.value)}
-                      className="w-full p-3 mt-1 border border-gray-300 rounded-xl focus:outline-purple-600 text-sm text-black"
-                      placeholder="••••••••"
-                      disabled={carregando}
-                    />
+                    <div className="relative">
+                      <input
+                        type={mostrarConfirmarSenha ? "text" : "password"}
+                        value={confirmarSenha}
+                        onChange={(e) => setConfirmarSenha(e.target.value)}
+                        className="w-full p-3 pr-12 mt-1 border border-gray-300 rounded-xl focus:outline-purple-600 text-sm text-black"
+                        placeholder="••••••••"
+                        disabled={carregando}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setMostrarConfirmarSenha((v) => !v)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
+                        tabIndex={-1}
+                        aria-label={
+                          mostrarConfirmarSenha
+                            ? "Ocultar senha"
+                            : "Mostrar senha"
+                        }
+                      >
+                        {mostrarConfirmarSenha ? (
+                          <EyeOff size={17} />
+                        ) : (
+                          <Eye size={17} />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
