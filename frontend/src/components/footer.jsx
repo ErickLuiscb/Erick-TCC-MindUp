@@ -89,7 +89,7 @@ export default function Footer() {
         <span className="hidden sm:inline text-white/20">•</span>
 
         <p className="text-[11px] text-white/60">
-          © 2025 <strong>MindUp</strong> — Todos os direitos reservados a Érick
+          © 2026 <strong>MindUp</strong> — Todos os direitos reservados a Érick
           Luis Capera Barneche
         </p>
       </div>
