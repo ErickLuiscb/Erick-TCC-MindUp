@@ -48,7 +48,16 @@ class BootstrapApiController extends Controller
             ->get();
 
         $favoritos = Favorito::where('usuario_id', $request->user()->id)
-            ->with('favoritavel')
+            ->with([
+                'favoritavel' => function ($morphTo) {
+                    $morphTo->morphWith([
+                        Video::class     => ['autor', 'categorias', 'favoritos'],
+                        Artigo::class    => ['autor', 'categorias', 'favoritos'],
+                        Sugestao::class  => ['autor', 'categorias', 'favoritos'],
+                        Autoajuda::class => ['autor', 'categorias', 'favoritos'],
+                    ]);
+                },
+            ])
             ->latest('data_criacao')
             ->get();
 
