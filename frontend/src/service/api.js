@@ -39,7 +39,13 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Um 401 vindo da própria tentativa de login significa "credenciais
+    // inválidas", e não "sessão expirada". Nesse caso NÃO recarregamos a
+    // página: a tela de Login precisa continuar montada para exibir a
+    // mensagem de erro ao usuário.
+    const ehTentativaDeLogin = error.config?.url?.includes("/login");
+
+    if (error.response?.status === 401 && !ehTentativaDeLogin) {
       // Token expirado ou inválido
       localStorage.removeItem("token");
       localStorage.removeItem("usuario");

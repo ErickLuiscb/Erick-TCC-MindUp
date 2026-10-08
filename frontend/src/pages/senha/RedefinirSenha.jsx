@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router";
 import api from "../../service/api";
-import { KeyRound, CheckCircle2 } from "lucide-react";
+import { KeyRound, CheckCircle2, Eye, EyeOff } from "lucide-react";
 
 export default function RedefinirSenha() {
   const navigate = useNavigate();
@@ -15,6 +15,8 @@ export default function RedefinirSenha() {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
 
   const linkInvalido = !token || !email;
 
@@ -111,28 +113,56 @@ export default function RedefinirSenha() {
               <label className="font-semibold block text-purple-900 text-sm mb-1">
                 Nova senha:
               </label>
-              <input
-                className="w-full p-3 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
-                type="password"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                required
-                minLength={6}
-                disabled={enviando}
-              />
+              <div className="relative">
+                <input
+                  className="w-full p-3 pr-12 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
+                  type={mostrarSenha ? "text" : "password"}
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  required
+                  minLength={6}
+                  disabled={enviando}
+                />
+                <button
+                  type="button"
+                  onClick={() => setMostrarSenha((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
+                  tabIndex={-1}
+                  aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+                >
+                  {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
 
               <label className="font-semibold block mt-4 text-purple-900 text-sm mb-1">
                 Confirme a nova senha:
               </label>
-              <input
-                className="w-full p-3 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
-                type="password"
-                value={confirmacao}
-                onChange={(e) => setConfirmacao(e.target.value)}
-                required
-                minLength={6}
-                disabled={enviando}
-              />
+              <div className="relative">
+                <input
+                  className="w-full p-3 pr-12 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
+                  type={mostrarConfirmacao ? "text" : "password"}
+                  value={confirmacao}
+                  onChange={(e) => setConfirmacao(e.target.value)}
+                  required
+                  minLength={6}
+                  disabled={enviando}
+                />
+                <button
+                  type="button"
+                  onClick={() => setMostrarConfirmacao((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
+                  tabIndex={-1}
+                  aria-label={
+                    mostrarConfirmacao ? "Ocultar senha" : "Mostrar senha"
+                  }
+                >
+                  {mostrarConfirmacao ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
+                </button>
+              </div>
 
               <p className="text-[11px] text-gray-400 mt-2">
                 Mínimo de 6 caracteres.
