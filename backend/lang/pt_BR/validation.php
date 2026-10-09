@@ -120,8 +120,12 @@ return [
     */
 
     'custom' => [
+        // Mensagem propositalmente genérica: não revela se o e-mail já tem conta.
         'email' => [
-            'unique' => 'Este e-mail já está em uso.',
+            'unique' => 'Não foi possível concluir a operação com os dados informados. Revise-os e tente novamente.',
+        ],
+        'senha' => [
+            'not_regex' => 'A senha não pode conter espaços.',
         ],
     ],
 

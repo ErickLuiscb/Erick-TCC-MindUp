@@ -29,6 +29,11 @@ export default function RedefinirSenha() {
       return;
     }
 
+    if (/\s/.test(senha)) {
+      setErro("❌ A senha não pode conter espaços.");
+      return;
+    }
+
     setEnviando(true);
 
     try {

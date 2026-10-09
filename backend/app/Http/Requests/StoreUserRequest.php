@@ -18,7 +18,7 @@ class StoreUserRequest extends FormRequest
 
             'email' => 'required|email|unique:usuarios,email',
 
-            'senha' => 'required|string|min:6',
+            'senha' => 'required|string|min:6|not_regex:/\s/u',
 
             'tipo' => 'required|in:usuario,psicologo',
 

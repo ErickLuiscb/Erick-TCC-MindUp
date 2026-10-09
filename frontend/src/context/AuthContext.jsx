@@ -105,7 +105,7 @@ export function AuthProvider({ children }) {
         mensagem:
           err.response?.data?.message ||
           err.response?.data?.error ||
-          "Credenciais inválidas",
+          "E-mail ou senha incorretos",
       };
     }
   };

@@ -63,6 +63,11 @@ export default function Perfil() {
       return;
     }
 
+    if (senha && /\s/.test(senha)) {
+      setMensagem("❌ A senha não pode conter espaços.");
+      return;
+    }
+
     setCarregando(true);
 
     const fd = new FormData();

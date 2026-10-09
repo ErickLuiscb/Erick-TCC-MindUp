@@ -32,7 +32,7 @@ class AuthController extends Controller
             !Hash::check($request->senha, $user->senha)
         ) {
             return response()->json([
-                'message' => 'Credenciais inválidas.'
+                'message' => 'E-mail ou senha incorretos.'
             ], 401);
         }
 

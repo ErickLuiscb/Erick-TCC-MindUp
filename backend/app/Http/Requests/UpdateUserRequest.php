@@ -20,7 +20,7 @@ class UpdateUserRequest extends FormRequest
 
             'email' => 'sometimes|required|email|unique:usuarios,email,' . ($user?->id),
 
-            'senha' => 'sometimes|string|min:6',
+            'senha' => 'sometimes|string|min:6|not_regex:/\s/u',
 
             'imagem_perfil' => 'sometimes|image|mimes:jpg,jpeg,png,webp|max:2048',
 

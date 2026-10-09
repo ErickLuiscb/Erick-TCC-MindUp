@@ -91,6 +91,12 @@ export default function Cadastro() {
       return;
     }
 
+    if (/\s/.test(form.senha)) {
+      setMensagem("❌ A senha não pode conter espaços");
+      setModalAberto(true);
+      return;
+    }
+
     if (form.senha.length < 6) {
       setMensagem("❌ A senha deve ter pelo menos 6 caracteres");
       setModalAberto(true);
