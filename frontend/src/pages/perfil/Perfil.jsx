@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
 import { Eye, EyeOff } from "lucide-react";
+import { semEspacos, bloquearEspaco } from "../../utils/senha";
 
 export default function Perfil() {
   const { usuario, updateUser, deleteAccount } = useAuth();
@@ -60,11 +61,6 @@ export default function Perfil() {
 
     if (senha && senha !== confirmarSenha) {
       setMensagem("❌ As senhas informadas não coincidem.");
-      return;
-    }
-
-    if (senha && /\s/.test(senha)) {
-      setMensagem("❌ A senha não pode conter espaços.");
       return;
     }
 
@@ -270,7 +266,8 @@ export default function Perfil() {
                       <input
                         type={mostrarSenha ? "text" : "password"}
                         value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
+                        onChange={(e) => setSenha(semEspacos(e.target.value))}
+                        onKeyDown={bloquearEspaco}
                         className="w-full p-3 pr-12 mt-1 border border-gray-300 rounded-xl focus:outline-purple-600 text-sm text-black"
                         placeholder="••••••••"
                         minLength={6}
@@ -302,7 +299,10 @@ export default function Perfil() {
                       <input
                         type={mostrarConfirmarSenha ? "text" : "password"}
                         value={confirmarSenha}
-                        onChange={(e) => setConfirmarSenha(e.target.value)}
+                        onChange={(e) =>
+                          setConfirmarSenha(semEspacos(e.target.value))
+                        }
+                        onKeyDown={bloquearEspaco}
                         className="w-full p-3 pr-12 mt-1 border border-gray-300 rounded-xl focus:outline-purple-600 text-sm text-black"
                         placeholder="••••••••"
                         disabled={carregando}

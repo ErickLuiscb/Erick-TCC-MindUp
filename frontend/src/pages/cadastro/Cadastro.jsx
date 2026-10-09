@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { CheckCircle2, XCircle, Mail, Eye, EyeOff } from "lucide-react";
+import { semEspacos, bloquearEspaco } from "../../utils/senha";
 
 export default function Cadastro() {
   const navigate = useNavigate();
@@ -38,6 +39,12 @@ export default function Cadastro() {
       </div>
     );
   }
+
+  // Campos de senha: a tecla de espaço não faz nada e espaços colados são removidos
+  const handleSenhaChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: semEspacos(value) }));
+  };
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -87,12 +94,6 @@ export default function Cadastro() {
     // Validações
     if (form.senha !== form.confirmar) {
       setMensagem("❌ As senhas não coincidem!");
-      setModalAberto(true);
-      return;
-    }
-
-    if (/\s/.test(form.senha)) {
-      setMensagem("❌ A senha não pode conter espaços");
       setModalAberto(true);
       return;
     }
@@ -185,7 +186,8 @@ export default function Cadastro() {
               type={mostrarSenha ? "text" : "password"}
               name="senha"
               value={form.senha}
-              onChange={handleChange}
+              onChange={handleSenhaChange}
+              onKeyDown={bloquearEspaco}
               required
               minLength={6}
               disabled={loadingCadastro}
@@ -210,7 +212,8 @@ export default function Cadastro() {
               type={mostrarConfirmar ? "text" : "password"}
               name="confirmar"
               value={form.confirmar}
-              onChange={handleChange}
+              onChange={handleSenhaChange}
+              onKeyDown={bloquearEspaco}
               required
               disabled={loadingCadastro}
             />

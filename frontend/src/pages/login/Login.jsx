@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { Eye, EyeOff } from "lucide-react";
+import { semEspacos, bloquearEspaco } from "../../utils/senha";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -33,6 +34,9 @@ export default function Login() {
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSenhaChange = (e) =>
+    setForm({ ...form, senha: semEspacos(e.target.value) });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,7 +116,8 @@ export default function Login() {
                 type={mostrarSenha ? "text" : "password"}
                 name="senha"
                 value={form.senha}
-                onChange={handleChange}
+                onChange={handleSenhaChange}
+                onKeyDown={bloquearEspaco}
                 required
                 disabled={loadingRequisicao}
               />

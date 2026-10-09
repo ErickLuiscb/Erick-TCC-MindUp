@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router";
 import api from "../../service/api";
 import { KeyRound, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { semEspacos, bloquearEspaco } from "../../utils/senha";
 
 export default function RedefinirSenha() {
   const navigate = useNavigate();
@@ -26,11 +27,6 @@ export default function RedefinirSenha() {
 
     if (senha !== confirmacao) {
       setErro("❌ As senhas não coincidem.");
-      return;
-    }
-
-    if (/\s/.test(senha)) {
-      setErro("❌ A senha não pode conter espaços.");
       return;
     }
 
@@ -123,7 +119,8 @@ export default function RedefinirSenha() {
                   className="w-full p-3 pr-12 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
                   type={mostrarSenha ? "text" : "password"}
                   value={senha}
-                  onChange={(e) => setSenha(e.target.value)}
+                  onChange={(e) => setSenha(semEspacos(e.target.value))}
+                  onKeyDown={bloquearEspaco}
                   required
                   minLength={6}
                   disabled={enviando}
@@ -147,7 +144,8 @@ export default function RedefinirSenha() {
                   className="w-full p-3 pr-12 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
                   type={mostrarConfirmacao ? "text" : "password"}
                   value={confirmacao}
-                  onChange={(e) => setConfirmacao(e.target.value)}
+                  onChange={(e) => setConfirmacao(semEspacos(e.target.value))}
+                  onKeyDown={bloquearEspaco}
                   required
                   minLength={6}
                   disabled={enviando}
