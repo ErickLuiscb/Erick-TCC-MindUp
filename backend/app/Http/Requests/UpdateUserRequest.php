@@ -23,8 +23,6 @@ class UpdateUserRequest extends FormRequest
             'senha' => 'sometimes|string|min:6|not_regex:/\s/u',
 
             'imagem_perfil' => 'sometimes|image|mimes:jpg,jpeg,png,webp|max:2048',
-
-            'crp' => 'nullable|string|max:20',
         ];
     }
 }

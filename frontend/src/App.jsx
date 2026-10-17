@@ -13,6 +13,7 @@ import { BootstrapProvider } from "./context/BootstrapContext";
 import Layout from "./components/Layout";
 import RotaProtegida from "./components/RotaProtegida";
 import RotaPsicologo from "./components/RotaPsicologo";
+import RotaAdmin from "./components/RotaAdmin";
 
 // Páginas públicas
 import Inicial from "./pages/inicial/Inicial";
@@ -77,6 +78,9 @@ import EditarSugestao from "./pages/dashboard/sugestoes/EditarSugestao";
 import MinhasAutoajudas from "./pages/dashboard/autoajuda/MinhasAutoajudas";
 import CriarAutoajuda from "./pages/dashboard/autoajuda/CriarAutoajuda";
 import EditarAutoajuda from "./pages/dashboard/autoajuda/EditarAutoajuda";
+
+// Admin — verificação de psicólogos
+import PainelPsicologos from "./pages/admin/PainelPsicologos";
 
 export default function App() {
   return (
@@ -182,12 +186,19 @@ export default function App() {
                         </Route>
 
                         {/* =========================
-                  ROTAS EXCLUSIVAS PSICÓLOGO / ADMIN
+                  PAINEL — psicólogo em análise também entra (vê o aviso)
+              ========================= */}
+                        <Route element={<RotaPsicologo permitirNaoAprovado />}>
+                          <Route element={<Layout />}>
+                            <Route path="/dashboard" element={<Dashboard />} />
+                          </Route>
+                        </Route>
+
+                        {/* =========================
+                  ROTAS EXCLUSIVAS PSICÓLOGO APROVADO / ADMIN
               ========================= */}
                         <Route element={<RotaPsicologo />}>
                           <Route element={<Layout />}>
-                            <Route path="/dashboard" element={<Dashboard />} />
-
                             {/* Dashboard - Gerenciamento de Vídeos */}
                             <Route
                               path="/dashboard/videos"
@@ -248,6 +259,18 @@ export default function App() {
                             <Route
                               path="/dashboard/autoajuda/editar/:id"
                               element={<EditarAutoajuda />}
+                            />
+                          </Route>
+                        </Route>
+
+                        {/* =========================
+                  ROTAS EXCLUSIVAS ADMIN
+              ========================= */}
+                        <Route element={<RotaAdmin />}>
+                          <Route element={<Layout />}>
+                            <Route
+                              path="/admin/psicologos"
+                              element={<PainelPsicologos />}
                             />
                           </Route>
                         </Route>

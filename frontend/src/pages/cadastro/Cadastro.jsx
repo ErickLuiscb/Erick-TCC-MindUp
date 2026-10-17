@@ -3,6 +3,12 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { CheckCircle2, XCircle, Mail, Eye, EyeOff } from "lucide-react";
 import { semEspacos, bloquearEspaco } from "../../utils/senha";
+import {
+  REGIOES_CRP,
+  formatarCpf,
+  cpfValido,
+  crpNumeroValido,
+} from "../../utils/crp";
 
 export default function Cadastro() {
   const navigate = useNavigate();
@@ -15,6 +21,8 @@ export default function Cadastro() {
     confirmar: "",
     imagem: null,
     crp: "",
+    crp_regiao: "",
+    cpf: "",
     tipo: "usuario", // 'usuario' ou 'psicologo'
   });
 
@@ -79,6 +87,9 @@ export default function Cadastro() {
 
       // Criar preview de forma limpa
       setPreview(URL.createObjectURL(file));
+    } else if (name === "cpf") {
+      // CPF é formatado enquanto digita (000.000.000-00)
+      setForm((prev) => ({ ...prev, cpf: formatarCpf(value) }));
     } else {
       setForm((prev) => ({
         ...prev,
@@ -104,10 +115,32 @@ export default function Cadastro() {
       return;
     }
 
-    if (form.tipo === "psicologo" && !form.crp.trim()) {
-      setMensagem("❌ Psicólogos devem informar o CRP");
-      setModalAberto(true);
-      return;
+    if (form.tipo === "psicologo") {
+      if (!form.crp_regiao) {
+        setMensagem("❌ Selecione a região do seu CRP");
+        setModalAberto(true);
+        return;
+      }
+
+      if (!form.crp.trim()) {
+        setMensagem("❌ Psicólogos devem informar o CRP");
+        setModalAberto(true);
+        return;
+      }
+
+      if (!crpNumeroValido(form.crp)) {
+        setMensagem(
+          "❌ Informe somente o número do CRP, sem a região nem símbolos",
+        );
+        setModalAberto(true);
+        return;
+      }
+
+      if (!cpfValido(form.cpf)) {
+        setMensagem("❌ CPF inválido. Confira os 11 dígitos");
+        setModalAberto(true);
+        return;
+      }
     }
 
     setLoadingCadastro(true);
@@ -120,7 +153,9 @@ export default function Cadastro() {
     fd.append("tipo", form.tipo);
 
     if (form.tipo === "psicologo") {
-      fd.append("crp", form.crp);
+      fd.append("crp_regiao", form.crp_regiao);
+      fd.append("crp", form.crp.trim());
+      fd.append("cpf", form.cpf);
     }
 
     if (form.imagem) {
@@ -270,21 +305,75 @@ export default function Cadastro() {
 
           {form.tipo === "psicologo" && (
             <div className="animate-fadeIn">
+              <div
+                role="note"
+                className="mt-4 bg-amber-50 border border-amber-100 rounded-xl p-4 text-sm text-amber-900 leading-relaxed"
+              >
+                <p className="font-bold">
+                  Confira seus dados antes de se cadastrar 💜
+                </p>
+                <p className="mt-1 text-xs">
+                  Nossa equipe vai conferir o seu registro profissional (região,
+                  número do CRP e CPF). Um erro de digitação pode atrasar a
+                  aprovação, e a correção depende de contato com a equipe. Vale
+                  revisar tudo antes de enviar.
+                </p>
+              </div>
+
               <label className="block mt-4 font-bold text-purple-900">
-                CRP (Registro Profissional):
+                Região do CRP:
+              </label>
+              <select
+                name="crp_regiao"
+                className="w-full p-3 border border-gray-300 rounded-lg bg-white focus:outline-purple-600 cursor-pointer"
+                value={form.crp_regiao}
+                onChange={handleChange}
+                required={form.tipo === "psicologo"}
+                disabled={loadingCadastro}
+              >
+                <option value="">Selecione a região</option>
+                {REGIOES_CRP.map((r) => (
+                  <option key={r.valor} value={r.valor}>
+                    {r.rotulo}
+                  </option>
+                ))}
+              </select>
+
+              <label className="block mt-4 font-bold text-purple-900">
+                Número do CRP:
               </label>
               <input
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-purple-600"
                 type="text"
+                inputMode="numeric"
                 name="crp"
                 value={form.crp}
                 onChange={handleChange}
-                placeholder="Digite seu número de CRP"
+                placeholder="Somente o número, ex.: 31253"
+                required={form.tipo === "psicologo"}
+                disabled={loadingCadastro}
+              />
+
+              <label className="block mt-4 font-bold text-purple-900">
+                CPF:
+              </label>
+              <input
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-purple-600"
+                type="text"
+                inputMode="numeric"
+                name="cpf"
+                value={form.cpf}
+                onChange={handleChange}
+                placeholder="000.000.000-00"
+                autoComplete="off"
                 required={form.tipo === "psicologo"}
                 disabled={loadingCadastro}
               />
               <p className="text-xs text-gray-500 mt-1">
-                Apenas psicólogos podem criar e publicar conteúdos
+                Usado só para conferir seu registro no Conselho; não é exibido a
+                outros usuários e é apagado assim que a análise terminar. Seu
+                cadastro passará por análise antes de você poder criar e
+                publicar conteúdos.
               </p>
             </div>
           )}
@@ -340,6 +429,15 @@ export default function Cadastro() {
                     {mensagem}
                   </p>
                 </div>
+                {form.tipo === "psicologo" && (
+                  <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6 text-left">
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      Como psicólogo, seu registro profissional será analisado.
+                      Você poderá entrar depois de confirmar o e-mail, mas só
+                      poderá publicar conteúdos depois da aprovação.
+                    </p>
+                  </div>
+                )}
                 <button
                   onClick={fecharModalEIrParaLogin}
                   className="w-full bg-purple-900 text-white py-3 rounded-full font-bold shadow-md hover:bg-purple-950 transition cursor-pointer"

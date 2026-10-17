@@ -1,10 +1,18 @@
 import { useNavigate } from "react-router";
-import { Home, User, Map, LogOut, BookOpen, Heart } from "lucide-react";
+import {
+  Home,
+  User,
+  Map,
+  LogOut,
+  BookOpen,
+  Heart,
+  ShieldCheck,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useBootstrap } from "../context/BootstrapContext";
 
 export default function Header() {
-  const { logout, abilities } = useAuth(); // Usando abilities do novo contexto para segurança
+  const { logout, abilities, usuario } = useAuth(); // Usando abilities do novo contexto para segurança
   const { recarregarTudo } = useBootstrap();
   const navigate = useNavigate();
 
@@ -18,9 +26,15 @@ export default function Header() {
     navigate("/inicial");
   };
 
-  // Verifica se o token tem permissão de publicador ou admin para renderizar o painel
+  // O painel aparece para quem pode publicar (publicador/admin) e também para
+  // o psicólogo ainda em análise, que vê lá o aviso do status do cadastro.
   const eProfissional =
-    abilities.includes("publicador") || abilities.includes("admin");
+    abilities.includes("publicador") ||
+    abilities.includes("admin") ||
+    usuario?.tipo === "psicologo";
+
+  // Só admin vê o painel de verificação de psicólogos
+  const eAdmin = abilities.includes("admin");
 
   return (
     <header className="flex flex-wrap gap-4 justify-between items-center bg-[#3a0b6d] px-8 py-4 shadow-lg relative">
@@ -48,6 +62,18 @@ export default function Header() {
                        text-sm font-bold flex items-center gap-2"
           >
             📊 <span>Meu Painel</span>
+          </button>
+        )}
+
+        {/* ADMIN — verificação de psicólogos (apenas admin) */}
+        {eAdmin && (
+          <button
+            onClick={() => navigate("/admin/psicologos")}
+            className="bg-[#7a00c1] px-4 py-2 rounded-lg shadow-md 
+                       hover:bg-[#8c00db] hover:text-[#ff7300] transition flex items-center gap-2 font-semibold text-sm"
+          >
+            <ShieldCheck size={18} className="text-[#ff7300]" />
+            <span>Admin</span>
           </button>
         )}
 

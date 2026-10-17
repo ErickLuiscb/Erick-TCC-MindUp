@@ -24,18 +24,26 @@ class User extends Authenticatable
         'senha',
         'imagem_perfil',
         'crp',
+        'crp_regiao',
+        'cpf',
         'tipo',
         'is_admin',
         'role',
+        // crp_status NÃO entra aqui de propósito: só o servidor define
+        // (cadastro => pendente; admin => aprovado/rejeitado).
     ];
 
     protected $hidden = [
         'senha',
         'remember_token',
+        'cpf', // nunca sai em serialização acidental para garantir a segurança do dado sensível
+               // seguindo justamente a LGPD (Lei Geral de Proteção de Dados Pessoais).
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'crp_analisado_em' => 'datetime',
+        'cpf' => 'encrypted',
     ];
 
     /**

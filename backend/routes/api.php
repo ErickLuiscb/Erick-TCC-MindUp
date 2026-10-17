@@ -7,6 +7,7 @@ use App\Http\Controllers\api\Auth\PasswordResetController;
 use App\Http\Controllers\api\Auth\EmailVerificationController;
 
 use App\Http\Controllers\api\UserApiController;
+use App\Http\Controllers\api\AdminPsicologoApiController;
 use App\Http\Controllers\api\AnotacaoApiController;
 
 use App\Http\Controllers\api\VideoApiController;
@@ -71,6 +72,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/usuarios/{user}', [UserApiController::class, 'update']);
 
     Route::delete('/usuarios/{user}', [UserApiController::class, 'destroy']);
+
+    /*
+    | ADMIN — VERIFICAÇÃO DE PSICÓLOGOS
+    */
+    Route::prefix('admin')
+        ->middleware('abilities:admin')
+        ->group(function () {
+            Route::get('/psicologos', [AdminPsicologoApiController::class, 'index']);
+
+            Route::patch('/psicologos/{user}/status', [AdminPsicologoApiController::class, 'atualizarStatus']);
+        });
 
     /*
     | ANOTAÇÕES

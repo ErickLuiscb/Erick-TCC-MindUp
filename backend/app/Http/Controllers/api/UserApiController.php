@@ -63,7 +63,16 @@ class UserApiController extends Controller
             );
         }
 
-        $user = User::create($data);
+        $user = new User($data);
+
+        // Criado pelo próprio admin: a decisão já é dele
+        if ($user->tipo === 'psicologo') {
+            $user->crp_status = 'aprovado';
+            $user->crp_analisado_por = $request->user()->id;
+            $user->crp_analisado_em = now();
+        }
+
+        $user->save();
 
         return response()->json([
             'message' => 'Usuário criado com sucesso.',

@@ -23,6 +23,12 @@ class UserResource extends JsonResource
 
             'crp' => $this->crp,
 
+            'crp_regiao' => $this->crp_regiao,
+
+            'crp_status' => $this->crp_status,
+
+            'crp_motivo' => $this->crp_motivo,
+
             'tipo' => $this->tipo,
 
             'is_admin' => $this->is_admin,

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -45,7 +45,9 @@ class AuthController extends Controller
 
         $abilities = [];
 
-        if ($user->tipo === 'psicologo') {
+        // Só psicólogo APROVADO publica. Qualquer outro status (inclusive
+        // nulo) fica sem a ability — na dúvida, bloqueia.
+        if ($user->tipo === 'psicologo' && $user->crp_status === 'aprovado') {
             $abilities[] = 'publicador';
         }
 
@@ -100,18 +102,11 @@ class AuthController extends Controller
     /**
      * REGISTRO
      */
-    public function register(StoreUserRequest $request)
+    public function register(RegisterRequest $request)
 {
     $data = $request->validated();
 
     $data['senha'] = Hash::make($data['senha']);
-
-    /*
-     Se possui CRP, considera psicólogo
-    */
-    if (!empty($data['crp'])) {
-        $data['tipo'] = 'psicologo';
-    }
 
     /*
      Upload imagem perfil
@@ -124,7 +119,14 @@ class AuthController extends Controller
         $data['imagem_perfil'] = $caminho;
     }
 
-    $user = User::create($data);
+    $user = new User($data);
+
+    // Psicólogo nasce pendente: só publica depois que o admin aprovar
+    if ($user->tipo === 'psicologo') {
+        $user->crp_status = 'pendente';
+    }
+
+    $user->save();
 
     EmailVerificationController::enviarEmailVerificacao($user);
 

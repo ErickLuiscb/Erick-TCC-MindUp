@@ -29,9 +29,10 @@
                             @if ($tipoUsuario === 'psicologo')
                                 <p style="font-size: 14px; color:#4b4b4b; line-height: 1.6; margin: 0 0 24px;">
                                     Estamos felizes em ter você como profissional no MindUp. Depois de
-                                    confirmar seu e-mail, sua conta será ativada e você poderá publicar
-                                    vídeos, artigos, sugestões e conteúdos de autoajuda para apoiar
-                                    nossos usuários.
+                                    confirmar seu e-mail, você já poderá entrar na plataforma. Para
+                                    publicar vídeos, artigos, sugestões e conteúdos de autoajuda, seu
+                                    registro profissional (CRP) será analisado pela nossa equipe, e
+                                    avisaremos o resultado por e-mail.
                                 </p>
                             @else
                                 <p style="font-size: 14px; color:#4b4b4b; line-height: 1.6; margin: 0 0 24px;">
