@@ -26,12 +26,10 @@ export default function Header() {
     navigate("/inicial");
   };
 
-  // O painel aparece para quem pode publicar (publicador/admin) e também para
+  // O painel aparece para quem pode publicar (publicador) e também para
   // o psicólogo ainda em análise, que vê lá o aviso do status do cadastro.
   const eProfissional =
-    abilities.includes("publicador") ||
-    abilities.includes("admin") ||
-    usuario?.tipo === "psicologo";
+    abilities.includes("publicador") || usuario?.tipo === "psicologo";
 
   // Só admin vê o painel de verificação de psicólogos
   const eAdmin = abilities.includes("admin");

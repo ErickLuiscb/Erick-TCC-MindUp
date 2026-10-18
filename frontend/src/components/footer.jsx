@@ -90,7 +90,8 @@ export default function Footer() {
 
         <p className="text-[11px] text-white/60">
           © 2026 <strong>MindUp</strong> — Todos os direitos reservados a Érick
-          Luis Capera Barneche
+          Luis Capera Barneche — Fale Conosco:
+          equipe.mindup.saudemental@gmail.com
         </p>
       </div>
     </footer>

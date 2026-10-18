@@ -83,7 +83,8 @@
                             @else
                                 <p style="font-size: 12px; color:#9a9a9a; line-height: 1.6; margin: 0;">
                                     Se você acredita que houve um engano, entre em contato com a
-                                    equipe do MindUp por este Email: Equipe-MindUp@gmail.com .
+                                    equipe do MindUp por este Email: equipe.mindup.saudemental@gmail.com, que estaremos dispostos a
+                                    responde-lo com devida atenção.
                                 </p>
                             @endif
                         </td>
