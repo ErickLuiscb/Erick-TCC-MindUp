@@ -148,7 +148,7 @@ export default function MeusArtigos() {
                     key={c.id}
                     className="text-[9px] font-black uppercase tracking-wider text-[#ff7300] bg-orange-50 px-2 py-0.5 rounded border border-orange-100"
                   >
-                    {c.nome.includes("-") ? c.nome.split("-")?.trim() : c.nome}
+                    {c.nome}
                   </span>
                 ))}
               </div>

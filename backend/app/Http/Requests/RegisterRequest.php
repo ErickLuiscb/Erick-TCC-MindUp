@@ -58,7 +58,7 @@ class RegisterRequest extends FormRequest
                 'exclude_unless:tipo,psicologo',
                 'required',
                 'integer',
-                'between:1,23',
+                'between:1,24',
             ],
 
             'crp' => [
