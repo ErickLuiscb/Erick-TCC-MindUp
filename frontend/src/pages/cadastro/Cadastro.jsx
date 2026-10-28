@@ -42,7 +42,10 @@ export default function Cadastro() {
 
   if (carregando) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-purple-700 text-xl font-bold">
+      <div
+        role="status"
+        className="min-h-dvh flex items-center justify-center text-purple-700 text-xl font-bold"
+      >
         Carregando...
       </div>
     );
@@ -185,13 +188,22 @@ export default function Cadastro() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-xl max-w-[900px] w-full mx-auto my-12 p-4 text-black">
-      <div className="flex-1 p-10">
-        <h1 className="text-3xl text-purple-700 font-bold">Cadastre-se</h1>
+    <main className="flex flex-col md:flex-row bg-white rounded-2xl shadow-xl w-[calc(100%-2rem)] max-w-[900px] mx-auto my-4 sm:my-8 md:my-12 p-2 sm:p-4 text-black">
+      <div className="flex-1 p-5 sm:p-8 md:p-10">
+        <h1 className="text-2xl sm:text-3xl text-purple-700 font-bold">
+          Cadastre-se
+        </h1>
 
         <form onSubmit={handleSubmit}>
-          <label className="block mt-4 font-bold text-purple-900">Nome:</label>
+          <label
+            htmlFor="cadastro-nome"
+            className="block mt-4 font-bold text-purple-900"
+          >
+            Nome:
+          </label>
           <input
+            id="cadastro-nome"
+            autoComplete="name"
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-purple-600"
             type="text"
             name="nome"
@@ -201,8 +213,15 @@ export default function Cadastro() {
             disabled={loadingCadastro}
           />
 
-          <label className="block mt-4 font-bold text-purple-900">Email:</label>
+          <label
+            htmlFor="cadastro-email"
+            className="block mt-4 font-bold text-purple-900"
+          >
+            Email:
+          </label>
           <input
+            id="cadastro-email"
+            autoComplete="email"
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-purple-600"
             type="email"
             name="email"
@@ -212,11 +231,16 @@ export default function Cadastro() {
             disabled={loadingCadastro}
           />
 
-          <label className="block mt-4 font-bold text-purple-900">
+          <label
+            htmlFor="cadastro-senha"
+            className="block mt-4 font-bold text-purple-900"
+          >
             Senha (mínimo 6 caracteres):
           </label>
           <div className="relative">
             <input
+              id="cadastro-senha"
+              autoComplete="new-password"
               className="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:outline-purple-600"
               type={mostrarSenha ? "text" : "password"}
               name="senha"
@@ -230,19 +254,23 @@ export default function Cadastro() {
             <button
               type="button"
               onClick={() => setMostrarSenha((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
-              tabIndex={-1}
+              className="absolute right-1 top-1/2 -translate-y-1/2 p-2.5 text-gray-500 hover:text-purple-700 cursor-pointer"
               aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
             >
               {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
 
-          <label className="block mt-4 font-bold text-purple-900">
+          <label
+            htmlFor="cadastro-confirmar"
+            className="block mt-4 font-bold text-purple-900"
+          >
             Confirmar Senha:
           </label>
           <div className="relative">
             <input
+              id="cadastro-confirmar"
+              autoComplete="new-password"
               className="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:outline-purple-600"
               type={mostrarConfirmar ? "text" : "password"}
               name="confirmar"
@@ -255,15 +283,21 @@ export default function Cadastro() {
             <button
               type="button"
               onClick={() => setMostrarConfirmar((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
-              tabIndex={-1}
-              aria-label={mostrarConfirmar ? "Ocultar senha" : "Mostrar senha"}
+              className="absolute right-1 top-1/2 -translate-y-1/2 p-2.5 text-gray-500 hover:text-purple-700 cursor-pointer"
+              aria-label={
+                mostrarConfirmar
+                  ? "Ocultar confirmação de senha"
+                  : "Mostrar confirmação de senha"
+              }
             >
               {mostrarConfirmar ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
 
-          <label className="block mt-4 font-bold text-purple-900">
+          <label
+            htmlFor="cadastro-imagem"
+            className="block mt-4 font-bold text-purple-900"
+          >
             Imagem de Perfil (opcional):
           </label>
 
@@ -271,13 +305,15 @@ export default function Cadastro() {
             <div className="mb-3">
               <img
                 src={preview}
-                alt="Preview"
+                alt="Pré-visualização da imagem de perfil"
                 className="w-24 h-24 rounded-full object-cover border-2 border-purple-400"
               />
             </div>
           )}
 
           <input
+            id="cadastro-imagem"
+            aria-describedby="cadastro-imagem-ajuda"
             className="w-full p-3 border border-gray-300 rounded-lg file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-purple-100 file:text-purple-700 hover:file:bg-purple-200 cursor-pointer"
             type="file"
             name="imagem"
@@ -285,14 +321,18 @@ export default function Cadastro() {
             onChange={handleChange}
             disabled={loadingCadastro}
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p id="cadastro-imagem-ajuda" className="text-xs text-gray-500 mt-1">
             Formatos: JPG, PNG, WEBP (máx. 2MB)
           </p>
 
-          <label className="block mt-4 font-bold text-purple-900">
+          <label
+            htmlFor="cadastro-tipo"
+            className="block mt-4 font-bold text-purple-900"
+          >
             Tipo de Conta:
           </label>
           <select
+            id="cadastro-tipo"
             name="tipo"
             className="w-full p-3 border border-gray-300 rounded-lg bg-white focus:outline-purple-600 cursor-pointer"
             value={form.tipo}
@@ -320,10 +360,14 @@ export default function Cadastro() {
                 </p>
               </div>
 
-              <label className="block mt-4 font-bold text-purple-900">
+              <label
+                htmlFor="cadastro-crp-regiao"
+                className="block mt-4 font-bold text-purple-900"
+              >
                 Região do CRP:
               </label>
               <select
+                id="cadastro-crp-regiao"
                 name="crp_regiao"
                 className="w-full p-3 border border-gray-300 rounded-lg bg-white focus:outline-purple-600 cursor-pointer"
                 value={form.crp_regiao}
@@ -339,10 +383,14 @@ export default function Cadastro() {
                 ))}
               </select>
 
-              <label className="block mt-4 font-bold text-purple-900">
+              <label
+                htmlFor="cadastro-crp"
+                className="block mt-4 font-bold text-purple-900"
+              >
                 Número do CRP:
               </label>
               <input
+                id="cadastro-crp"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-purple-600"
                 type="text"
                 inputMode="numeric"
@@ -354,10 +402,15 @@ export default function Cadastro() {
                 disabled={loadingCadastro}
               />
 
-              <label className="block mt-4 font-bold text-purple-900">
+              <label
+                htmlFor="cadastro-cpf"
+                className="block mt-4 font-bold text-purple-900"
+              >
                 CPF:
               </label>
               <input
+                id="cadastro-cpf"
+                aria-describedby="cadastro-cpf-ajuda"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-purple-600"
                 type="text"
                 inputMode="numeric"
@@ -369,7 +422,7 @@ export default function Cadastro() {
                 required={form.tipo === "psicologo"}
                 disabled={loadingCadastro}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p id="cadastro-cpf-ajuda" className="text-xs text-gray-500 mt-1">
                 Usado só para conferir seu registro no Conselho; não é exibido a
                 outros usuários e é apagado assim que a análise terminar. Seu
                 cadastro passará por análise antes de você poder criar e
@@ -400,11 +453,13 @@ export default function Cadastro() {
         </form>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-8 bg-gray-50 rounded-r-2xl md:rounded-l-none">
+      {/* No celular a logo aparece agora em cima do formulário (order-first), pequena e
+          sem o fundo cinza; a partir de md volta para a direita, como antes. */}
+      <div className="order-first md:order-last flex-1 flex items-center justify-center pt-4 pb-2 md:p-8 md:bg-gray-50 md:rounded-r-2xl">
         <img
           src="/logo.png"
           alt="Logo MindUp"
-          className="max-w-[280px] object-contain"
+          className="w-40 sm:w-48 md:w-auto max-w-[280px] object-contain"
         />
       </div>
 
@@ -413,19 +468,31 @@ export default function Cadastro() {
           de sucesso e instrução de confirmar email, ou mensagem de erro */}
       {modalAberto && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
+          <div
+            role={cadastroConcluido ? "dialog" : "alertdialog"}
+            aria-modal="true"
+            aria-labelledby="cadastro-modal-titulo"
+            aria-describedby="cadastro-modal-descricao"
+            className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 text-center max-h-[90dvh] overflow-y-auto"
+          >
             {cadastroConcluido ? (
               <>
                 <CheckCircle2
                   size={48}
                   className="text-green-600 mx-auto mb-4"
                 />
-                <h2 className="text-xl font-black text-purple-900 mb-2">
+                <h2
+                  id="cadastro-modal-titulo"
+                  className="text-xl font-black text-purple-900 mb-2"
+                >
                   Cadastro realizado!
                 </h2>
                 <div className="bg-purple-50 border border-purple-100 rounded-xl p-4 mb-6 flex items-start gap-3 text-left">
                   <Mail size={20} className="text-purple-700 shrink-0 mt-0.5" />
-                  <p className="text-sm text-gray-700 leading-relaxed">
+                  <p
+                    id="cadastro-modal-descricao"
+                    className="text-sm text-gray-700 leading-relaxed"
+                  >
                     {mensagem}
                   </p>
                 </div>
@@ -439,6 +506,8 @@ export default function Cadastro() {
                   </div>
                 )}
                 <button
+                  type="button"
+                  autoFocus
                   onClick={fecharModalEIrParaLogin}
                   className="w-full bg-purple-900 text-white py-3 rounded-full font-bold shadow-md hover:bg-purple-950 transition cursor-pointer"
                 >
@@ -448,13 +517,21 @@ export default function Cadastro() {
             ) : (
               <>
                 <XCircle size={48} className="text-red-600 mx-auto mb-4" />
-                <h2 className="text-xl font-black text-purple-900 mb-2">
+                <h2
+                  id="cadastro-modal-titulo"
+                  className="text-xl font-black text-purple-900 mb-2"
+                >
                   Não foi possível cadastrar
                 </h2>
-                <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                <p
+                  id="cadastro-modal-descricao"
+                  className="text-sm text-gray-600 leading-relaxed mb-6"
+                >
                   {mensagem.replace("❌ ", "")}
                 </p>
                 <button
+                  type="button"
+                  autoFocus
                   onClick={() => setModalAberto(false)}
                   className="w-full bg-purple-100 text-purple-900 py-3 rounded-full font-bold hover:bg-purple-200 transition cursor-pointer"
                 >
@@ -465,6 +542,6 @@ export default function Cadastro() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }

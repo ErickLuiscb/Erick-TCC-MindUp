@@ -60,8 +60,8 @@ export default function RedefinirSenha() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-10">
+    <div className="min-h-dvh flex items-center justify-center p-4 sm:p-6">
+      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 sm:p-10">
         <div className="flex items-center gap-3 mb-2">
           <div className="bg-purple-100 p-2.5 rounded-xl">
             <KeyRound size={22} className="text-purple-700" />
@@ -71,7 +71,7 @@ export default function RedefinirSenha() {
 
         {linkInvalido && (
           <div className="mt-4">
-            <p className="text-sm text-red-600 font-bold mb-4">
+            <p role="alert" className="text-sm text-red-600 font-bold mb-4">
               ❌ Este link de redefinição está incompleto ou inválido. Peça um
               novo link na tela de login.
             </p>
@@ -87,11 +87,12 @@ export default function RedefinirSenha() {
         {!linkInvalido && sucesso && (
           <div className="mt-4 text-center">
             <CheckCircle2 size={40} className="text-green-600 mx-auto mb-3" />
-            <p className="text-sm text-green-700 font-bold mb-6">
+            <p role="alert" className="text-sm text-green-700 font-bold mb-6">
               Senha redefinida com sucesso! Você já pode fazer login com sua
               nova senha.
             </p>
             <button
+              type="button"
               onClick={() => navigate("/login")}
               className="w-full bg-purple-900 text-white py-3 rounded-full font-bold shadow-md hover:bg-purple-950 transition"
             >
@@ -103,19 +104,29 @@ export default function RedefinirSenha() {
         {!linkInvalido && !sucesso && (
           <>
             <p className="text-sm text-gray-500 leading-relaxed mb-6 mt-2">
-              Escolha uma nova senha para <strong>{email}</strong>.
+              Escolha uma nova senha para{" "}
+              <strong className="break-all">{email}</strong>.
             </p>
 
-            {erro && (
-              <p className="mb-4 font-bold text-sm text-red-600">{erro}</p>
-            )}
+            {/* Região de aviso sempre presente: leitores de tela anunciam o erro assim que ele aparece */}
+            <div role="status" aria-live="polite">
+              {erro && (
+                <p className="mb-4 font-bold text-sm text-red-600">{erro}</p>
+              )}
+            </div>
 
             <form onSubmit={handleSubmit}>
-              <label className="font-semibold block text-purple-900 text-sm mb-1">
+              <label
+                htmlFor="redefinir-senha"
+                className="font-semibold block text-purple-900 text-sm mb-1"
+              >
                 Nova senha:
               </label>
               <div className="relative">
                 <input
+                  id="redefinir-senha"
+                  autoComplete="new-password"
+                  aria-describedby="redefinir-senha-ajuda"
                   className="w-full p-3 pr-12 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
                   type={mostrarSenha ? "text" : "password"}
                   value={senha}
@@ -128,19 +139,23 @@ export default function RedefinirSenha() {
                 <button
                   type="button"
                   onClick={() => setMostrarSenha((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
-                  tabIndex={-1}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 p-2.5 text-gray-500 hover:text-purple-700 cursor-pointer"
                   aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
                 >
                   {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
 
-              <label className="font-semibold block mt-4 text-purple-900 text-sm mb-1">
+              <label
+                htmlFor="redefinir-confirmacao"
+                className="font-semibold block mt-4 text-purple-900 text-sm mb-1"
+              >
                 Confirme a nova senha:
               </label>
               <div className="relative">
                 <input
+                  id="redefinir-confirmacao"
+                  autoComplete="new-password"
                   className="w-full p-3 pr-12 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
                   type={mostrarConfirmacao ? "text" : "password"}
                   value={confirmacao}
@@ -153,8 +168,7 @@ export default function RedefinirSenha() {
                 <button
                   type="button"
                   onClick={() => setMostrarConfirmacao((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
-                  tabIndex={-1}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 p-2.5 text-gray-500 hover:text-purple-700 cursor-pointer"
                   aria-label={
                     mostrarConfirmacao ? "Ocultar senha" : "Mostrar senha"
                   }
@@ -167,14 +181,17 @@ export default function RedefinirSenha() {
                 </button>
               </div>
 
-              <p className="text-[11px] text-gray-400 mt-2">
+              <p
+                id="redefinir-senha-ajuda"
+                className="text-[11px] text-gray-500 mt-2"
+              >
                 Mínimo de 6 caracteres.
               </p>
 
               <button
                 type="submit"
                 disabled={enviando}
-                className="w-full mt-6 bg-purple-900 text-white py-3 rounded-full font-bold shadow-md hover:bg-purple-950 transition disabled:opacity-50"
+                className="w-full mt-6 bg-purple-900 text-white py-3 px-4 rounded-full font-bold text-sm sm:text-base shadow-md hover:bg-purple-950 transition disabled:opacity-50"
               >
                 {enviando ? "SALVANDO..." : "REDEFINIR SENHA"}
               </button>

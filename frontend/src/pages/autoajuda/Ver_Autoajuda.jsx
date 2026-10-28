@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate, Link } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useAutoajuda } from "../../context/AutoajudaContext";
 import { ArrowLeft, Heart } from "lucide-react";
 
@@ -13,7 +13,7 @@ export default function VerAutoajuda() {
 
   if (carregando) {
     return (
-      <div className="flex justify-center pt-20 animate-pulse">
+      <div role="status" className="flex justify-center pt-20 animate-pulse">
         <p className="text-xl font-bold text-white tracking-wide">
           Carregando conteúdo...
         </p>
@@ -23,13 +23,17 @@ export default function VerAutoajuda() {
 
   if (!item) {
     return (
-      <div className="max-w-md mx-auto bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center mt-12 shadow-xl text-white">
+      <div
+        role="alert"
+        className="max-w-md mx-auto bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center mt-12 shadow-xl text-white"
+      >
         <p className="text-xl font-bold">❌ Conteúdo não encontrado</p>
         <p className="text-purple-200 text-xs mt-2">
           O conteúdo solicitado está inacessível ou foi ocultado pelo
           profissional.
         </p>
         <button
+          type="button"
           onClick={() => navigate(-1)}
           className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline cursor-pointer"
         >
@@ -42,8 +46,9 @@ export default function VerAutoajuda() {
   return (
     <div className="max-w-3xl mx-auto p-2 text-black animate-fadeIn">
       <button
+        type="button"
         onClick={() => navigate(-1)}
-        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-4 sm:mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
@@ -52,7 +57,7 @@ export default function VerAutoajuda() {
         <span>Voltar</span>
       </button>
 
-      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-sky-100">
+      <article className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-sky-100">
         {/* Mídia */}
         <div className="w-full bg-sky-950 relative overflow-hidden">
           {item.tipo_midia === "imagem" ? (
@@ -65,17 +70,21 @@ export default function VerAutoajuda() {
             <video
               src={item.midia}
               controls
+              playsInline
+              aria-label={`Vídeo: ${item.titulo}`}
               className="w-full max-h-[70vh] bg-black"
             />
           )}
 
-          <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider shadow-md flex items-center gap-1.5 text-white bg-sky-700/90 backdrop-blur-sm">
-            <span>{item.tipo_midia === "imagem" ? "🖼️" : "🎬"}</span>
+          <div className="absolute top-3 left-3 sm:top-4 sm:left-4 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-black uppercase tracking-wider shadow-md flex items-center gap-1.5 text-white bg-sky-700/90 backdrop-blur-sm">
+            <span aria-hidden="true">
+              {item.tipo_midia === "imagem" ? "🖼️" : "🎬"}
+            </span>
             <span>{item.tipo_midia === "imagem" ? "Imagem" : "Vídeo"}</span>
           </div>
         </div>
 
-        <div className="p-6 md:p-8">
+        <div className="p-4 sm:p-6 md:p-8">
           <div className="flex flex-wrap gap-1.5 mb-3">
             {item.categorias?.map((c) => (
               <span
@@ -87,24 +96,24 @@ export default function VerAutoajuda() {
             ))}
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-black text-purple-950 uppercase tracking-wide leading-tight">
+          <h1 className="text-2xl md:text-3xl font-black text-purple-950 uppercase tracking-wide leading-tight wrap-break-words">
             {item.titulo}
           </h1>
 
-          <p className="whitespace-pre-wrap text-sm md:text-base text-gray-600 leading-relaxed font-medium bg-gray-50/70 p-5 rounded-2xl border border-gray-100 mt-6">
+          <p className="whitespace-pre-wrap text-sm md:text-base text-gray-600 leading-relaxed font-medium bg-gray-50/70 p-4 sm:p-5 rounded-2xl border border-gray-100 mt-6">
             {item.descricao ||
               "Este conteúdo foi disponibilizado sem uma descrição prévia pelo autor."}
           </p>
 
-          <footer className="mt-8 pt-5 border-t border-gray-100 flex items-center justify-between">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+          <footer className="mt-8 pt-5 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
               Por {item.autor?.nome || "Profissional MindUp"}
             </span>
 
             <button
               type="button"
               onClick={() => alternarFavoritoAutoajuda(item.id)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider border transition cursor-pointer ${
+              className={`w-full sm:w-auto justify-center flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider border transition cursor-pointer ${
                 item.favoritado
                   ? "bg-sky-100 border-sky-300 text-sky-800"
                   : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
@@ -120,7 +129,7 @@ export default function VerAutoajuda() {
             </button>
           </footer>
         </div>
-      </div>
+      </article>
     </div>
   );
 }

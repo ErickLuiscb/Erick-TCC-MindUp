@@ -83,7 +83,7 @@ function CopiarBotao({ texto, rotulo }) {
       type="button"
       onClick={copiar}
       aria-label={`Copiar ${rotulo}`}
-      className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-100 transition cursor-pointer"
+      className="inline-flex items-center gap-1 px-2.5 py-2 sm:px-2 sm:py-1 rounded-lg text-[10px] font-bold bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-100 transition cursor-pointer"
     >
       {copiado ? <Check size={11} /> : <Copy size={11} />}
       <span>{copiado ? "Copiado" : "Copiar"}</span>
@@ -111,7 +111,7 @@ function ModalMotivo({ alvo, acao, enviando, erro, onCancelar, onConfirmar }) {
         role="dialog"
         aria-modal="true"
         aria-label={titulo}
-        className="bg-white text-black rounded-2xl shadow-2xl w-full max-w-md p-6"
+        className="bg-white text-black rounded-2xl shadow-2xl w-full max-w-md max-h-[90dvh] overflow-y-auto p-5 sm:p-6"
       >
         <h2 className="text-lg font-black text-purple-950">{titulo}</h2>
         <p className="text-sm text-gray-600 mt-1">
@@ -138,7 +138,7 @@ function ModalMotivo({ alvo, acao, enviando, erro, onCancelar, onConfirmar }) {
           placeholder="Ex.: Não localizamos o registro informado no Cadastro Nacional."
           className="w-full mt-1 p-3 border border-gray-300 rounded-lg text-sm focus:outline-purple-600 resize-none"
         />
-        <p className="text-[11px] text-gray-400 text-right">
+        <p className="text-[11px] text-gray-500 text-right">
           {motivo.length}/{MAX_MOTIVO}
         </p>
 
@@ -148,12 +148,12 @@ function ModalMotivo({ alvo, acao, enviando, erro, onCancelar, onConfirmar }) {
           </p>
         )}
 
-        <div className="flex justify-end gap-3 mt-5">
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 mt-5">
           <button
             type="button"
             onClick={onCancelar}
             disabled={enviando}
-            className="px-4 py-2 rounded-xl text-sm font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 transition cursor-pointer disabled:opacity-50"
+            className="w-full sm:w-auto px-4 py-3 sm:py-2 rounded-xl text-sm font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 transition cursor-pointer disabled:opacity-50"
           >
             Cancelar
           </button>
@@ -161,7 +161,7 @@ function ModalMotivo({ alvo, acao, enviando, erro, onCancelar, onConfirmar }) {
             type="button"
             onClick={() => onConfirmar(motivo)}
             disabled={enviando || !motivo.trim()}
-            className="px-4 py-2 rounded-xl text-sm font-bold bg-red-600 hover:bg-red-700 text-white transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto px-4 py-3 sm:py-2 rounded-xl text-sm font-bold bg-red-600 hover:bg-red-700 text-white transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {enviando ? "Enviando..." : revogando ? "Revogar" : "Rejeitar"}
           </button>
@@ -351,7 +351,10 @@ export default function PainelPsicologos() {
   // ============================
   if (carregando) {
     return (
-      <div className="flex flex-col items-center justify-center pt-20 animate-pulse">
+      <div
+        role="status"
+        className="flex flex-col items-center justify-center pt-20 animate-pulse"
+      >
         <div className="text-xl font-bold text-white tracking-wide">
           Carregando psicólogos...
         </div>
@@ -361,10 +364,14 @@ export default function PainelPsicologos() {
 
   if (erroCarga) {
     return (
-      <div className="max-w-md mx-auto mt-16 bg-red-900/80 border border-red-500 p-6 rounded-2xl shadow-xl text-center text-white">
+      <div
+        role="alert"
+        className="max-w-md mx-auto mt-16 bg-red-900/80 border border-red-500 p-6 rounded-2xl shadow-xl text-center text-white"
+      >
         <AlertTriangle size={28} className="mx-auto mb-2" />
         <p className="font-bold">{erroCarga}</p>
         <button
+          type="button"
           onClick={carregar}
           className="mt-4 inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition cursor-pointer"
         >
@@ -380,8 +387,9 @@ export default function PainelPsicologos() {
   return (
     <div className="text-black max-w-5xl mx-auto animate-fadeIn p-2">
       <button
+        type="button"
         onClick={() => navigate("/inicial")}
-        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-4 sm:mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
@@ -391,8 +399,8 @@ export default function PainelPsicologos() {
       </button>
 
       {/* TOPO */}
-      <div className="mb-8 pb-4 border-b border-purple-300/30 text-white">
-        <h1 className="text-3xl font-black tracking-wide drop-shadow-md text-[#ffb300]">
+      <div className="mb-6 sm:mb-8 pb-4 border-b border-purple-300/30 text-white">
+        <h1 className="text-2xl sm:text-3xl font-black tracking-wide drop-shadow-md text-[#ffb300]">
           Gerenciar Psicólogos 🛡️
         </h1>
         <p className="text-purple-200 text-xs md:text-sm mt-1 font-medium">
@@ -413,9 +421,10 @@ export default function PainelPsicologos() {
         >
           <span>{aviso.texto}</span>
           <button
+            type="button"
             onClick={() => setAviso(null)}
             aria-label="Fechar aviso"
-            className="cursor-pointer"
+            className="p-3 -m-3 shrink-0 cursor-pointer"
           >
             <X size={14} />
           </button>
@@ -424,12 +433,15 @@ export default function PainelPsicologos() {
 
       {/* ABAS + BUSCA */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <div role="tablist" className="flex gap-2">
+        <div role="tablist" className="flex gap-2 w-full md:w-auto">
           <button
+            type="button"
             role="tab"
+            id="aba-pedidos"
+            aria-controls="painel-pedidos"
             aria-selected={aba === "pedidos"}
             onClick={() => setAba("pedidos")}
-            className={`px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition cursor-pointer ${
+            className={`flex-1 md:flex-none justify-center px-3 sm:px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition cursor-pointer ${
               aba === "pedidos"
                 ? "bg-white text-purple-900 shadow-lg"
                 : "bg-white/10 text-white hover:bg-white/20"
@@ -449,10 +461,13 @@ export default function PainelPsicologos() {
           </button>
 
           <button
+            type="button"
             role="tab"
+            id="aba-psicologos"
+            aria-controls="painel-psicologos"
             aria-selected={aba === "psicologos"}
             onClick={() => setAba("psicologos")}
-            className={`px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition cursor-pointer ${
+            className={`flex-1 md:flex-none justify-center px-3 sm:px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition cursor-pointer ${
               aba === "psicologos"
                 ? "bg-white text-purple-900 shadow-lg"
                 : "bg-white/10 text-white hover:bg-white/20"
@@ -484,15 +499,17 @@ export default function PainelPsicologos() {
 
       {/* ============ ABA: PEDIDOS ============ */}
       {aba === "pedidos" && (
-        <>
+        <div role="tabpanel" id="painel-pedidos" aria-labelledby="aba-pedidos">
           {pedidosVisiveis.length === 0 && (
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-12 text-center max-w-md mx-auto mt-8 shadow-xl text-white">
-              <p className="text-2xl mb-2">✅</p>
-              <h3 className="font-bold text-lg">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 sm:p-12 text-center max-w-md mx-auto mt-8 shadow-xl text-white">
+              <p className="text-2xl mb-2" aria-hidden="true">
+                ✅
+              </p>
+              <h2 className="font-bold text-lg">
                 {pedidos.length === 0
                   ? "Nenhum pedido pendente"
                   : "Nenhum pedido encontrado"}
-              </h3>
+              </h2>
               <p className="text-purple-200 text-xs mt-1 leading-relaxed">
                 {pedidos.length === 0
                   ? "Quando um psicólogo se cadastrar, o pedido aparecerá aqui para análise."
@@ -501,22 +518,22 @@ export default function PainelPsicologos() {
             </div>
           )}
 
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4 sm:gap-6">
             {pedidosVisiveis.map((p) => {
               const processando = processandoId === p.id;
 
               return (
                 <div
                   key={p.id}
-                  className="bg-white rounded-2xl shadow-2xl border border-purple-50 p-6"
+                  className="bg-white rounded-2xl shadow-2xl border border-purple-50 p-4 sm:p-6"
                 >
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="flex items-center gap-4 min-w-0">
                       <Avatar p={p} />
                       <div className="min-w-0">
-                        <h3 className="text-lg font-black text-purple-950 tracking-wide truncate">
+                        <h2 className="text-lg font-black text-purple-950 tracking-wide truncate">
                           {p.nome}
-                        </h3>
+                        </h2>
                         <p className="text-xs text-gray-500 truncate">
                           {p.email}
                         </p>
@@ -538,9 +555,9 @@ export default function PainelPsicologos() {
                   </div>
 
                   {/* DADOS PARA CONFERÊNCIA */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mt-5">
                     <div className="bg-gray-50 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-gray-500">
                         Registro (CRP)
                       </p>
                       <p className="text-sm font-bold text-purple-950 mt-1">
@@ -558,7 +575,7 @@ export default function PainelPsicologos() {
                     </div>
 
                     <div className="bg-gray-50 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-gray-500">
                         CPF
                       </p>
                       <p className="text-sm font-bold text-purple-950 mt-1">
@@ -578,7 +595,7 @@ export default function PainelPsicologos() {
                     </div>
 
                     <div className="bg-gray-50 border border-gray-100 rounded-xl p-3">
-                      <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-gray-500">
                         Solicitado em
                       </p>
                       <p className="text-sm font-bold text-purple-950 mt-1">
@@ -601,10 +618,11 @@ export default function PainelPsicologos() {
                       href={URL_CONSULTA_CFP}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold bg-white hover:bg-purple-100 text-purple-700 border border-purple-200 transition"
+                      className="w-full md:w-auto justify-center shrink-0 inline-flex items-center gap-1.5 px-3 py-3 md:py-2 rounded-lg text-xs font-bold bg-white hover:bg-purple-100 text-purple-700 border border-purple-200 transition"
                     >
                       <ExternalLink size={12} />
                       Abrir consulta do CFP
+                      <span className="sr-only">(abre em nova aba)</span>
                     </a>
                   </div>
 
@@ -616,25 +634,29 @@ export default function PainelPsicologos() {
                   )}
 
                   {/* AÇÕES */}
-                  <div className="mt-5 pt-4 border-t border-gray-100 flex justify-end gap-3">
+                  <div className="mt-5 pt-4 border-t border-gray-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
                     {ehEuMesmo(p) ? (
-                      <span className="text-xs text-gray-400 font-semibold">
+                      <span className="text-xs text-gray-500 font-semibold">
                         Você não pode analisar o seu próprio pedido.
                       </span>
                     ) : (
                       <>
                         <button
+                          type="button"
+                          aria-label={`Rejeitar pedido de ${p.nome}`}
                           onClick={() => abrirModal(p, "rejeitar")}
                           disabled={processando}
-                          className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-100 cursor-pointer disabled:opacity-50"
+                          className="w-full sm:w-auto justify-center px-4 py-3 sm:py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-100 cursor-pointer disabled:opacity-50"
                         >
                           <X size={12} />
                           <span>Rejeitar</span>
                         </button>
                         <button
+                          type="button"
+                          aria-label={`Aprovar pedido de ${p.nome}`}
                           onClick={() => aprovar(p)}
                           disabled={processando}
-                          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                          className="w-full sm:w-auto justify-center px-4 py-3 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
                         >
                           <Check size={12} />
                           <span>{processando ? "Enviando..." : "Aprovar"}</span>
@@ -646,12 +668,16 @@ export default function PainelPsicologos() {
               );
             })}
           </div>
-        </>
+        </div>
       )}
 
       {/* ============ ABA: PSICÓLOGOS CADASTRADOS ============ */}
       {aba === "psicologos" && (
-        <>
+        <div
+          role="tabpanel"
+          id="painel-psicologos"
+          aria-labelledby="aba-psicologos"
+        >
           <div className="flex flex-wrap gap-2 mb-6">
             {[
               { id: "todos", texto: "Todos", total: cadastrados.length },
@@ -660,9 +686,10 @@ export default function PainelPsicologos() {
             ].map((f) => (
               <button
                 key={f.id}
+                type="button"
                 onClick={() => setFiltroStatus(f.id)}
                 aria-pressed={filtroStatus === f.id}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                className={`px-3 py-2.5 sm:py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
                   filtroStatus === f.id
                     ? "bg-[#ffb300] text-purple-950"
                     : "bg-white/10 text-white hover:bg-white/20"
@@ -674,9 +701,11 @@ export default function PainelPsicologos() {
           </div>
 
           {cadastradosVisiveis.length === 0 && (
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-12 text-center max-w-md mx-auto mt-8 shadow-xl text-white">
-              <p className="text-2xl mb-2">👥</p>
-              <h3 className="font-bold text-lg">Nenhum psicólogo encontrado</h3>
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 sm:p-12 text-center max-w-md mx-auto mt-8 shadow-xl text-white">
+              <p className="text-2xl mb-2" aria-hidden="true">
+                👥
+              </p>
+              <h2 className="font-bold text-lg">Nenhum psicólogo encontrado</h2>
               <p className="text-purple-200 text-xs mt-1 leading-relaxed">
                 Ajuste o filtro ou a busca para ver outros resultados.
               </p>
@@ -691,15 +720,15 @@ export default function PainelPsicologos() {
               return (
                 <div
                   key={p.id}
-                  className="bg-white rounded-2xl shadow-xl border border-purple-50 p-5"
+                  className="bg-white rounded-2xl shadow-xl border border-purple-50 p-4 sm:p-5"
                 >
                   <div className="flex items-center justify-between gap-4 flex-wrap">
                     <div className="flex items-center gap-4 min-w-0">
                       <Avatar p={p} />
                       <div className="min-w-0">
-                        <h3 className="text-base font-black text-purple-950 tracking-wide truncate">
+                        <h2 className="text-base font-black text-purple-950 tracking-wide truncate">
                           {p.nome}
-                        </h3>
+                        </h2>
                         <p className="text-xs text-gray-500 truncate">
                           {p.email}
                         </p>
@@ -711,36 +740,40 @@ export default function PainelPsicologos() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
                       <div className="text-right">
                         <span
                           className={`inline-block text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded border ${badge.classe}`}
                         >
                           {badge.texto}
                         </span>
-                        <p className="text-[10px] text-gray-400 mt-1">
+                        <p className="text-[10px] text-gray-500 mt-1">
                           Decisão em {formatarData(p.crp_analisado_em)}
                         </p>
                       </div>
 
                       {ehEuMesmo(p) ? (
-                        <span className="text-xs text-gray-400 font-semibold">
+                        <span className="text-xs text-gray-500 font-semibold">
                           Você
                         </span>
                       ) : p.crp_status === "aprovado" ? (
                         <button
+                          type="button"
+                          aria-label={`Revogar permissão de ${p.nome}`}
                           onClick={() => abrirModal(p, "revogar")}
                           disabled={processando}
-                          className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-100 cursor-pointer disabled:opacity-50"
+                          className="px-4 py-3 sm:py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-100 cursor-pointer disabled:opacity-50"
                         >
                           <X size={12} />
                           <span>Revogar</span>
                         </button>
                       ) : (
                         <button
+                          type="button"
+                          aria-label={`Reativar permissão de ${p.nome}`}
                           onClick={() => aprovar(p, true)}
                           disabled={processando}
-                          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                          className="px-4 py-3 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
                         >
                           <Check size={12} />
                           <span>
@@ -753,7 +786,7 @@ export default function PainelPsicologos() {
 
                   {p.crp_motivo && (
                     <p
-                      className={`mt-3 text-xs rounded-lg px-3 py-2 border ${
+                      className={`mt-3 text-xs rounded-lg px-3 py-2 border wrap-break-words ${
                         p.crp_status === "rejeitado"
                           ? "bg-red-50 text-red-700 border-red-100"
                           : "bg-gray-50 text-gray-500 border-gray-100"
@@ -769,7 +802,7 @@ export default function PainelPsicologos() {
               );
             })}
           </div>
-        </>
+        </div>
       )}
 
       {/* MODAL DE MOTIVO (rejeitar / revogar) */}

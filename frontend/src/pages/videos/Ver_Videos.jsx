@@ -11,7 +11,7 @@ export default function VerVideo() {
 
   if (carregando) {
     return (
-      <div className="flex justify-center pt-20 animate-pulse">
+      <div role="status" className="flex justify-center pt-20 animate-pulse">
         <p className="text-xl font-bold text-white tracking-wide">
           Carregando player de vídeo...
         </p>
@@ -21,12 +21,16 @@ export default function VerVideo() {
 
   if (!video) {
     return (
-      <div className="max-w-md mx-auto bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center mt-12 shadow-xl text-white">
+      <div
+        role="alert"
+        className="max-w-md mx-auto bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center mt-12 shadow-xl text-white"
+      >
         <p className="text-xl font-bold">❌ Vídeo não encontrado</p>
         <p className="text-purple-200 text-xs mt-2">
           O conteúdo solicitado pode ter sido desativado pelo autor ou removido.
         </p>
         <button
+          type="button"
           onClick={() => navigate(-1)}
           className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline cursor-pointer"
         >
@@ -50,8 +54,9 @@ export default function VerVideo() {
     <div className="max-w-4xl mx-auto p-2 text-black animate-fadeIn">
       {/* Botão Superior de Voltar */}
       <button
+        type="button"
         onClick={() => navigate(-1)}
-        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-4 sm:mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
@@ -61,12 +66,14 @@ export default function VerVideo() {
       </button>
 
       {/* Container Principal do Player com Linguagem Moderna */}
-      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-purple-100 flex flex-col">
+      <article className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-purple-100 flex flex-col">
         {/* PLAYER DE VÍDEO COMPACTADO (Proporção 16:9 Estrita) */}
         <div className="w-full aspect-video bg-black relative flex items-center justify-center shadow-inner">
           <video
             className="w-full h-full object-contain focus:outline-none"
             controls
+            playsInline
+            aria-label={`Vídeo: ${video.titulo}`}
             controlsList="nodownload" // bloqueia o download nativo do vídeo
             preload="auto"
           >
@@ -76,7 +83,7 @@ export default function VerVideo() {
         </div>
 
         {/* DETALHES TEXTUAIS DO CONTEÚDO */}
-        <div className="p-6 md:p-8 flex-1 flex flex-col justify-between">
+        <div className="p-4 sm:p-6 md:p-8 flex-1 flex flex-col justify-between">
           <div>
             {/* Categoria Badges e Data */}
             <div className="flex flex-wrap items-center justify-between gap-4 mb-4 pb-4 border-b border-gray-100">
@@ -96,16 +103,21 @@ export default function VerVideo() {
                 )}
               </div>
 
-              <div className="flex items-center gap-1 text-xs text-gray-400 font-semibold">
+              <div className="flex items-center gap-1 text-xs text-gray-500 font-semibold">
                 <Calendar size={13} className="text-purple-500" />
-                <span>Publicado em: {formatarData(video.created_at)}</span>
+                <span>
+                  Publicado em:{" "}
+                  <time dateTime={video.created_at}>
+                    {formatarData(video.created_at)}
+                  </time>
+                </span>
               </div>
             </div>
 
             {/* Título */}
             <h1 className="text-2xl md:text-3xl font-black text-purple-950 tracking-wide leading-tight mb-4 flex items-center gap-2">
               <Film size={22} className="text-purple-700 shrink-0" />
-              <span>{video.titulo}</span>
+              <span className="min-w-0 wrap-break-words">{video.titulo}</span>
             </h1>
 
             {/* Descrição em Bloco Acolhedor com scroll controlado */}
@@ -116,7 +128,7 @@ export default function VerVideo() {
           </div>
 
           {/* Rodapé com botão secundário de fechamento rápido */}
-          <div className="mt-8 pt-4 border-t border-gray-100 flex justify-between items-center">
+          <div className="mt-8 pt-4 border-t border-gray-100 flex flex-wrap justify-between items-center gap-3">
             <Link
               to="/videos"
               className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-colors"
@@ -124,12 +136,12 @@ export default function VerVideo() {
               Fechar Player
             </Link>
 
-            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
               MindUp Psicoeducação
             </span>
           </div>
         </div>
-      </div>
+      </article>
     </div>
   );
 }

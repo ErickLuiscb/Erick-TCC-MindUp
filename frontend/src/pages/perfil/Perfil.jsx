@@ -108,9 +108,12 @@ export default function Perfil() {
 
   return (
     <div className="max-w-5xl mx-auto animate-fadeIn">
+      <h1 className="sr-only">Meu perfil</h1>
+
       {/* Alerta de Feedback */}
       {mensagem && (
         <div
+          role={mensagem.includes("❌") ? "alert" : "status"}
           className={`p-4 rounded-xl font-bold mb-6 border shadow-xs ${mensagem.includes("❌") ? "bg-red-100 border-red-200 text-red-700" : "bg-green-100 border-green-200 text-green-700"}`}
         >
           {mensagem}
@@ -118,28 +121,36 @@ export default function Perfil() {
       )}
 
       {/* Caixa Branca em Grid Duplo (Acessível no Mobile, Lindo no Desktop) */}
-      <div className="bg-white rounded-2xl shadow-2xl text-gray-800 flex flex-col md:flex-row overflow-hidden border border-purple-100">
+      {/* Celular: uma coluna na ordem Identificação -> Formulário -> Zona de perigo
+            (o botão de excluir conta fica por ÚLTIMO).
+            md em diante: 2 colunas; a zona de perigo volta para o pé da coluna da esquerda. */}
+      <div className="bg-white rounded-2xl shadow-2xl text-gray-800 flex flex-col md:grid md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:grid-rows-[1fr_auto] overflow-hidden border border-purple-100">
         {/* COLUNA DA ESQUERDA: Identificação Visual */}
-        <div className="md:w-2/5 bg-purple-50 p-8 flex flex-col items-center justify-between border-b md:border-b-0 md:border-r border-purple-100">
+        <div className="md:col-start-1 md:row-start-1 bg-purple-50 p-5 sm:p-8 md:pb-0 flex flex-col items-center border-b md:border-b-0 md:border-r border-purple-100">
           <div className="text-center w-full flex flex-col items-center">
             <h2 className="text-xs font-black tracking-widest text-purple-600 uppercase mb-4">
               Identificação
             </h2>
 
             {/* Bloco da Imagem */}
-            <div
-              className="relative group cursor-pointer"
+            <button
+              type="button"
+              aria-label="Alterar foto de perfil"
+              className="relative group cursor-pointer rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-purple-400"
               onClick={() => document.getElementById("input-foto").click()}
             >
               <img
                 src={preview}
-                alt="Foto de perfil"
-                className="w-44 h-44 rounded-full object-cover border-4 border-purple-600 shadow-md group-hover:opacity-80 transition"
+                alt=""
+                className="w-36 h-36 sm:w-44 sm:h-44 rounded-full object-cover border-4 border-purple-600 shadow-md group-hover:opacity-80 transition"
               />
-              <div className="absolute bottom-2 right-2 bg-purple-700 text-white p-2.5 rounded-full shadow-lg hover:bg-purple-800 transition">
+              <span
+                aria-hidden="true"
+                className="absolute bottom-2 right-2 bg-purple-700 text-white p-2.5 rounded-full shadow-lg hover:bg-purple-800 transition"
+              >
                 📷
-              </div>
-            </div>
+              </span>
+            </button>
 
             <input
               id="input-foto"
@@ -149,7 +160,7 @@ export default function Perfil() {
               className="hidden"
               disabled={carregando}
             />
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-gray-500 mt-2">
               Clique na foto para alterar
             </p>
 
@@ -161,10 +172,14 @@ export default function Perfil() {
             {/* Informações Fixas Bloqueadas */}
             <div className="w-full mt-6 space-y-3 text-left">
               <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-purple-500">
+                <label
+                  htmlFor="perfil-email"
+                  className="text-[11px] font-bold uppercase tracking-wider text-purple-700"
+                >
                   E-mail de Cadastro
                 </label>
                 <input
+                  id="perfil-email"
                   type="text"
                   value={usuario?.email || ""}
                   disabled
@@ -174,10 +189,14 @@ export default function Perfil() {
 
               {usuario?.crp && (
                 <div className="animate-fadeIn">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-purple-500">
+                  <label
+                    htmlFor="perfil-crp"
+                    className="text-[11px] font-bold uppercase tracking-wider text-purple-700"
+                  >
                     Registro Profissional (CRP)
                   </label>
                   <input
+                    id="perfil-crp"
                     type="text"
                     value={usuario?.crp || ""}
                     disabled
@@ -187,47 +206,12 @@ export default function Perfil() {
               )}
             </div>
           </div>
-
-          {/* Zona de Perigo / Teste Especial */}
-          <div className="w-full mt-12 pt-6 border-t border-purple-200">
-            <h4 className="text-xs font-black uppercase text-red-600 tracking-wider mb-2">
-              Verifique antes de agir
-            </h4>
-
-            {/* Se for psicólogo, exibe o seletor do teste especial antes de deletar */}
-            {usuario?.tipo === "psicologo" && (
-              <label className="flex items-start gap-2 bg-red-50 p-2.5 rounded-lg border border-red-100 mb-3 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={manterConteudos}
-                  onChange={(e) => setManterConteudos(e.target.checked)}
-                  className="mt-0.5 rounded text-purple-600 focus:ring-purple-500"
-                />
-                <div>
-                  <p className="text-[11px] font-bold text-red-900">
-                    Manter minhas postagens no app
-                  </p>
-                  <p className="text-[10px] text-red-700">
-                    Seus vídeos e PDFs continuarão visíveis para os pacientes.
-                  </p>
-                </div>
-              </label>
-            )}
-
-            <button
-              onClick={handleExcluirConta}
-              disabled={carregando}
-              className="w-full bg-red-100 text-red-700 hover:bg-red-200 border border-red-200 py-2.5 rounded-xl text-xs font-bold transition uppercase tracking-wider"
-            >
-              🗑️ Excluir minha conta
-            </button>
-          </div>
         </div>
 
         {/* COLUNA DA DIREITA: Formulário de Atualização Dados */}
         <form
           onSubmit={handleSalvarAlteracoes}
-          className="flex-1 p-8 flex flex-col justify-between"
+          className="md:col-start-2 md:row-start-1 md:row-span-2 p-5 sm:p-8 flex flex-col justify-between gap-6"
         >
           <div>
             <h2 className="text-xs font-black tracking-widest text-purple-600 uppercase mb-6">
@@ -236,10 +220,14 @@ export default function Perfil() {
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-purple-950">
+                <label
+                  htmlFor="perfil-nome"
+                  className="text-xs font-bold text-purple-950"
+                >
                   Nome Completo:
                 </label>
                 <input
+                  id="perfil-nome"
                   type="text"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
@@ -252,18 +240,23 @@ export default function Perfil() {
                 <p className="text-xs font-bold text-purple-600 mb-2">
                   🛡️ Alteração de Credenciais de Acesso
                 </p>
-                <p className="text-[11px] text-gray-400 mb-4">
+                <p className="text-[11px] text-gray-500 mb-4">
                   Caso não queira alterar sua senha atual, basta deixar os
                   campos abaixo vazios.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-purple-950">
+                    <label
+                      htmlFor="perfil-senha"
+                      className="text-xs font-bold text-purple-950"
+                    >
                       Nova Senha (mín. 6):
                     </label>
                     <div className="relative">
                       <input
+                        id="perfil-senha"
+                        autoComplete="new-password"
                         type={mostrarSenha ? "text" : "password"}
                         value={senha}
                         onChange={(e) => setSenha(semEspacos(e.target.value))}
@@ -276,8 +269,7 @@ export default function Perfil() {
                       <button
                         type="button"
                         onClick={() => setMostrarSenha((v) => !v)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
-                        tabIndex={-1}
+                        className="absolute right-1 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-purple-700 cursor-pointer"
                         aria-label={
                           mostrarSenha ? "Ocultar senha" : "Mostrar senha"
                         }
@@ -292,11 +284,16 @@ export default function Perfil() {
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-purple-950">
+                    <label
+                      htmlFor="perfil-confirmar-senha"
+                      className="text-xs font-bold text-purple-950"
+                    >
                       Confirmar Nova Senha:
                     </label>
                     <div className="relative">
                       <input
+                        id="perfil-confirmar-senha"
+                        autoComplete="new-password"
                         type={mostrarConfirmarSenha ? "text" : "password"}
                         value={confirmarSenha}
                         onChange={(e) =>
@@ -310,8 +307,7 @@ export default function Perfil() {
                       <button
                         type="button"
                         onClick={() => setMostrarConfirmarSenha((v) => !v)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
-                        tabIndex={-1}
+                        className="absolute right-1 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-purple-700 cursor-pointer"
                         aria-label={
                           mostrarConfirmarSenha
                             ? "Ocultar senha"
@@ -331,24 +327,64 @@ export default function Perfil() {
             </div>
           </div>
 
-          <div className="flex justify-end space-x-4">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => navigate("/inicial")}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition"
+              className="w-full sm:w-auto bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition"
               disabled={carregando}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition"
+              className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition"
               disabled={carregando}
             >
               {carregando ? "Salvando..." : "Salvar Alterações"}
             </button>
           </div>
         </form>
+
+        {/* ZONA DE PERIGO / EXCLUSÃO DE CONTA
+            Celular: último bloco da tela, depois do formulário.
+            md em diante: rodapé da coluna da esquerda (mesma aparência de antes). */}
+        <div className="md:col-start-1 md:row-start-2 md:self-end bg-purple-50 p-5 sm:p-8 border-t border-purple-100 md:border-t-0 md:border-r md:pt-0">
+          <div className="md:mt-12 md:pt-6 md:border-t md:border-purple-200">
+            <h2 className="text-xs font-black uppercase text-red-600 tracking-wider mb-2">
+              Verifique antes de agir
+            </h2>
+
+            {/* Se for psicólogo, exibe o seletor do teste especial antes de deletar */}
+            {usuario?.tipo === "psicologo" && (
+              <label className="flex items-start gap-2 bg-red-50 p-2.5 rounded-lg border border-red-100 mb-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={manterConteudos}
+                  onChange={(e) => setManterConteudos(e.target.checked)}
+                  className="mt-0.5 rounded text-purple-600 focus:ring-purple-500"
+                />
+                <div>
+                  <p className="text-[11px] font-bold text-red-900">
+                    Manter minhas postagens no app
+                  </p>
+                  <p className="text-[11px] text-red-700">
+                    Seus vídeos e PDFs continuarão visíveis para os pacientes.
+                  </p>
+                </div>
+              </label>
+            )}
+
+            <button
+              type="button"
+              onClick={handleExcluirConta}
+              disabled={carregando}
+              className="w-full bg-red-100 text-red-700 hover:bg-red-200 border border-red-200 py-3 md:py-2.5 rounded-xl text-xs font-bold transition uppercase tracking-wider"
+            >
+              <span aria-hidden="true">🗑️</span> Excluir minha conta
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

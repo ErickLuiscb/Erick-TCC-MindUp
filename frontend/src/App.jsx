@@ -171,17 +171,6 @@ export default function App() {
 
                             {/* Favoritos */}
                             <Route path="/favoritos" element={<Favoritos />} />
-
-                            {/* Módulos adiados (Em construção) */}
-                            <Route
-                              path="/mapa"
-                              element={
-                                <div>
-                                  Mapa de Consultórios e Farmácias (Em
-                                  construção)
-                                </div>
-                              }
-                            />
                           </Route>
                         </Route>
 

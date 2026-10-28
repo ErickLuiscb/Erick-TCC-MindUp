@@ -26,7 +26,10 @@ export default function Login() {
 
   if (carregando) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white text-xl">
+      <div
+        role="status"
+        className="min-h-dvh flex items-center justify-center text-white text-xl"
+      >
         Carregando...
       </div>
     );
@@ -67,15 +70,16 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <main className="min-h-dvh flex items-center justify-center p-4 sm:p-6">
       <div className="bg-white rounded-2xl shadow-xl max-w-4xl w-full flex flex-col md:flex-row">
-        <div className="flex-1 p-12">
-          <h1 className="text-3xl font-bold text-purple-700 mb-2">
+        <div className="flex-1 p-6 sm:p-8 md:p-12">
+          <h1 className="text-2xl sm:text-3xl font-bold text-purple-700 mb-2">
             Bem-vindo(a) de volta 💜
           </h1>
 
           {mensagem && (
             <p
+              role={mensagem.includes("❌") ? "alert" : "status"}
               className={`mt-3 font-bold ${mensagem.includes("❌") ? "text-red-600" : "text-green-600"}`}
             >
               {mensagem}
@@ -94,10 +98,15 @@ export default function Login() {
           )}
 
           <form onSubmit={handleSubmit}>
-            <label className="font-semibold block mt-4 text-purple-900">
+            <label
+              htmlFor="login-email"
+              className="font-semibold block mt-4 text-purple-900"
+            >
               E-mail:
             </label>
             <input
+              id="login-email"
+              autoComplete="email"
               className="w-full p-3 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
               type="email"
               name="email"
@@ -107,11 +116,16 @@ export default function Login() {
               disabled={loadingRequisicao}
             />
 
-            <label className="font-semibold block mt-4 text-purple-900">
+            <label
+              htmlFor="login-senha"
+              className="font-semibold block mt-4 text-purple-900"
+            >
               Senha:
             </label>
             <div className="relative">
               <input
+                id="login-senha"
+                autoComplete="current-password"
                 className="w-full p-3 pr-12 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
                 type={mostrarSenha ? "text" : "password"}
                 name="senha"
@@ -124,8 +138,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setMostrarSenha((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-700 cursor-pointer"
-                tabIndex={-1}
+                className="absolute right-1 top-1/2 -translate-y-1/2 p-2.5 text-gray-500 hover:text-purple-700 cursor-pointer"
                 aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
               >
                 {mostrarSenha ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -134,12 +147,13 @@ export default function Login() {
 
             {/* Link Esqueceu a Senha em Negrito e Destacado */}
             <div className="text-right mt-2">
-              <span
+              <button
+                type="button"
                 className="text-sm font-black text-purple-900 cursor-pointer hover:underline"
                 onClick={() => navigate("/esqueci-senha")}
               >
                 Esqueceu a senha?
-              </span>
+              </button>
             </div>
 
             <button
@@ -153,24 +167,26 @@ export default function Login() {
           {/* Botão de Cadastre-se com Super Destaque Visual */}
           <p className="mt-6 text-center text-gray-700">
             Não tem conta?{" "}
-            <span
+            <button
+              type="button"
               className="text-purple-900 cursor-pointer font-black text-lg underline tracking-wide hover:text-purple-700 transition"
               onClick={() => navigate("/cadastro")}
             >
               Cadastre-se
-            </span>
+            </button>
           </p>
         </div>
 
-        <div className="flex-1 p-8 flex justify-center items-center">
-          {/* Corrigido o caminho do arquivo para a logo oficial que ajustei no PWA */}
+        {/* No celular a logo aparece agora em cima do formulário (order-first);
+            a partir de md volta para a direita (md:order-last). */}
+        <div className="order-first md:order-last flex-1 pt-6 px-6 pb-0 md:p-8 flex justify-center items-center">
           <img
             src="/logo.png"
             alt="Logo MindUp"
-            className="max-w-[280px] object-contain animate-fadeIn"
+            className="w-40 sm:w-48 md:w-auto max-w-[280px] object-contain animate-fadeIn"
           />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

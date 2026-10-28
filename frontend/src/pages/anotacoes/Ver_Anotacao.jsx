@@ -11,7 +11,7 @@ export default function Ver_Anotacao() {
 
   if (carregando) {
     return (
-      <div className="flex justify-center pt-20 animate-pulse">
+      <div role="status" className="flex justify-center pt-20 animate-pulse">
         <p className="text-xl font-bold text-white tracking-wide">
           Abrindo diário...
         </p>
@@ -21,7 +21,10 @@ export default function Ver_Anotacao() {
 
   if (!anotacao) {
     return (
-      <div className="max-w-md mx-auto bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center mt-12 shadow-xl text-white">
+      <div
+        role="alert"
+        className="max-w-md mx-auto bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center mt-12 shadow-xl text-white"
+      >
         <p className="text-xl font-bold">❌ Registro não encontrado</p>
         <p className="text-purple-200 text-xs mt-2">
           Esta anotação pode ter sido removida ou não pertence ao seu perfil.
@@ -56,7 +59,7 @@ export default function Ver_Anotacao() {
       {/* Botão de navegação superior para retorno rápido */}
       <Link
         to="/anotacoes"
-        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors"
+        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-4 sm:mb-6 group transition-colors"
       >
         <ArrowLeft
           size={16}
@@ -66,7 +69,7 @@ export default function Ver_Anotacao() {
       </Link>
 
       {/* Cartão de leitura limpo e confortável */}
-      <article className="bg-white rounded-2xl shadow-2xl p-8 md:p-10 border border-purple-100 flex flex-col justify-between min-h-[400px]">
+      <article className="bg-white rounded-2xl shadow-2xl p-5 sm:p-8 md:p-10 border border-purple-100 flex flex-col justify-between min-h-0 sm:min-h-[400px]">
         <div>
           {/* Cabeçalho da Nota */}
           <header className="border-b border-gray-100 pb-4 mb-6">
@@ -75,41 +78,53 @@ export default function Ver_Anotacao() {
               <span>Registro Pessoal</span>
             </div>
 
-            <h1 className="text-3xl font-black text-purple-950 tracking-wide leading-tight flex items-center gap-3">
-              {anotacao.titulo}
+            <h1 className="text-2xl sm:text-3xl font-black text-purple-950 tracking-wide leading-tight flex items-center gap-3">
+              <span className="min-w-0 wrap-break-words">
+                {anotacao.titulo}
+              </span>
               {humor && (
-                <span title={humor.label} className="text-3xl leading-none">
+                <span
+                  role="img"
+                  aria-label={`Humor: ${humor.label}`}
+                  title={humor.label}
+                  className="text-3xl leading-none shrink-0"
+                >
                   {humor.emoji}
                 </span>
               )}
             </h1>
 
-            <div className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold mt-3">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500 font-semibold mt-3">
               <Calendar size={14} className="text-purple-500" />
-              <span>Escrito em {formatarData(anotacao.created_at)}</span>
+              <span>
+                Escrito em{" "}
+                <time dateTime={anotacao.created_at}>
+                  {formatarData(anotacao.created_at)}
+                </time>
+              </span>
             </div>
           </header>
 
           {/* Corpo do desabafo com espaçamento e fonte confortável para leitura */}
-          <p className="whitespace-pre-wrap text-base leading-relaxed text-gray-700 font-medium tracking-wide px-1">
+          <p className="whitespace-pre-wrap wrap-break-words text-base leading-relaxed text-gray-700 font-medium tracking-wide px-1">
             {anotacao.texto}
           </p>
         </div>
 
         {/* Rodapé do cartão contendo link de atalho para edição rápida caso o usuário queira mudar algo */}
-        <footer className="mt-12 pt-4 border-t border-gray-100 flex justify-between items-center">
+        <footer className="mt-8 sm:mt-12 pt-4 border-t border-gray-100 flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-3">
           <Link
             to="/anotacoes"
-            className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-colors"
+            className="text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-3 sm:py-2.5 rounded-xl text-xs uppercase tracking-wider transition-colors"
           >
             Fechar Leitura
           </Link>
 
           <Link
             to={`/anotacoes/editar/${anotacao.id}`}
-            className="bg-purple-800 hover:bg-purple-900 text-white font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-sm shadow-purple-950/10"
+            className="text-center bg-purple-800 hover:bg-purple-900 text-white font-bold px-6 py-3 sm:py-2.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-sm shadow-purple-950/10"
           >
-            ✏️ Editar Nota
+            <span aria-hidden="true">✏️</span> Editar Nota
           </Link>
         </footer>
       </article>

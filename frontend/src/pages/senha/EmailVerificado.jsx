@@ -8,8 +8,8 @@ export default function EmailVerificado() {
   const sucesso = status === "sucesso";
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-10 text-center">
+    <div className="min-h-dvh flex items-center justify-center p-4 sm:p-6">
+      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 sm:p-10 text-center">
         {sucesso ? (
           <>
             <CheckCircle2 size={48} className="text-green-600 mx-auto mb-4" />
@@ -21,6 +21,7 @@ export default function EmailVerificado() {
               e começar a usar o MindUp.
             </p>
             <button
+              type="button"
               onClick={() => navigate("/login")}
               className="w-full bg-purple-900 text-white py-3 rounded-full font-bold shadow-md hover:bg-purple-950 transition"
             >

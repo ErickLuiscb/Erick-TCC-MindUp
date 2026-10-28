@@ -44,11 +44,12 @@ export default function EsqueciSenha() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-10">
+    <div className="min-h-dvh flex items-center justify-center p-4 sm:p-6">
+      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 sm:p-10">
         <button
+          type="button"
           onClick={() => navigate("/login")}
-          className="flex items-center gap-2 text-purple-700 hover:text-purple-900 font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+          className="flex items-center gap-2 py-1 text-purple-700 hover:text-purple-900 font-semibold text-sm mb-5 sm:mb-6 group transition-colors cursor-pointer"
         >
           <ArrowLeft
             size={16}
@@ -71,24 +72,32 @@ export default function EsqueciSenha() {
           para você escolher uma nova senha.
         </p>
 
-        {mensagem && (
-          <p
-            className={`mb-4 font-bold text-sm ${
-              mensagem.includes("❌") || mensagem.includes("⏱️")
-                ? "text-red-600"
-                : "text-green-600"
-            }`}
-          >
-            {mensagem}
-          </p>
-        )}
+        {/* Região de aviso sempre presente: leitores de tela anunciam o texto assim que ele aparece */}
+        <div role="status" aria-live="polite">
+          {mensagem && (
+            <p
+              className={`mb-4 font-bold text-sm ${
+                mensagem.includes("❌") || mensagem.includes("⏱️")
+                  ? "text-red-600"
+                  : "text-green-700"
+              }`}
+            >
+              {mensagem}
+            </p>
+          )}
+        </div>
 
         {!enviado ? (
           <form onSubmit={handleSubmit}>
-            <label className="font-semibold block text-purple-900 text-sm mb-1">
+            <label
+              htmlFor="esqueci-email"
+              className="font-semibold block text-purple-900 text-sm mb-1"
+            >
               E-mail:
             </label>
             <input
+              id="esqueci-email"
+              autoComplete="email"
               className="w-full p-3 border border-gray-300 rounded-lg text-black focus:outline-purple-600"
               type="email"
               value={email}
@@ -101,13 +110,14 @@ export default function EsqueciSenha() {
             <button
               type="submit"
               disabled={enviando}
-              className="w-full mt-6 bg-purple-900 text-white py-3 rounded-full font-bold shadow-md hover:bg-purple-950 transition disabled:opacity-50"
+              className="w-full mt-6 bg-purple-900 text-white py-3 px-4 rounded-full font-bold text-sm sm:text-base shadow-md hover:bg-purple-950 transition disabled:opacity-50"
             >
               {enviando ? "ENVIANDO..." : "ENVIAR LINK DE REDEFINIÇÃO"}
             </button>
           </form>
         ) : (
           <button
+            type="button"
             onClick={() => navigate("/login")}
             className="w-full bg-purple-100 text-purple-900 py-3 rounded-full font-bold hover:bg-purple-200 transition"
           >

@@ -8,11 +8,11 @@ export default function Layout() {
   const { erro, recarregarTudo } = useBootstrap();
 
   return (
-    <div className="flex flex-col min-h-screen bg-linear-to-br from-[#5b1aa0] to-[#a64bf4] text-white">
+    <div className="flex flex-col min-h-dvh bg-linear-to-br from-[#5b1aa0] to-[#a64bf4] text-white">
       <Header />
 
       {erro && (
-        <div className="bg-red-900/90 border-b border-red-500 px-6 py-3 flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
+        <div className="bg-red-900/90 border-b border-red-500 px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
           <span className="flex items-center gap-2 text-sm font-bold">
             <AlertTriangle size={16} className="shrink-0" />
             Não conseguimos carregar seus conteúdos agora. O servidor pode estar
@@ -28,7 +28,8 @@ export default function Layout() {
         </div>
       )}
 
-      <main className="flex-1 p-8">
+      {/* Padding responsivo: 16px no celular, 24px em tablets, 32px no desktop */}
+      <main className="flex-1 p-4 sm:p-6 lg:p-8">
         <Outlet />
       </main>
 

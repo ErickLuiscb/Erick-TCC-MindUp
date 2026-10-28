@@ -56,7 +56,7 @@ export default function Sugestoes() {
       {/* Botão de voltar à tela inicial */}
       <button
         onClick={() => navigate("/inicial")}
-        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-4 sm:mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
@@ -66,9 +66,9 @@ export default function Sugestoes() {
       </button>
 
       {/* CABEÇALHO */}
-      <header className="mb-8 pb-4 border-b border-purple-300/30 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+      <header className="mb-6 sm:mb-8 pb-4 border-b border-purple-300/30 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-wide drop-shadow-md">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-wide drop-shadow-md">
             Sugestões Culturais 💡
           </h1>
           <p className="text-purple-200 text-xs md:text-sm mt-1 font-medium">
@@ -114,11 +114,12 @@ export default function Sugestoes() {
       </div>
 
       {/* BARRA DE BUSCA + BOTÃO DE FILTROS DE CATEGORIA */}
-      <div className="flex justify-center mb-10">
+      <div className="flex justify-center mb-6 sm:mb-10">
         <div className="relative w-full max-w-xl flex gap-3 items-center">
           <div className="relative flex-1">
             <input
               type="text"
+              aria-label="Buscar sugestões por título"
               placeholder="Buscar por título..."
               className="w-full pl-5 pr-12 py-3.5 bg-white border border-purple-100 rounded-2xl shadow-xl text-sm font-semibold text-black focus:outline-3 focus:outline-[#ffb300] placeholder-gray-400 transition"
               value={busca}
@@ -133,6 +134,8 @@ export default function Sugestoes() {
           <div className="relative" ref={painelRef}>
             <button
               onClick={() => setPainelAberto((v) => !v)}
+              aria-expanded={painelAberto}
+              aria-controls="painel-filtros-sugestoes"
               className={`flex items-center gap-2 px-4 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-xl transition-all cursor-pointer border ${
                 categoriasSelecionadas.length > 0
                   ? "bg-[#13b5a2] border-teal-400 text-white"
@@ -147,15 +150,22 @@ export default function Sugestoes() {
               </span>
             </button>
 
+            {/* PAINEL FLUTUANTE
+                Largura = tela inteira menos as margens (2rem), limitada a 24rem
+                (o w-96 antigo). Assim o painel nunca passa da borda no celular. */}
             {painelAberto && (
-              <div className="absolute right-0 top-14 w-96 bg-white border border-purple-100 rounded-2xl shadow-2xl p-4 z-50 animate-fadeIn">
+              <div
+                id="painel-filtros-sugestoes"
+                className="absolute right-0 top-14 w-[calc(100vw-2rem)] max-w-96 bg-white border border-purple-100 rounded-2xl shadow-2xl p-4 z-50 animate-fadeIn"
+              >
                 <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
                   <h3 className="text-xs font-black uppercase text-teal-700 tracking-wider">
                     Filtrar por Tema
                   </h3>
                   <button
                     onClick={() => setPainelAberto(false)}
-                    className="text-gray-400 hover:text-red-500 cursor-pointer"
+                    aria-label="Fechar filtros"
+                    className="p-3 -m-3 text-gray-400 hover:text-red-500 cursor-pointer"
                   >
                     <X size={16} />
                   </button>
@@ -197,9 +207,9 @@ export default function Sugestoes() {
       </div>
 
       {/* GRID DE CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8 items-stretch">
         {filtradas.length === 0 && (
-          <div className="col-span-full bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-12 text-center max-w-sm mx-auto mt-6 shadow-xl">
+          <div className="col-span-full bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 sm:p-12 text-center max-w-sm mx-auto mt-6 shadow-xl">
             <p className="text-xl font-bold text-white">
               💡 Nenhuma sugestão encontrada
             </p>
@@ -209,21 +219,36 @@ export default function Sugestoes() {
           </div>
         )}
 
+        {/* CARD DE SUGESTÃO
+            Celular (< sm): layout HORIZONTAL com CAPA VERTICAL (proporção ~2:3,
+            como pôster de filme ou capa de livro) à esquerda, texto à direita.
+            sm em diante: layout VERTICAL de sempre, com capa 16:9. */}
         {filtradas.map((sugestao) => {
           const tipo = TIPOS_SUGESTAO.find((t) => t.valor === sugestao.tipo);
           return (
             <div
               key={sugestao.id}
+              role="link"
+              tabIndex={0}
+              aria-label={`Abrir sugestão: ${sugestao.titulo}`}
               onClick={() => navigate(`/sugestoes/${sugestao.id}`)}
-              className="cursor-pointer bg-white shadow-2xl rounded-2xl border border-teal-50 overflow-hidden flex flex-col justify-between transition-all hover:shadow-teal-950/20 hover:scale-[1.03] duration-300 group"
+              onKeyDown={(e) => {
+                // Enter abre a sugestão, mas só se o foco estiver no próprio card
+                // (não quando estiver no botão de favoritar, que fica dentro dele)
+                if (e.key === "Enter" && e.target === e.currentTarget) {
+                  navigate(`/sugestoes/${sugestao.id}`);
+                }
+              }}
+              className="cursor-pointer bg-white shadow-2xl rounded-2xl border border-teal-50 overflow-hidden flex flex-row sm:flex-col sm:justify-between transition-all hover:shadow-teal-950/20 hover:scale-[1.03] duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#13b5a2] motion-reduce:transition-none motion-reduce:hover:scale-100"
             >
-              {/* Capa */}
-              <div className="w-full aspect-video bg-teal-950 relative flex items-center justify-center overflow-hidden border-b border-gray-100">
+              {/* Capa: no celular é uma coluna de 6rem com altura mínima de 9rem (2:3);
+                  a partir de sm volta a largura total em 16:9 */}
+              <div className="relative shrink-0 w-24 min-h-36 sm:min-h-0 sm:w-full sm:aspect-video bg-teal-950 flex items-center justify-center overflow-hidden border-r sm:border-r-0 sm:border-b border-gray-100">
                 {sugestao.capa ? (
                   <img
                     src={sugestao.capa}
-                    alt={sugestao.titulo}
-                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
                   />
                 ) : (
                   <Lightbulb
@@ -232,48 +257,67 @@ export default function Sugestoes() {
                   />
                 )}
 
+                {/* Selo do tipo sobre a capa: só a partir de sm
+                    (no celular o tipo aparece como texto acima do título) */}
                 {tipo && (
-                  <div className="absolute top-3 left-3 z-20 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-md flex items-center gap-1 text-white bg-teal-700/90 backdrop-blur-sm">
+                  <div className="hidden sm:flex absolute top-3 left-3 z-20 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-md items-center gap-1 text-white bg-teal-700/90 backdrop-blur-sm">
                     <span>{tipo.emoji}</span>
                     <span>{tipo.label}</span>
                   </div>
                 )}
               </div>
 
-              <div className="p-5 flex-1 flex flex-col justify-between">
+              <div className="flex-1 min-w-0 p-3 sm:p-5 flex flex-col justify-between">
                 <div>
-                  <div className="flex flex-wrap gap-1 mb-3">
+                  {tipo && (
+                    <p className="sm:hidden text-[10px] font-black uppercase tracking-wider text-teal-700 mb-1">
+                      <span aria-hidden="true">{tipo.emoji}</span> {tipo.label}
+                    </p>
+                  )}
+
+                  <div className="flex flex-wrap gap-1 mb-2 sm:mb-3">
                     {sugestao.categorias?.slice(0, 2).map((c) => (
                       <span
                         key={c.id}
-                        className="text-[10px] font-black uppercase tracking-widest text-[#13b5a2] bg-teal-50 border border-teal-100 px-2.5 py-1 rounded-md"
+                        className="max-w-full truncate text-[10px] font-black uppercase tracking-wider sm:tracking-widest text-[#13b5a2] bg-teal-50 border border-teal-100 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md"
                       >
                         {c.nome}
                       </span>
                     ))}
+                    {sugestao.categorias?.length > 2 && (
+                      <span className="self-center text-[10px] font-bold text-gray-500">
+                        +{sugestao.categorias.length - 2}
+                      </span>
+                    )}
                   </div>
 
-                  <h2 className="text-lg font-black text-purple-950 uppercase tracking-wide leading-snug line-clamp-2 group-hover:text-teal-700 transition">
+                  <h2 className="text-sm sm:text-lg font-black text-purple-950 uppercase tracking-wide leading-snug line-clamp-2 group-hover:text-teal-700 transition">
                     {sugestao.titulo}
                   </h2>
 
-                  <p className="text-sm text-gray-600 leading-relaxed mt-3 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mt-1.5 sm:mt-3 line-clamp-2">
                     {sugestao.descricao || "Clique para ver os detalhes."}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider truncate">
+                <div className="mt-3 sm:mt-6 pt-2 sm:pt-4 border-t border-gray-100 flex items-center justify-between gap-2">
+                  <span className="text-[11px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider truncate">
                     Por {sugestao.autor?.nome || "Profissional MindUp"}
                   </span>
 
                   <button
                     type="button"
+                    aria-label={
+                      sugestao.favoritado
+                        ? "Remover dos favoritos"
+                        : "Adicionar aos favoritos"
+                    }
+                    aria-pressed={!!sugestao.favoritado}
                     onClick={(e) => {
                       e.stopPropagation();
                       alternarFavoritoSugestao(sugestao.id);
                     }}
-                    className="p-2 bg-teal-50 hover:bg-teal-100 rounded-xl transition flex items-center justify-center cursor-pointer border border-teal-100/50 group/fav shrink-0"
+                    className="p-2.5 sm:p-2 bg-teal-50 hover:bg-teal-100 rounded-xl transition flex items-center justify-center cursor-pointer border border-teal-100/50 group/fav shrink-0"
                   >
                     <Heart
                       size={16}

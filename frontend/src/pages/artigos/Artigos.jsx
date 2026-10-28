@@ -2,7 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useArtigos } from "../../context/ArtigosContext";
 import { useVideos } from "../../context/VideosContext";
-import { Search, Heart, BookOpen, Filter, X, ArrowLeft } from "lucide-react";
+import {
+  Search,
+  Heart,
+  BookOpen,
+  Filter,
+  X,
+  ArrowLeft,
+  FileText,
+} from "lucide-react";
 
 export default function Artigos() {
   const navigate = useNavigate();
@@ -54,7 +62,7 @@ export default function Artigos() {
       {/* Botão de voltar à tela inicial */}
       <button
         onClick={() => navigate("/inicial")}
-        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-4 sm:mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
@@ -64,9 +72,9 @@ export default function Artigos() {
       </button>
 
       {/* CABEÇALHO */}
-      <header className="mb-8 pb-4 border-b border-purple-300/30 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+      <header className="mb-6 sm:mb-8 pb-4 border-b border-purple-300/30 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-wide drop-shadow-md">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-wide drop-shadow-md">
             Artigos e Publicações 📄
           </h1>
           <p className="text-purple-200 text-xs md:text-sm mt-1 font-medium">
@@ -84,11 +92,12 @@ export default function Artigos() {
       </header>
 
       {/* BARRA DE BUSCA + BOTÃO DE FILTROS */}
-      <div className="flex justify-center mb-10">
+      <div className="flex justify-center mb-6 sm:mb-10">
         <div className="relative w-full max-w-xl flex gap-3 items-center">
           <div className="relative flex-1">
             <input
               type="text"
+              aria-label="Buscar artigos por palavra-chave"
               placeholder="Buscar artigos por palavra-chave..."
               className="w-full pl-5 pr-12 py-3.5 bg-white border border-purple-100 rounded-2xl shadow-xl text-sm font-semibold text-black focus:outline-3 focus:outline-[#ffb300] placeholder-gray-400 transition"
               value={busca}
@@ -103,6 +112,8 @@ export default function Artigos() {
           <div className="relative" ref={painelRef}>
             <button
               onClick={() => setPainelAberto((v) => !v)}
+              aria-expanded={painelAberto}
+              aria-controls="painel-filtros-artigos"
               className={`flex items-center gap-2 px-4 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-xl transition-all cursor-pointer border ${
                 categoriasSelecionadas.length > 0
                   ? "bg-[#ff7300] border-orange-400 text-white"
@@ -117,16 +128,22 @@ export default function Artigos() {
               </span>
             </button>
 
-            {/* PAINEL FLUTUANTE */}
+            {/* PAINEL FLUTUANTE
+                Largura = tela inteira menos as margens (2rem), limitada a 24rem
+                (o w-96 antigo). Assim o painel nunca passa da borda no celular. */}
             {painelAberto && (
-              <div className="absolute right-0 top-14 w-96 bg-white border border-purple-100 rounded-2xl shadow-2xl p-4 z-50 animate-fadeIn">
+              <div
+                id="painel-filtros-artigos"
+                className="absolute right-0 top-14 w-[calc(100vw-2rem)] max-w-96 bg-white border border-purple-100 rounded-2xl shadow-2xl p-4 z-50 animate-fadeIn"
+              >
                 <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
                   <h3 className="text-xs font-black uppercase text-purple-700 tracking-wider">
                     Filtrar por Tema
                   </h3>
                   <button
                     onClick={() => setPainelAberto(false)}
-                    className="text-gray-400 hover:text-red-500 cursor-pointer"
+                    aria-label="Fechar filtros"
+                    className="p-3 -m-3 text-gray-400 hover:text-red-500 cursor-pointer"
                   >
                     <X size={16} />
                   </button>
@@ -168,9 +185,9 @@ export default function Artigos() {
       </div>
 
       {/* GRID DE CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8 items-stretch">
         {filtrados.length === 0 && (
-          <div className="col-span-full bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-12 text-center max-w-sm mx-auto mt-6 shadow-xl">
+          <div className="col-span-full bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 sm:p-12 text-center max-w-sm mx-auto mt-6 shadow-xl">
             <p className="text-xl font-bold text-white">
               📄 Nenhum artigo encontrado
             </p>
@@ -180,63 +197,98 @@ export default function Artigos() {
           </div>
         )}
 
+        {/* CARD DE ARTIGO
+            Celular (< sm): layout HORIZONTAL compacto — selo de documento à esquerda
+            (faz o papel de miniatura, já que artigo não tem imagem), texto à direita.
+            sm em diante: card de texto de sempre. */}
         {filtrados.map((artigo) => (
           <div
             key={artigo.id}
+            role="link"
+            tabIndex={0}
+            aria-label={`Abrir artigo: ${artigo.titulo}`}
             onClick={() => navigate(`/artigos/${artigo.id}`)}
-            className="cursor-pointer bg-white shadow-2xl rounded-2xl border border-purple-50 p-6 flex flex-col justify-between transition-all hover:shadow-purple-950/20 hover:scale-[1.03] duration-300 group"
+            onKeyDown={(e) => {
+              // Enter abre o artigo, mas só se o foco estiver no próprio card
+              // (não quando estiver no botão de favoritar, que fica dentro dele)
+              if (e.key === "Enter" && e.target === e.currentTarget) {
+                navigate(`/artigos/${artigo.id}`);
+              }
+            }}
+            className="cursor-pointer bg-white shadow-2xl rounded-2xl border border-purple-50 overflow-hidden flex flex-row sm:flex-col sm:justify-between transition-all hover:shadow-purple-950/20 hover:scale-[1.03] duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7300] motion-reduce:transition-none motion-reduce:hover:scale-100"
           >
-            <div>
-              <div className="flex flex-wrap gap-1 mb-4">
-                {artigo.categorias?.slice(0, 2).map((c) => (
-                  <span
-                    key={c.id}
-                    className="text-[10px] font-black uppercase tracking-widest text-[#ff7300] bg-orange-50 border border-orange-100 px-2.5 py-1 rounded-md"
-                  >
-                    {c.nome}
-                  </span>
-                ))}
-              </div>
-
-              <h2 className="text-lg font-black text-purple-950 uppercase tracking-wide leading-snug line-clamp-2 group-hover:text-purple-700 transition">
-                {artigo.titulo}
-              </h2>
-
-              <p className="text-sm text-gray-600 leading-relaxed mt-3 line-clamp-3">
-                {artigo.descricao ||
-                  "Clique para abrir e visualizar os detalhes completos e resumo deste material de leitura."}
-              </p>
+            {/* Selo de documento: só no celular */}
+            <div
+              aria-hidden="true"
+              className="sm:hidden shrink-0 w-14 bg-orange-50 border-r border-orange-100 flex items-center justify-center"
+            >
+              <FileText size={24} className="text-[#ff7300]" />
             </div>
 
-            <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2.5 max-w-[75%]">
-                <img
-                  src={artigo.autor?.imagem_perfil || "/default_perfil.png"}
-                  alt="Autor"
-                  className="w-7 h-7 rounded-full object-cover border border-purple-200 shrink-0"
-                />
-                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider truncate">
-                  Por {artigo.autor?.nome || "Profissional MindUp"}
-                </span>
+            <div className="flex-1 min-w-0 p-4 sm:p-6 flex flex-col justify-between">
+              <div>
+                <div className="flex flex-wrap gap-1 mb-2 sm:mb-4">
+                  {artigo.categorias?.slice(0, 2).map((c) => (
+                    <span
+                      key={c.id}
+                      className="max-w-full truncate text-[10px] font-black uppercase tracking-wider sm:tracking-widest text-[#ff7300] bg-orange-50 border border-orange-100 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md"
+                    >
+                      {c.nome}
+                    </span>
+                  ))}
+                  {artigo.categorias?.length > 2 && (
+                    <span className="self-center text-[10px] font-bold text-gray-500">
+                      +{artigo.categorias.length - 2}
+                    </span>
+                  )}
+                </div>
+
+                <h2 className="text-sm sm:text-lg font-black text-purple-950 uppercase tracking-wide leading-snug line-clamp-2 group-hover:text-purple-700 transition">
+                  {artigo.titulo}
+                </h2>
+
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mt-1.5 sm:mt-3 line-clamp-2 sm:line-clamp-3">
+                  {artigo.descricao ||
+                    "Clique para abrir e visualizar os detalhes completos e resumo deste material de leitura."}
+                </p>
               </div>
 
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  alternarFavoritoArtigo(artigo.id);
-                }}
-                className="p-2 bg-orange-50 hover:bg-orange-100 rounded-xl transition flex items-center justify-center cursor-pointer border border-orange-100/50 group/fav"
-              >
-                <Heart
-                  size={16}
-                  className={`transition-all transform active:scale-75 duration-200 ${
+              <div className="mt-3 sm:mt-6 pt-3 sm:pt-4 border-t border-gray-100 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 max-w-[75%]">
+                  <img
+                    src={artigo.autor?.imagem_perfil || "/default_perfil.png"}
+                    alt=""
+                    className="w-6 h-6 sm:w-7 sm:h-7 rounded-full object-cover border border-purple-200 shrink-0"
+                  />
+                  <span className="text-[11px] sm:text-xs font-bold text-gray-500 uppercase tracking-wider truncate">
+                    Por {artigo.autor?.nome || "Profissional MindUp"}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  aria-label={
                     artigo.favoritado
-                      ? "text-[#ff7300] fill-[#ff7300] scale-110"
-                      : "text-gray-400 group-hover/fav:text-[#ff7300]"
-                  }`}
-                />
-              </button>
+                      ? "Remover dos favoritos"
+                      : "Adicionar aos favoritos"
+                  }
+                  aria-pressed={!!artigo.favoritado}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    alternarFavoritoArtigo(artigo.id);
+                  }}
+                  className="p-2.5 sm:p-2 bg-orange-50 hover:bg-orange-100 rounded-xl transition flex items-center justify-center cursor-pointer border border-orange-100/50 group/fav shrink-0"
+                >
+                  <Heart
+                    size={16}
+                    className={`transition-all transform active:scale-75 duration-200 ${
+                      artigo.favoritado
+                        ? "text-[#ff7300] fill-[#ff7300] scale-110"
+                        : "text-gray-400 group-hover/fav:text-[#ff7300]"
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
           </div>
         ))}

@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useNavigate, Link } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useSugestoes } from "../../context/SugestoesContext";
 import { infoTipoSugestao, acaoExternaLabel } from "../../utils/sugestoes";
 import { ArrowLeft, Calendar, ExternalLink, Heart } from "lucide-react";
@@ -14,7 +14,7 @@ export default function VerSugestao() {
 
   if (carregando) {
     return (
-      <div className="flex justify-center pt-20 animate-pulse">
+      <div role="status" className="flex justify-center pt-20 animate-pulse">
         <p className="text-xl font-bold text-white tracking-wide">
           Carregando detalhes da sugestão...
         </p>
@@ -24,13 +24,17 @@ export default function VerSugestao() {
 
   if (!sugestao) {
     return (
-      <div className="max-w-md mx-auto bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center mt-12 shadow-xl text-white">
+      <div
+        role="alert"
+        className="max-w-md mx-auto bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 text-center mt-12 shadow-xl text-white"
+      >
         <p className="text-xl font-bold">❌ Sugestão não encontrada</p>
         <p className="text-purple-200 text-xs mt-2">
           O conteúdo solicitado está inacessível ou foi ocultado pelo
           profissional.
         </p>
         <button
+          type="button"
           onClick={() => navigate(-1)}
           className="inline-block mt-4 text-xs font-bold text-[#ffb300] uppercase tracking-wider hover:underline cursor-pointer"
         >
@@ -54,8 +58,9 @@ export default function VerSugestao() {
   return (
     <div className="max-w-4xl mx-auto p-2 text-black animate-fadeIn">
       <button
+        type="button"
         onClick={() => navigate(-1)}
-        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+        className="inline-flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-4 sm:mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
@@ -64,66 +69,92 @@ export default function VerSugestao() {
         <span>Voltar</span>
       </button>
 
-      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-teal-100">
-        {/* Capa */}
-        <div className="w-full aspect-21/9 bg-teal-950 relative overflow-hidden">
+      {/*
+        TELA REMODELADA — "ficha da obra"
+        Celular: capa em cima, inteira (sem cortar), texto embaixo.
+        md em diante: duas colunas — capa à esquerda (20rem), texto à direita.
+      */}
+      <article className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-teal-100 md:grid md:grid-cols-[20rem_1fr]">
+        {/* COLUNA DA CAPA */}
+        <div className="relative bg-teal-950 flex items-center justify-center md:items-start p-6 md:p-8 overflow-hidden">
           {sugestao.capa ? (
-            <img
-              src={sugestao.capa}
-              alt={sugestao.titulo}
-              className="w-full h-full object-cover"
-            />
+            <>
+              {/* Fundo desfocado com a própria capa (decorativo) */}
+              <img
+                src={sugestao.capa}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 w-full h-full object-cover blur-2xl scale-125 opacity-40"
+              />
+              {/* Capa inteira, na proporção original (nada é cortado) */}
+              <img
+                src={sugestao.capa}
+                alt={`Capa de ${sugestao.titulo}`}
+                className="relative h-auto w-auto max-w-full max-h-[55vh] md:w-full md:max-h-none object-contain rounded-xl shadow-2xl"
+              />
+            </>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-6xl">
+            <div aria-hidden="true" className="relative py-8 md:py-16 text-7xl">
               {tipo.emoji}
             </div>
           )}
-          <div className="absolute top-4 left-4 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider shadow-md flex items-center gap-1.5 text-white bg-teal-700/90 backdrop-blur-sm">
-            <span>{tipo.emoji}</span>
-            <span>{tipo.label}</span>
-          </div>
         </div>
 
-        <div className="p-6 md:p-8">
+        {/* COLUNA DO CONTEÚDO */}
+        <div className="p-5 sm:p-6 md:p-8 min-w-0 flex flex-col">
           {/* Cabeçalho */}
-          <header className="border-b border-gray-100 pb-5 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex flex-wrap gap-1.5 mb-2">
-                {sugestao.categorias?.map((c) => (
-                  <span
-                    key={c.id}
-                    className="text-[10px] font-black uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-100"
-                  >
-                    {c.nome}
-                  </span>
-                ))}
-              </div>
-              <h1 className="text-2xl md:text-3xl font-black text-purple-950 uppercase tracking-wide leading-tight">
-                {sugestao.titulo}
-              </h1>
+          <header className="border-b border-gray-100 pb-5 mb-6">
+            <div className="flex flex-wrap items-center gap-1.5 mb-3">
+              {/* Tipo da obra (antes ficava como selo sobre a capa) */}
+              <span className="text-[10px] font-black uppercase tracking-wider text-white bg-teal-700 px-2.5 py-1 rounded-md flex items-center gap-1">
+                <span aria-hidden="true">{tipo.emoji}</span>
+                <span>{tipo.label}</span>
+              </span>
+
+              {sugestao.categorias?.map((c) => (
+                <span
+                  key={c.id}
+                  className="text-[10px] font-black uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-100"
+                >
+                  {c.nome}
+                </span>
+              ))}
             </div>
 
-            <div className="flex items-center gap-1.5 text-xs text-gray-400 font-bold tracking-wide shrink-0">
-              <Calendar size={14} className="text-teal-500" />
-              <span>{formatarData(sugestao.created_at)}</span>
-            </div>
+            <h1 className="text-2xl md:text-3xl font-black text-purple-950 uppercase tracking-wide leading-tight wrap-break-words">
+              {sugestao.titulo}
+            </h1>
+
+            <p className="mt-3 flex items-center gap-1.5 text-xs text-gray-500 font-bold tracking-wide">
+              <Calendar
+                size={14}
+                className="text-teal-600"
+                aria-hidden="true"
+              />
+              <span>
+                Publicado em{" "}
+                <time dateTime={sugestao.created_at}>
+                  {formatarData(sugestao.created_at)}
+                </time>
+              </span>
+            </p>
           </header>
 
           {/* Descrição */}
-          <p className="whitespace-pre-wrap text-sm md:text-base text-gray-600 leading-relaxed font-medium bg-gray-50/70 p-5 rounded-2xl border border-gray-100">
+          <p className="whitespace-pre-wrap text-sm md:text-base text-gray-600 leading-relaxed font-medium bg-gray-50/70 p-4 sm:p-5 rounded-2xl border border-gray-100">
             {sugestao.descricao ||
               "Este conteúdo foi disponibilizado sem uma descrição prévia pelo autor."}
           </p>
 
-          {/* Autor */}
-          <div className="mt-8 flex items-center gap-3 bg-teal-50/50 border border-teal-100 p-4 rounded-xl w-fit">
+          {/* Autor (mesmo conteúdo de antes; só ficou responsivo) */}
+          <div className="mt-6 flex items-center gap-3 bg-teal-50/50 border border-teal-100 p-3 sm:p-4 rounded-xl w-full sm:w-fit max-w-full">
             <img
               src={sugestao.autor?.imagem_perfil || "/default_perfil.png"}
-              alt="Avatar Autor"
-              className="w-10 h-10 rounded-full object-cover border border-teal-300"
+              alt=""
+              className="w-10 h-10 rounded-full object-cover border border-teal-300 shrink-0"
             />
-            <div>
-              <p className="text-sm font-black text-purple-950">
+            <div className="min-w-0">
+              <p className="text-sm font-black text-purple-950 truncate">
                 Por {sugestao.autor?.nome || "Profissional Cadastrado"}
               </p>
               <p className="text-[10px] text-teal-700 font-bold uppercase tracking-wider">
@@ -132,12 +163,13 @@ export default function VerSugestao() {
             </div>
           </div>
 
-          {/* Rodapé com ações */}
-          <footer className="mt-10 pt-5 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+          {/* Ações: no celular o link externo (ação principal) vem primeiro e os
+              dois botões ocupam a largura toda */}
+          <footer className="mt-8 pt-5 border-t border-gray-100 flex flex-col-reverse sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => alternarFavoritoSugestao(sugestao.id)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider border transition cursor-pointer ${
+              className={`w-full sm:w-auto justify-center flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider border transition cursor-pointer ${
                 sugestao.favoritado
                   ? "bg-teal-100 border-teal-300 text-teal-800"
                   : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
@@ -145,6 +177,7 @@ export default function VerSugestao() {
             >
               <Heart
                 size={16}
+                aria-hidden="true"
                 className={sugestao.favoritado ? "fill-teal-700" : ""}
               />
               <span>
@@ -157,15 +190,16 @@ export default function VerSugestao() {
                 href={sugestao.link_externo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto bg-[#13b5a2] hover:bg-[#0fa190] text-white font-black px-8 py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-teal-950/20 transition-all transform hover:scale-105 cursor-pointer text-center flex items-center justify-center gap-2"
+                className="w-full sm:w-auto bg-[#13b5a2] hover:bg-[#0fa190] text-white font-black px-8 py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-teal-950/20 transition-all transform hover:scale-105 motion-reduce:transform-none cursor-pointer text-center flex items-center justify-center gap-2"
               >
-                <ExternalLink size={14} />
+                <ExternalLink size={14} aria-hidden="true" />
                 <span>{acaoExternaLabel(sugestao.tipo)}</span>
+                <span className="sr-only"> (abre em nova aba)</span>
               </a>
             )}
           </footer>
         </div>
-      </div>
+      </article>
     </div>
   );
 }

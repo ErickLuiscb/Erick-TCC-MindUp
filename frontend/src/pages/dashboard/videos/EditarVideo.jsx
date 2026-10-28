@@ -93,7 +93,7 @@ export default function EditarVideo() {
 
   if (carregando) {
     return (
-      <div className="flex justify-center pt-20 animate-pulse">
+      <div role="status" className="flex justify-center pt-20 animate-pulse">
         <p className="text-xl font-bold text-white tracking-wide">
           Recuperando registros do vídeo...
         </p>
@@ -106,7 +106,7 @@ export default function EditarVideo() {
       <button
         type="button"
         onClick={() => navigate("/dashboard/videos")}
-        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors"
+        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-4 sm:mb-6 group transition-colors cursor-pointer"
         disabled={salvando}
       >
         <ArrowLeft
@@ -117,13 +117,16 @@ export default function EditarVideo() {
       </button>
 
       {erro && (
-        <div className="p-4 bg-red-100 border border-red-200 text-red-700 font-bold rounded-xl mb-6 shadow-xs animate-fadeIn flex items-center gap-2">
+        <div
+          role="alert"
+          className="p-4 bg-red-100 border border-red-200 text-red-700 font-bold rounded-xl mb-6 shadow-xs animate-fadeIn flex items-center gap-2"
+        >
           <AlertTriangle size={18} className="shrink-0" />
           <span>{erro}</span>
         </div>
       )}
 
-      <div className="bg-white rounded-2xl shadow-2xl p-8 border border-purple-100">
+      <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-8 border border-purple-100">
         <header className="mb-6 border-b border-gray-100 pb-4">
           <h1 className="text-2xl font-black text-purple-950 tracking-wide">
             Modificar Vídeo Publicado ✏️
@@ -136,10 +139,14 @@ export default function EditarVideo() {
 
         <form onSubmit={salvar} className="space-y-5">
           <div>
-            <label className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider">
+            <label
+              htmlFor="titulo-video"
+              className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider"
+            >
               Título do Vídeo:
             </label>
             <input
+              id="titulo-video"
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
               className="w-full border border-gray-300 p-3 rounded-xl text-sm focus:outline-purple-600 text-black font-semibold"
@@ -150,10 +157,14 @@ export default function EditarVideo() {
           </div>
 
           <div>
-            <label className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider">
+            <label
+              htmlFor="descricao-video"
+              className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider"
+            >
               Descrição / Conteúdo:
             </label>
             <textarea
+              id="descricao-video"
               value={descricao}
               onChange={(e) => setDescricao(e.target.value)}
               className="w-full border border-gray-300 p-3 rounded-xl text-sm h-32 focus:outline-purple-600 text-black leading-relaxed"
@@ -162,17 +173,27 @@ export default function EditarVideo() {
           </div>
 
           {/* SELETOR DE CATEGORIAS COM BUSCADOR */}
-          <div className="bg-gray-50 p-5 rounded-xl border border-gray-200">
+          <div
+            role="group"
+            aria-labelledby="rotulo-categorias"
+            className="bg-gray-50 p-4 sm:p-5 rounded-xl border border-gray-200"
+          >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-200 pb-3 mb-4 gap-1">
               <div>
-                <label className="text-xs font-black text-purple-950 uppercase tracking-wider block">
+                <span
+                  id="rotulo-categorias"
+                  className="text-xs font-black text-purple-950 uppercase tracking-wider block"
+                >
                   Vincular Categorias Temáticas:
-                </label>
-                <p className="text-[10px] text-gray-400 mt-0.5">
+                </span>
+                <p className="text-[10px] text-gray-500 mt-0.5">
                   Pesquise e marque os temas relacionados ao conteúdo.
                 </p>
               </div>
-              <span className="text-[10px] font-black uppercase text-purple-600 bg-purple-100 px-2 py-0.5 rounded-md w-fit shrink-0">
+              <span
+                role="status"
+                className="text-[10px] font-black uppercase text-purple-700 bg-purple-100 px-2 py-0.5 rounded-md w-fit shrink-0"
+              >
                 {categoriasSelecionadas.length} / 5 selecionadas
               </span>
             </div>
@@ -181,11 +202,12 @@ export default function EditarVideo() {
             <div className="relative mb-3">
               <input
                 type="text"
+                aria-label="Pesquisar categoria"
                 placeholder="Pesquisar categoria... (ex: Ansiedade, Luto)"
                 value={buscaCategoria}
                 onChange={(e) => setBuscaCategoria(e.target.value)}
                 disabled={salvando}
-                className="w-full pl-9 pr-9 py-2.5 bg-white border border-gray-300 rounded-xl text-xs font-semibold text-black focus:outline-purple-600 placeholder-gray-400"
+                className="w-full pl-9 pr-9 py-2.5 bg-white border border-gray-300 rounded-xl text-xs font-semibold text-black focus:outline-purple-600 placeholder-gray-500"
               />
               <Search
                 size={14}
@@ -195,7 +217,8 @@ export default function EditarVideo() {
                 <button
                   type="button"
                   onClick={() => setBuscaCategoria("")}
-                  className="absolute right-3 top-2.5 text-gray-400 hover:text-red-500 cursor-pointer"
+                  aria-label="Limpar busca"
+                  className="absolute right-3 top-2.5 p-3 -m-3 text-gray-500 hover:text-red-500 cursor-pointer"
                 >
                   <X size={14} />
                 </button>
@@ -205,14 +228,14 @@ export default function EditarVideo() {
             {/* Lista filtrada */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-52 overflow-y-auto pr-1">
               {categoriasFiltradas.length === 0 ? (
-                <p className="col-span-full text-xs text-center text-gray-400 py-4">
+                <p className="col-span-full text-xs text-center text-gray-500 py-4">
                   Nenhuma categoria encontrada com esse termo.
                 </p>
               ) : (
                 categoriasFiltradas.map((cat) => (
                   <label
                     key={cat.id}
-                    className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-xs font-semibold cursor-pointer select-none transition ${
+                    className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-xs font-semibold cursor-pointer select-none transition focus-within:ring-2 focus-within:ring-purple-600 ${
                       categoriasSelecionadas.includes(cat.id)
                         ? "bg-purple-100 border-purple-300 text-purple-950 font-black"
                         : "bg-white border-gray-200 text-gray-700 hover:bg-gray-100"
@@ -245,7 +268,8 @@ export default function EditarVideo() {
                       <button
                         type="button"
                         onClick={() => handleCheckboxChange(catId)}
-                        className="hover:text-red-300 cursor-pointer"
+                        aria-label={`Remover categoria ${cat.nome}`}
+                        className="p-2 -m-2 hover:text-red-300 cursor-pointer"
                       >
                         <X size={10} />
                       </button>
@@ -257,10 +281,14 @@ export default function EditarVideo() {
           </div>
 
           <div>
-            <label className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider">
+            <label
+              htmlFor="arquivo-video"
+              className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider"
+            >
               Trocar Mídia de Vídeo (Opcional):
             </label>
             <input
+              id="arquivo-video"
               type="file"
               accept="video/mp4,video/quicktime,video/x-msvideo"
               onChange={(e) => setArquivo(e.target.files[0])}
@@ -270,11 +298,11 @@ export default function EditarVideo() {
           </div>
 
           {/* BOTÕES DE AÇÃO */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t border-gray-100">
             <button
               type="button"
               onClick={() => navigate("/dashboard/videos")}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition"
+              className="w-full sm:w-auto bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-3 sm:py-2.5 rounded-xl text-xs uppercase tracking-wider transition"
               disabled={salvando}
             >
               Cancelar
@@ -282,7 +310,7 @@ export default function EditarVideo() {
             <button
               type="submit"
               disabled={salvando}
-              className="bg-[#ff7300] hover:bg-[#ff8c00] text-white font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider transition flex items-center gap-2 shadow-md shadow-orange-950/10 disabled:opacity-50 cursor-pointer"
+              className="w-full sm:w-auto justify-center bg-[#ff7300] hover:bg-[#ff8c00] text-white font-bold px-6 py-3 sm:py-2.5 rounded-xl text-xs uppercase tracking-wider transition flex items-center gap-2 shadow-md shadow-orange-950/10 disabled:opacity-50 cursor-pointer"
             >
               <Save size={14} />
               <span>{salvando ? "Sincronizando..." : "Salvar Alterações"}</span>

@@ -5,6 +5,27 @@ import { useVideos } from "../../context/VideosContext";
 import { TIPOS_MIDIA_AUTOAJUDA } from "../../utils/autoajuda";
 import { Search, Heart, Filter, X, Play, ArrowLeft } from "lucide-react";
 
+// Chips de categoria (máx. 2 + "+N"). Usado em dois lugares do card:
+// em cima do título (desktop) e no rodapé, ao lado do coração (celular).
+function ChipsCategorias({ categorias, className, chipClassName }) {
+  const lista = categorias?.slice(0, 2) ?? [];
+  const resto = (categorias?.length ?? 0) - 2;
+  return (
+    <div className={className}>
+      {lista.map((c) => (
+        <span key={c.id} className={chipClassName}>
+          {c.nome}
+        </span>
+      ))}
+      {resto > 0 && (
+        <span className="self-center text-[10px] font-bold text-gray-500">
+          +{resto}
+        </span>
+      )}
+    </div>
+  );
+}
+
 export default function Autoajuda() {
   const navigate = useNavigate();
   const { autoajudas, carregando, alternarFavoritoAutoajuda } = useAutoajuda();
@@ -56,7 +77,7 @@ export default function Autoajuda() {
       {/* Botão de voltar à tela inicial */}
       <button
         onClick={() => navigate("/inicial")}
-        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors cursor-pointer"
+        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-4 sm:mb-6 group transition-colors cursor-pointer"
       >
         <ArrowLeft
           size={16}
@@ -66,9 +87,9 @@ export default function Autoajuda() {
       </button>
 
       {/* CABEÇALHO */}
-      <header className="mb-8 pb-4 border-b border-purple-300/30 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+      <header className="mb-6 sm:mb-8 pb-4 border-b border-purple-300/30 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-wide drop-shadow-md">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-wide drop-shadow-md">
             Autoajuda 🌱
           </h1>
           <p className="text-purple-200 text-xs md:text-sm mt-1 font-medium">
@@ -114,11 +135,12 @@ export default function Autoajuda() {
       </div>
 
       {/* BARRA DE BUSCA + BOTÃO DE FILTROS DE CATEGORIA */}
-      <div className="flex justify-center mb-10">
+      <div className="flex justify-center mb-6 sm:mb-10">
         <div className="relative w-full max-w-xl flex gap-3 items-center">
           <div className="relative flex-1">
             <input
               type="text"
+              aria-label="Buscar conteúdos de autoajuda por título"
               placeholder="Buscar por título..."
               className="w-full pl-5 pr-12 py-3.5 bg-white border border-purple-100 rounded-2xl shadow-xl text-sm font-semibold text-black focus:outline-3 focus:outline-[#ffb300] placeholder-gray-400 transition"
               value={busca}
@@ -132,6 +154,8 @@ export default function Autoajuda() {
           <div className="relative" ref={painelRef}>
             <button
               onClick={() => setPainelAberto((v) => !v)}
+              aria-expanded={painelAberto}
+              aria-controls="painel-filtros-autoajuda"
               className={`flex items-center gap-2 px-4 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-xl transition-all cursor-pointer border ${
                 categoriasSelecionadas.length > 0
                   ? "bg-[#1599cd] border-sky-400 text-white"
@@ -146,15 +170,22 @@ export default function Autoajuda() {
               </span>
             </button>
 
+            {/* PAINEL FLUTUANTE
+                Largura = tela inteira menos as margens (2rem), limitada a 24rem
+                (o w-96 antigo). Assim o painel nunca passa da borda no celular. */}
             {painelAberto && (
-              <div className="absolute right-0 top-14 w-96 bg-white border border-purple-100 rounded-2xl shadow-2xl p-4 z-50 animate-fadeIn">
+              <div
+                id="painel-filtros-autoajuda"
+                className="absolute right-0 top-14 w-[calc(100vw-2rem)] max-w-96 bg-white border border-purple-100 rounded-2xl shadow-2xl p-4 z-50 animate-fadeIn"
+              >
                 <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
                   <h3 className="text-xs font-black uppercase text-sky-700 tracking-wider">
                     Filtrar por Tema
                   </h3>
                   <button
                     onClick={() => setPainelAberto(false)}
-                    className="text-gray-400 hover:text-red-500 cursor-pointer"
+                    aria-label="Fechar filtros"
+                    className="p-3 -m-3 text-gray-400 hover:text-red-500 cursor-pointer"
                   >
                     <X size={16} />
                   </button>
@@ -196,9 +227,9 @@ export default function Autoajuda() {
       </div>
 
       {/* GRID DE CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8 items-stretch">
         {filtrados.length === 0 && (
-          <div className="col-span-full bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-12 text-center max-w-sm mx-auto mt-6 shadow-xl">
+          <div className="col-span-full bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 sm:p-12 text-center max-w-sm mx-auto mt-6 shadow-xl">
             <p className="text-xl font-bold text-white">
               🌱 Nenhum conteúdo encontrado
             </p>
@@ -208,86 +239,115 @@ export default function Autoajuda() {
           </div>
         )}
 
+        {/* CARD DE AUTOAJUDA
+            Celular (< sm): layout HORIZONTAL compacto — miniatura à esquerda, texto
+            à direita; as categorias vão para o rodapé, ao lado do coração.
+            sm em diante: layout VERTICAL de sempre, com as categorias sobre o título. */}
         {filtrados.map((item) => (
           <div
             key={item.id}
+            role="link"
+            tabIndex={0}
+            aria-label={`Abrir conteúdo de autoajuda: ${item.titulo}`}
             onClick={() => navigate(`/autoajuda/${item.id}`)}
-            className="cursor-pointer bg-white shadow-2xl rounded-2xl border border-sky-50 overflow-hidden flex flex-col justify-between transition-all hover:shadow-sky-950/20 hover:scale-[1.03] duration-300 group"
+            onKeyDown={(e) => {
+              // Enter abre o conteúdo, mas só se o foco estiver no próprio card
+              // (não quando estiver no botão de favoritar, que fica dentro dele)
+              if (e.key === "Enter" && e.target === e.currentTarget) {
+                navigate(`/autoajuda/${item.id}`);
+              }
+            }}
+            className="cursor-pointer bg-white shadow-2xl rounded-2xl border border-sky-50 overflow-hidden flex flex-row sm:flex-col sm:justify-between transition-all hover:shadow-sky-950/20 hover:scale-[1.03] duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1599cd] motion-reduce:transition-none motion-reduce:hover:scale-100"
           >
-            <div>
-              <div className="w-full aspect-video bg-sky-950 relative flex items-center justify-center overflow-hidden border-b border-gray-100">
-                {item.tipo_midia === "imagem" ? (
-                  <img
-                    src={item.midia}
-                    alt={item.titulo}
-                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
-                  />
-                ) : (
-                  <>
-                    <div className="absolute z-20 bg-black/40 group-hover:bg-black/20 transition-colors w-12 h-12 rounded-full flex items-center justify-center">
-                      <Play
-                        size={20}
-                        className="text-white fill-white ml-0.5"
-                      />
-                    </div>
-                    <video
-                      className="w-full h-full object-cover pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity"
-                      muted
-                      preload="metadata"
-                    >
-                      <source src={item.midia} type="video/mp4" />
-                    </video>
-                  </>
-                )}
+            {/* Miniatura: coluna fixa de 7rem no celular; largura total + 16:9 a partir de sm */}
+            <div className="relative shrink-0 w-28 sm:w-full sm:aspect-video bg-sky-950 flex items-center justify-center overflow-hidden border-r sm:border-r-0 sm:border-b border-gray-100">
+              {item.tipo_midia === "imagem" ? (
+                <img
+                  src={item.midia}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
+                />
+              ) : (
+                <>
+                  <div className="absolute z-20 bg-black/40 group-hover:bg-black/20 transition-colors w-9 h-9 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
+                    <Play
+                      size={20}
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-white fill-white ml-0.5"
+                    />
+                  </div>
+                  <video
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity"
+                    muted
+                    preload="metadata"
+                  >
+                    <source src={item.midia} type="video/mp4" />
+                  </video>
+                </>
+              )}
 
-                <div className="absolute top-3 left-3 z-20 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-md flex items-center gap-1 text-white bg-sky-700/90 backdrop-blur-sm">
-                  <span>{item.tipo_midia === "imagem" ? "🖼️" : "🎬"}</span>
-                  <span>
-                    {item.tipo_midia === "imagem" ? "Imagem" : "Vídeo"}
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-5">
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {item.categorias?.slice(0, 2).map((c) => (
-                    <span
-                      key={c.id}
-                      className="text-[10px] font-black uppercase tracking-widest text-[#1599cd] bg-sky-50 border border-sky-100 px-2.5 py-1 rounded-md"
-                    >
-                      {c.nome}
-                    </span>
-                  ))}
-                </div>
-
-                <h2 className="text-lg font-black text-purple-950 uppercase tracking-wide leading-snug line-clamp-2 group-hover:text-sky-700 transition">
-                  {item.titulo}
-                </h2>
-
-                <p className="text-sm text-gray-600 leading-relaxed mt-3 line-clamp-2">
-                  {item.descricao || "Clique para ver o conteúdo completo."}
-                </p>
+              {/* Selo do tipo: no celular só o emoji (o texto fica para leitores de tela) */}
+              <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 z-20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[10px] font-black uppercase tracking-wider shadow-md flex items-center gap-1 text-white bg-sky-700/90 backdrop-blur-sm">
+                <span aria-hidden="true">
+                  {item.tipo_midia === "imagem" ? "🖼️" : "🎬"}
+                </span>
+                <span className="sr-only sm:not-sr-only">
+                  {item.tipo_midia === "imagem" ? "Imagem" : "Vídeo"}
+                </span>
               </div>
             </div>
 
-            <div className="px-5 pb-5 pt-2 border-t border-gray-50 flex items-center justify-end">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  alternarFavoritoAutoajuda(item.id);
-                }}
-                className="p-2 bg-sky-50 hover:bg-sky-100 rounded-xl transition flex items-center justify-center cursor-pointer border border-sky-100/50 group/fav shrink-0"
-              >
-                <Heart
-                  size={16}
-                  className={`transition-all transform active:scale-75 duration-200 ${
-                    item.favoritado
-                      ? "text-[#1599cd] fill-[#1599cd] scale-110"
-                      : "text-gray-400 group-hover/fav:text-[#1599cd]"
-                  }`}
+            {/* Coluna de texto */}
+            <div className="flex-1 min-w-0 flex flex-col justify-between">
+              <div className="p-3 sm:p-5">
+                {/* Categorias sobre o título: só a partir de sm */}
+                <ChipsCategorias
+                  categorias={item.categorias}
+                  className="hidden sm:flex flex-wrap gap-1 mb-3"
+                  chipClassName="text-[10px] font-black uppercase tracking-widest text-[#1599cd] bg-sky-50 border border-sky-100 px-2.5 py-1 rounded-md"
                 />
-              </button>
+
+                <h2 className="text-sm sm:text-lg font-black text-purple-950 uppercase tracking-wide leading-snug line-clamp-2 group-hover:text-sky-700 transition">
+                  {item.titulo}
+                </h2>
+
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mt-1 sm:mt-3 line-clamp-2">
+                  {item.descricao || "Clique para ver o conteúdo completo."}
+                </p>
+              </div>
+
+              <div className="px-3 pb-3 pt-1 sm:px-5 sm:pb-5 sm:pt-2 border-t-0 sm:border-t border-gray-50 flex items-center justify-between sm:justify-end gap-2">
+                {/* Categorias no rodapé: só no celular */}
+                <ChipsCategorias
+                  categorias={item.categorias}
+                  className="flex sm:hidden flex-wrap gap-1 min-w-0 flex-1"
+                  chipClassName="max-w-full truncate text-[10px] font-black uppercase tracking-wider text-[#1599cd] bg-sky-50 border border-sky-100 px-2 py-0.5 rounded-md"
+                />
+
+                <button
+                  type="button"
+                  aria-label={
+                    item.favoritado
+                      ? "Remover dos favoritos"
+                      : "Adicionar aos favoritos"
+                  }
+                  aria-pressed={!!item.favoritado}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    alternarFavoritoAutoajuda(item.id);
+                  }}
+                  className="p-2.5 sm:p-2 bg-sky-50 hover:bg-sky-100 rounded-xl transition flex items-center justify-center cursor-pointer border border-sky-100/50 group/fav shrink-0"
+                >
+                  <Heart
+                    size={16}
+                    className={`transition-all transform active:scale-75 duration-200 ${
+                      item.favoritado
+                        ? "text-[#1599cd] fill-[#1599cd] scale-110"
+                        : "text-gray-400 group-hover/fav:text-[#1599cd]"
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
           </div>
         ))}

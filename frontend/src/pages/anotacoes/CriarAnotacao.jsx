@@ -49,8 +49,9 @@ export default function CriarAnotacao() {
     <div className="max-w-2xl mx-auto p-2 animate-fadeIn text-black">
       {/* Botão de voltar e indicação de contexto */}
       <button
+        type="button"
         onClick={() => navigate("/anotacoes")}
-        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-6 group transition-colors"
+        className="flex items-center gap-2 text-purple-200 hover:text-white font-semibold text-sm mb-4 sm:mb-6 group transition-colors"
         disabled={salvando}
       >
         <ArrowLeft
@@ -62,13 +63,16 @@ export default function CriarAnotacao() {
 
       {/* Banner de Feedback de Erro */}
       {erro && (
-        <div className="p-4 bg-red-100 border border-red-200 text-red-700 font-bold rounded-xl mb-6 shadow-xs animate-fadeIn">
+        <div
+          role="alert"
+          className="p-4 bg-red-100 border border-red-200 text-red-700 font-bold rounded-xl mb-6 shadow-xs animate-fadeIn"
+        >
           {erro}
         </div>
       )}
 
       {/* Caixa do Formulário Web Profissional */}
-      <div className="bg-white rounded-2xl shadow-2xl p-8 border border-purple-100">
+      <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-8 border border-purple-100">
         <header className="mb-6 border-b border-gray-100 pb-4">
           <h1 className="text-2xl font-black text-purple-950 tracking-wide">
             Nova Página do Diário ✍️
@@ -81,10 +85,14 @@ export default function CriarAnotacao() {
 
         <form onSubmit={salvar} className="space-y-5">
           <div>
-            <label className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider">
+            <label
+              htmlFor="titulo-anotacao"
+              className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider"
+            >
               Título do Registro:
             </label>
             <input
+              id="titulo-anotacao"
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
               className="w-full border border-gray-300 p-3 rounded-xl text-sm focus:outline-purple-600 text-black font-semibold"
@@ -95,18 +103,22 @@ export default function CriarAnotacao() {
             />
           </div>
 
-          <div>
-            <label className="block mb-2 text-xs font-bold text-purple-950 uppercase tracking-wider">
+          <div role="group" aria-labelledby="rotulo-humor">
+            <span
+              id="rotulo-humor"
+              className="block mb-2 text-xs font-bold text-purple-950 uppercase tracking-wider"
+            >
               Como você está se sentindo?{" "}
-              <span className="normal-case text-gray-400 font-medium">
+              <span className="normal-case text-gray-500 font-medium">
                 (opcional)
               </span>
-            </label>
+            </span>
             <div className="flex flex-wrap gap-2">
               {HUMORES.map((h) => (
                 <button
                   key={h.valor}
                   type="button"
+                  aria-pressed={humor === h.valor}
                   onClick={() => setHumor(humor === h.valor ? null : h.valor)}
                   disabled={salvando}
                   title={h.label}
@@ -116,8 +128,10 @@ export default function CriarAnotacao() {
                       : "bg-gray-50 border-gray-200 hover:bg-gray-100"
                   }`}
                 >
-                  <span className="text-2xl leading-none">{h.emoji}</span>
-                  <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wide">
+                  <span aria-hidden="true" className="text-2xl leading-none">
+                    {h.emoji}
+                  </span>
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">
                     {h.label}
                   </span>
                 </button>
@@ -126,10 +140,14 @@ export default function CriarAnotacao() {
           </div>
 
           <div>
-            <label className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider">
+            <label
+              htmlFor="texto-anotacao"
+              className="block mb-1 text-xs font-bold text-purple-950 uppercase tracking-wider"
+            >
               O que você está pensando ou sentindo?
             </label>
             <textarea
+              id="texto-anotacao"
               value={texto}
               onChange={(e) => setTexto(e.target.value)}
               className="w-full border border-gray-300 p-3 rounded-xl text-sm h-52 focus:outline-purple-600 text-black leading-relaxed"
@@ -140,11 +158,11 @@ export default function CriarAnotacao() {
           </div>
 
           {/* Botões de Ação Alinhados */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t border-gray-100">
             <button
               type="button"
               onClick={() => navigate("/anotacoes")}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition"
+              className="w-full sm:w-auto bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-3 sm:py-2.5 rounded-xl text-xs uppercase tracking-wider transition"
               disabled={salvando}
             >
               Cancelar
@@ -153,7 +171,7 @@ export default function CriarAnotacao() {
             <button
               type="submit"
               disabled={salvando}
-              className="bg-purple-800 hover:bg-purple-900 text-white font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider transition flex items-center gap-2 shadow-md shadow-purple-950/10 disabled:opacity-50 cursor-pointer"
+              className="w-full sm:w-auto justify-center bg-purple-800 hover:bg-purple-900 text-white font-bold px-6 py-3 sm:py-2.5 rounded-xl text-xs uppercase tracking-wider transition flex items-center gap-2 shadow-md shadow-purple-950/10 disabled:opacity-50 cursor-pointer"
             >
               <Save size={14} />
               <span>{salvando ? "Salvando..." : "Salvar Registro"}</span>
