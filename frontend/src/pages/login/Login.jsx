@@ -175,6 +175,15 @@ export default function Login() {
               Cadastre-se
             </button>
           </p>
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={() => navigate("/visitante")}
+              className="text-sm font-bold text-purple-900 underline hover:text-purple-700 transition cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7300]"
+            >
+              Entrar como visitante
+            </button>
+          </div>
         </div>
 
         {/* No celular a logo aparece agora em cima do formulário (order-first);

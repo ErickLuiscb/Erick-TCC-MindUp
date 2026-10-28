@@ -19,11 +19,14 @@ use App\Http\Controllers\api\CategoriaApiController;
 use App\Http\Controllers\api\FavoritoApiController;
 use App\Http\Controllers\api\BootstrapApiController;
 
+use App\Http\Controllers\api\VisitanteApiController;
+
 /*
 | ROTAS PÚBLICAS
 */
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::get('/visitante/conteudos', [VisitanteApiController::class, 'index']);
 
 /*
 | REDEFINIÇÃO DE SENHA (pública — o usuário ainda não está logado)

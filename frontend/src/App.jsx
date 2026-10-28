@@ -82,6 +82,9 @@ import EditarAutoajuda from "./pages/dashboard/autoajuda/EditarAutoajuda";
 // Admin — verificação de psicólogos
 import PainelPsicologos from "./pages/admin/PainelPsicologos";
 
+// Visitante
+import Visitante from "./pages/visitante/Visitante";
+
 export default function App() {
   return (
     <AuthProvider>
@@ -103,6 +106,7 @@ export default function App() {
                         {/* Públicas */}
                         <Route path="/login" element={<Login />} />
                         <Route path="/cadastro" element={<Cadastro />} />
+                        <Route path="/visitante" element={<Visitante />} />
                         <Route
                           path="/esqueci-senha"
                           element={<EsqueciSenha />}
