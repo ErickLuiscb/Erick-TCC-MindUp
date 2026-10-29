@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router";
 import { useAnotacoes } from "../../context/AnotacoesContext";
 import { infoHumor } from "../../utils/humores";
 import { ArrowLeft, Calendar, BookOpen } from "lucide-react";
+import ExportarAnotacoes from "./ExportarAnotacoes";
 
 export default function Ver_Anotacao() {
   const { id } = useParams();
@@ -119,6 +120,14 @@ export default function Ver_Anotacao() {
           >
             Fechar Leitura
           </Link>
+
+          <ExportarAnotacoes
+            anotacoes={[anotacao]}
+            tituloDocumento={`MindUp - ${anotacao.titulo}`.slice(0, 80)}
+            className="text-center bg-white border-2 border-purple-200 hover:bg-purple-50 text-purple-800 font-bold px-5 py-3 sm:py-2.5 rounded-xl text-xs uppercase tracking-wider transition-colors cursor-pointer inline-flex items-center justify-center gap-2"
+          >
+            Exportar esta anotação
+          </ExportarAnotacoes>
 
           <Link
             to={`/anotacoes/editar/${anotacao.id}`}

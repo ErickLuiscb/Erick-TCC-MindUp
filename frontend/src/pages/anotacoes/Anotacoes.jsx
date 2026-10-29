@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router";
 import { useAnotacoes } from "../../context/AnotacoesContext";
 import { HUMORES, infoHumor } from "../../utils/humores";
+import ExportarAnotacoes from "./ExportarAnotacoes";
 import {
   Plus,
   Eye,
@@ -147,13 +148,22 @@ export default function Anotacoes() {
           </p>
         </div>
 
-        <Link
-          to="/anotacoes/criar"
-          className="bg-[#ff7300] hover:bg-[#ff8c00] text-white font-bold px-5 py-3 rounded-xl shadow-lg shadow-orange-950/20 transition-all transform hover:scale-105 motion-reduce:transform-none w-full sm:w-auto justify-center flex items-center gap-2 text-sm tracking-wide"
-        >
-          <Plus size={18} />
-          <span>Nova Anotação</span>
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <ExportarAnotacoes
+            anotacoes={ordenadas}
+            className="bg-white/10 hover:bg-white/20 border border-white/25 text-white font-bold px-5 py-3 rounded-xl shadow-lg transition-all w-full sm:w-auto justify-center flex items-center gap-2 text-sm tracking-wide cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white/10"
+          >
+            Exportar anotações
+          </ExportarAnotacoes>
+
+          <Link
+            to="/anotacoes/criar"
+            className="bg-[#ff7300] hover:bg-[#ff8c00] text-white font-bold px-5 py-3 rounded-xl shadow-lg shadow-orange-950/20 transition-all transform hover:scale-105 motion-reduce:transform-none w-full sm:w-auto justify-center flex items-center gap-2 text-sm tracking-wide"
+          >
+            <Plus size={18} />
+            <span>Nova Anotação</span>
+          </Link>
+        </div>
       </header>
 
       {/* BARRA DE BUSCA + FILTRO POR HUMOR (só aparece se já existir alguma anotação) */}
@@ -368,7 +378,7 @@ export default function Anotacoes() {
                 </div>
 
                 {/* Corpo de Texto Truncado para Usabilidade Limpa */}
-                <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 sm:line-clamp-4 break-words bg-gray-50/50 p-3 rounded-xl border border-gray-100">
+                <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 sm:line-clamp-4 wrap-break-words bg-gray-50/50 p-3 rounded-xl border border-gray-100">
                   {a.texto}
                 </p>
               </div>
