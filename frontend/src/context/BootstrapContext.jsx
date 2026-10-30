@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import api from "../service/api";
+import api, { EVENTO_CONTEUDO_ALTERADO } from "../service/api";
 import { useAuth } from "./AuthContext";
 import { useVideos } from "./VideosContext";
 import { useArtigos } from "./ArtigosContext";
@@ -119,13 +119,28 @@ export function BootstrapProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autenticado, carregandoAuth]);
 
+  // ==========================================
+  // ATUALIZA AS LISTAS QUANDO O PSICÓLOGO ALTERA UM CONTEÚDO
+  // (criar / editar / excluir vídeo, artigo, sugestão ou autoajuda)
+  // ==========================================
+  useEffect(() => {
+    if (!autenticado) return;
+
+    const atualizar = () => carregarTudo(TENTATIVAS_PADRAO, true);
+
+    window.addEventListener(EVENTO_CONTEUDO_ALTERADO, atualizar);
+    return () =>
+      window.removeEventListener(EVENTO_CONTEUDO_ALTERADO, atualizar);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autenticado]);
+
   return (
     <BootstrapContext.Provider
       value={{
         pronto,
         erro,
-        // "recarregarTudo" chamado pelo usuário (ex.: botão Início ou
-        // "Tentar novamente") passa forcar=false, respeitando o cooldown
+        // "recarregarTudo" chamado pelo usuário (ex.: botão "Tentar
+        // novamente") passa forcar=false, respeitando o cooldown
         recarregarTudo: () => carregarTudo(TENTATIVAS_PADRAO, false),
       }}
     >

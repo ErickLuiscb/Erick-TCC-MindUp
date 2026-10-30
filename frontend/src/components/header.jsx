@@ -12,7 +12,6 @@ import {
   X,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { useBootstrap } from "../context/BootstrapContext";
 
 /*
 - tamanho: "normal" (barra do desktop) ou "bloco" (menu do celular, ocupa a
@@ -52,7 +51,6 @@ function NavBtn({ ativoQuando, onClick, icone, tamanho = "normal", children }) {
 
 export default function Header() {
   const { logout, abilities, usuario } = useAuth(); // Usando abilities do novo contexto para segurança
-  const { recarregarTudo } = useBootstrap();
   const navigate = useNavigate();
 
   // Controla se o menu do celular está aberto
@@ -84,7 +82,6 @@ export default function Header() {
   };
 
   const handleInicio = () => {
-    recarregarTudo();
     irPara("/inicial");
   };
 

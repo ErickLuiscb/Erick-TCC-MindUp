@@ -1,5 +1,14 @@
 import axios from "axios";
 
+// Evento disparado quando o psicólogo cria, edita ou exclui um conteúdo com
+// sucesso. O BootstrapContext escuta e atualiza as listas das telas públicas.
+export const EVENTO_CONTEUDO_ALTERADO = "mindup:conteudo-alterado";
+
+// Rotas de conteúdo (as de favoritos e anotações NÃO entram: elas já atualizam
+// a própria tela) e métodos que alteram dados
+const ROTAS_DE_CONTEUDO = /^\/(videos|artigos|sugestoes|autoajudas)(\/|$)/;
+const METODOS_QUE_ALTERAM = ["post", "put", "patch", "delete"];
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   timeout: 20000, // 20 segundos (era 10s — curto demais para o plano gratuito do Render)
@@ -37,7 +46,16 @@ api.interceptors.request.use(
 
 // Interceptor para respostas
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const metodo = response.config?.method?.toLowerCase();
+    const url = response.config?.url ?? "";
+
+    if (METODOS_QUE_ALTERAM.includes(metodo) && ROTAS_DE_CONTEUDO.test(url)) {
+      window.dispatchEvent(new Event(EVENTO_CONTEUDO_ALTERADO));
+    }
+
+    return response;
+  },
   (error) => {
     // Um 401 vindo da própria tentativa de login significa "credenciais
     // inválidas", e não "sessão expirada". Nesse caso NÃO recarregamos a

@@ -40,7 +40,7 @@ export default function Inicial() {
           <img
             src="/videos.png"
             alt="Vídeos"
-            className="w-full aspect-[4/3] sm:aspect-auto sm:h-40 object-cover"
+            className="w-full aspect-4/3 sm:aspect-auto sm:h-40 object-cover"
           />
           <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between">
             <div>
@@ -65,7 +65,7 @@ export default function Inicial() {
           <img
             src="/artigos.png"
             alt="Artigos"
-            className="w-full aspect-[4/3] sm:aspect-auto sm:h-40 object-cover"
+            className="w-full aspect-4/3 sm:aspect-auto sm:h-40 object-cover"
           />
           <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between">
             <div>
@@ -90,7 +90,7 @@ export default function Inicial() {
           <img
             src="/sugestoes.png"
             alt="Sugestões"
-            className="w-full aspect-[4/3] sm:aspect-auto sm:h-40 object-cover"
+            className="w-full aspect-4/3 sm:aspect-auto sm:h-40 object-cover"
           />
           <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between">
             <div>
@@ -115,7 +115,7 @@ export default function Inicial() {
           <img
             src="/autoajuda.png"
             alt="Autoajuda"
-            className="w-full aspect-[4/3] sm:aspect-auto sm:h-40 object-cover"
+            className="w-full aspect-4/3 sm:aspect-auto sm:h-40 object-cover"
           />
           <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between">
             <div>
