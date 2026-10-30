@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router";
 import { useArtigos } from "../../context/ArtigosContext";
-import { ArrowLeft, BookOpen, Calendar, ShieldCheck } from "lucide-react";
+import { ArrowLeft, BookOpen, Calendar, Info } from "lucide-react";
 
 export default function VerArtigo() {
   const { id } = useParams();
@@ -52,11 +52,12 @@ export default function VerArtigo() {
     });
   };
 
-  // ✅ SOLUÇÃO TÉCNICA CONTRA DOWNLOADS: Aplica o parâmetro #toolbar=0 ocultando botões nativos na nova aba
+  // Abre o PDF em uma nova aba. O #toolbar=0 só oculta a barra em alguns leitores de PDF do computador;
+  // em celulares o navegador pode baixar o arquivo em vez de abri-lo.
   const handleAbrirPdf = () => {
     if (artigo.arquivo_pdf) {
-      const urlProtegida = `${artigo.arquivo_pdf}#toolbar=0`;
-      window.open(urlProtegida, "_blank", "noopener,noreferrer");
+      const urlPdf = `${artigo.arquivo_pdf}#toolbar=0`;
+      window.open(urlPdf, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -136,11 +137,14 @@ export default function VerArtigo() {
           </div>
         </div>
 
-        {/* Rodapé com Ação de Abertura Segura */}
+        {/* Rodapé com a ação de abrir o PDF */}
         <footer className="mt-8 sm:mt-12 pt-5 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-bold">
-            <ShieldCheck size={16} />
-            <span>Visualização Protegida Contra Downloads Ativa</span>
+          <div className="flex items-center gap-1.5 text-xs text-gray-500 font-semibold">
+            <Info size={16} className="shrink-0" aria-hidden="true" />
+            <span>
+              O PDF abrirá em uma nova aba ou será baixado, dependendo do seu
+              aparelho.
+            </span>
           </div>
 
           <button

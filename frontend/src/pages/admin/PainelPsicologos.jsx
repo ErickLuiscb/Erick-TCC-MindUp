@@ -541,7 +541,7 @@ export default function PainelPsicologos() {
                     </div>
 
                     <span
-                      className={`inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded border ${
+                      className={`inline-flex shrink-0 items-center gap-1 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded border ${
                         p.email_verificado
                           ? "bg-green-50 text-green-700 border-green-100"
                           : "bg-amber-50 text-amber-700 border-amber-100"
@@ -556,7 +556,7 @@ export default function PainelPsicologos() {
 
                   {/* DADOS PARA CONFERÊNCIA */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mt-5">
-                    <div className="bg-gray-50 border border-gray-100 rounded-xl p-3">
+                    <div className="flex flex-col bg-gray-50 border border-gray-100 rounded-xl p-3">
                       <p className="text-[10px] font-black uppercase tracking-wider text-gray-500">
                         Registro (CRP)
                       </p>
@@ -566,7 +566,7 @@ export default function PainelPsicologos() {
                       <p className="text-[11px] text-gray-500">
                         {rotuloRegiao(p.crp_regiao) ?? "Região não informada"}
                       </p>
-                      <div className="mt-2">
+                      <div className="mt-auto pt-2">
                         <CopiarBotao
                           texto={p.crp ?? ""}
                           rotulo="número do CRP"
@@ -574,7 +574,7 @@ export default function PainelPsicologos() {
                       </div>
                     </div>
 
-                    <div className="bg-gray-50 border border-gray-100 rounded-xl p-3">
+                    <div className="flex flex-col bg-gray-50 border border-gray-100 rounded-xl p-3">
                       <p className="text-[10px] font-black uppercase tracking-wider text-gray-500">
                         CPF
                       </p>
@@ -585,7 +585,7 @@ export default function PainelPsicologos() {
                         Apagado após a decisão
                       </p>
                       {p.cpf && (
-                        <div className="mt-2">
+                        <div className="mt-auto pt-2">
                           <CopiarBotao
                             texto={formatarCpf(p.cpf)}
                             rotulo="CPF"
@@ -594,7 +594,7 @@ export default function PainelPsicologos() {
                       )}
                     </div>
 
-                    <div className="bg-gray-50 border border-gray-100 rounded-xl p-3">
+                    <div className="flex flex-col bg-gray-50 border border-gray-100 rounded-xl p-3">
                       <p className="text-[10px] font-black uppercase tracking-wider text-gray-500">
                         Solicitado em
                       </p>
@@ -636,7 +636,7 @@ export default function PainelPsicologos() {
                   {/* AÇÕES */}
                   <div className="mt-5 pt-4 border-t border-gray-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
                     {ehEuMesmo(p) ? (
-                      <span className="text-xs text-gray-500 font-semibold">
+                      <span className="text-center sm:text-right text-xs text-gray-500 font-semibold">
                         Você não pode analisar o seu próprio pedido.
                       </span>
                     ) : (
@@ -646,7 +646,7 @@ export default function PainelPsicologos() {
                           aria-label={`Rejeitar pedido de ${p.nome}`}
                           onClick={() => abrirModal(p, "rejeitar")}
                           disabled={processando}
-                          className="w-full sm:w-auto justify-center px-4 py-3 sm:py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-100 cursor-pointer disabled:opacity-50"
+                          className="w-full sm:w-32 justify-center px-4 py-3 sm:py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-100 cursor-pointer disabled:opacity-50"
                         >
                           <X size={12} />
                           <span>Rejeitar</span>
@@ -656,7 +656,7 @@ export default function PainelPsicologos() {
                           aria-label={`Aprovar pedido de ${p.nome}`}
                           onClick={() => aprovar(p)}
                           disabled={processando}
-                          className="w-full sm:w-auto justify-center px-4 py-3 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                          className="w-full sm:w-32 justify-center px-4 py-3 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
                         >
                           <Check size={12} />
                           <span>{processando ? "Enviando..." : "Aprovar"}</span>
@@ -740,8 +740,8 @@ export default function PainelPsicologos() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
-                      <div className="text-right">
+                    <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-5 w-full sm:w-auto">
+                      <div className="text-left sm:text-right sm:w-36">
                         <span
                           className={`inline-block text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded border ${badge.classe}`}
                         >
@@ -753,7 +753,7 @@ export default function PainelPsicologos() {
                       </div>
 
                       {ehEuMesmo(p) ? (
-                        <span className="text-xs text-gray-500 font-semibold">
+                        <span className="sm:w-28 text-center text-xs text-gray-500 font-semibold">
                           Você
                         </span>
                       ) : p.crp_status === "aprovado" ? (
@@ -762,7 +762,7 @@ export default function PainelPsicologos() {
                           aria-label={`Revogar permissão de ${p.nome}`}
                           onClick={() => abrirModal(p, "revogar")}
                           disabled={processando}
-                          className="px-4 py-3 sm:py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-100 cursor-pointer disabled:opacity-50"
+                          className="sm:w-28 justify-center px-4 py-3 sm:py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-100 cursor-pointer disabled:opacity-50"
                         >
                           <X size={12} />
                           <span>Revogar</span>
@@ -773,7 +773,7 @@ export default function PainelPsicologos() {
                           aria-label={`Reativar permissão de ${p.nome}`}
                           onClick={() => aprovar(p, true)}
                           disabled={processando}
-                          className="px-4 py-3 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                          className="sm:w-28 justify-center px-4 py-3 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
                         >
                           <Check size={12} />
                           <span>
