@@ -105,11 +105,24 @@ export default function VerAutoajuda() {
               "Este conteúdo foi disponibilizado sem uma descrição prévia pelo autor."}
           </p>
 
-          <footer className="mt-8 pt-5 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              Por {item.autor?.nome || "Profissional MindUp"}
-            </span>
+          {/* Identificação do Autor (mesmo padrão de Artigo, Sugestão e Vídeo) */}
+          <div className="mt-6 flex items-center gap-3 bg-sky-50/50 border border-sky-100 p-3 sm:p-4 rounded-xl w-full sm:w-fit max-w-full">
+            <img
+              src={item.autor?.imagem_perfil || "/default_perfil.png"}
+              alt=""
+              className="w-10 h-10 rounded-full object-cover border border-sky-300 shrink-0"
+            />
+            <div className="min-w-0">
+              <p className="text-sm font-black text-purple-950 truncate">
+                Por {item.autor?.nome || "Profissional Cadastrado"}
+              </p>
+              <p className="text-[10px] text-sky-700 font-bold uppercase tracking-wider">
+                CRP: {item.autor?.crp || "Verificado"}
+              </p>
+            </div>
+          </div>
 
+          <footer className="mt-8 pt-5 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => alternarFavoritoAutoajuda(item.id)}

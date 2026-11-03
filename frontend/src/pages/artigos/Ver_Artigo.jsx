@@ -1,12 +1,13 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router";
 import { useArtigos } from "../../context/ArtigosContext";
-import { ArrowLeft, BookOpen, Calendar, Info } from "lucide-react";
+import { ArrowLeft, BookOpen, Calendar, Info, Heart } from "lucide-react";
 
 export default function VerArtigo() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { buscarArtigoPorId, carregando } = useArtigos();
+  const { buscarArtigoPorId, carregando, alternarFavoritoArtigo } =
+    useArtigos();
 
   const artigo = buscarArtigoPorId(id);
 
@@ -147,14 +148,40 @@ export default function VerArtigo() {
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={handleAbrirPdf}
-            className="w-full sm:w-auto bg-[#ff7300] hover:bg-[#ff8c00] text-white font-black px-8 py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-orange-950/20 transition-all transform hover:scale-105 motion-reduce:transform-none cursor-pointer text-center"
-          >
-            <span aria-hidden="true">📖</span> Ler Artigo Completo
-            <span className="sr-only"> (abre em nova aba)</span>
-          </button>
+          {/* Ações: no celular "Ler Artigo" (ação principal) vem primeiro e os
+              dois botões ocupam a largura toda */}
+          <div className="w-full sm:w-auto flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3">
+            <button
+              type="button"
+              aria-pressed={!!artigo.favoritado}
+              onClick={() => alternarFavoritoArtigo(artigo.id)}
+              className={`w-full sm:w-auto justify-center flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider border transition cursor-pointer ${
+                artigo.favoritado
+                  ? "bg-orange-100 border-orange-300 text-orange-800"
+                  : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              <Heart
+                size={16}
+                aria-hidden="true"
+                className={
+                  artigo.favoritado ? "fill-[#ff7300] text-[#ff7300]" : ""
+                }
+              />
+              <span>
+                {artigo.favoritado ? "Salvo nos Favoritos" : "Favoritar"}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleAbrirPdf}
+              className="w-full sm:w-auto bg-[#ff7300] hover:bg-[#ff8c00] text-white font-black px-8 py-3.5 rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-orange-950/20 transition-all transform hover:scale-105 motion-reduce:transform-none cursor-pointer text-center"
+            >
+              <span aria-hidden="true">📖</span> Ler Artigo Completo
+              <span className="sr-only"> (abre em nova aba)</span>
+            </button>
+          </div>
         </footer>
       </article>
     </div>

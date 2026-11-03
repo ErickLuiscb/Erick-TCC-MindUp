@@ -1,11 +1,11 @@
 import { useParams, useNavigate, Link } from "react-router";
 import { useVideos } from "../../context/VideosContext";
-import { ArrowLeft, Film, Calendar } from "lucide-react";
+import { ArrowLeft, Film, Calendar, Heart } from "lucide-react";
 
 export default function VerVideo() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { buscarVideoPorId, carregando } = useVideos();
+  const { buscarVideoPorId, carregando, alternarFavoritoVideo } = useVideos();
 
   const video = buscarVideoPorId(id);
 
@@ -125,20 +125,59 @@ export default function VerVideo() {
               {video.descricao ||
                 "Este vídeo não possui uma descrição fornecida pelo autor."}
             </p>
+
+            {/* Identificação do Autor (mesmo padrão de Artigo e Sugestão) */}
+            <div className="mt-6 flex items-center gap-3 bg-purple-50/50 border border-purple-100 p-3 sm:p-4 rounded-xl w-full sm:w-fit max-w-full">
+              <img
+                src={video.autor?.imagem_perfil || "/default_perfil.png"}
+                alt=""
+                className="w-10 h-10 rounded-full object-cover border border-purple-300 shrink-0"
+              />
+              <div className="min-w-0">
+                <p className="text-sm font-black text-purple-950 truncate">
+                  Por {video.autor?.nome || "Profissional Cadastrado"}
+                </p>
+                <p className="text-[10px] text-purple-600 font-bold uppercase tracking-wider">
+                  CRP: {video.autor?.crp || "Verificado"}
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Rodapé com botão secundário de fechamento rápido */}
           <div className="mt-8 pt-4 border-t border-gray-100 flex flex-wrap justify-between items-center gap-3">
             <Link
               to="/videos"
-              className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-colors"
+              className="flex-1 sm:flex-none text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-3 rounded-xl text-xs uppercase tracking-wider transition-colors"
             >
               Fechar Player
             </Link>
 
-            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
+            <span className="order-last w-full text-center sm:order-0 sm:w-auto text-[11px] font-bold text-gray-500 uppercase tracking-widest">
               MindUp Psicoeducação
             </span>
+
+            <button
+              type="button"
+              aria-pressed={!!video.favoritado}
+              onClick={() => alternarFavoritoVideo(video.id)}
+              className={`flex-1 sm:flex-none justify-center flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-wider border transition cursor-pointer ${
+                video.favoritado
+                  ? "bg-orange-100 border-orange-300 text-orange-800"
+                  : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              <Heart
+                size={16}
+                aria-hidden="true"
+                className={
+                  video.favoritado ? "fill-[#ff7300] text-[#ff7300]" : ""
+                }
+              />
+              <span>
+                {video.favoritado ? "Salvo nos Favoritos" : "Favoritar"}
+              </span>
+            </button>
           </div>
         </div>
       </article>

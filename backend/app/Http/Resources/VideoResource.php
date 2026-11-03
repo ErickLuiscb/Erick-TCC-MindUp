@@ -32,13 +32,7 @@ class VideoResource extends JsonResource
         : false,
         'quantidade_favoritos' => $this->favoritos->count(),
 
-            'autor' => $this->whenLoaded('autor', function () {
-                return [
-                    'id' => $this->autor->id,
-                    'nome' => $this->autor->nome,
-                    'email' => $this->autor->email,
-                ];
-            }),
+            'autor' => $this->whenLoaded('autor', fn () => new AutorResource($this->autor)),
 
             'categorias' => $this->whenLoaded('categorias', function () {
                 return $this->categorias->map(function ($categoria) {
