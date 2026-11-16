@@ -369,7 +369,7 @@ export default function Perfil() {
                     Manter minhas postagens no app
                   </p>
                   <p className="text-[11px] text-red-700">
-                    Seus vídeos e PDFs continuarão visíveis para os pacientes.
+                    Seus conteúdos continuarão visíveis para os usuários.
                   </p>
                 </div>
               </label>

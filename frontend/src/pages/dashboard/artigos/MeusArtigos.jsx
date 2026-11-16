@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router";
 import api from "../../../service/api";
+import { useVideos } from "../../../context/VideosContext";
 import {
   Plus,
   Edit3,
@@ -9,12 +10,34 @@ import {
   FileText,
   ArrowLeft,
   Calendar,
+  Search,
+  Filter,
+  X,
 } from "lucide-react";
 
 export default function MeusArtigos() {
   const navigate = useNavigate();
   const [artigos, setArtigos] = useState([]);
   const [carregando, setCarregando] = useState(true);
+
+  // FILTRO (busca por título + categorias), igual às telas públicas.
+  // As categorias vêm do BootstrapContext, via VideosContext.
+  const { categorias } = useVideos();
+  const [busca, setBusca] = useState("");
+  const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
+  const [painelAberto, setPainelAberto] = useState(false);
+  const painelRef = useRef(null);
+
+  // Fecha o painel ao clicar fora
+  useEffect(() => {
+    function handleClickFora(e) {
+      if (painelRef.current && !painelRef.current.contains(e.target)) {
+        setPainelAberto(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickFora);
+    return () => document.removeEventListener("mousedown", handleClickFora);
+  }, []);
 
   // ============================
   // CARREGAR ARTIGOS DO AUTOR
@@ -82,6 +105,21 @@ export default function MeusArtigos() {
     );
   }
 
+  const handleAlternarCategoria = (id) => {
+    setCategoriasSelecionadas((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id],
+    );
+  };
+
+  const filtrados = artigos.filter((x) => {
+    const bateBusca = x.titulo.toLowerCase().includes(busca.toLowerCase());
+    if (categoriasSelecionadas.length === 0) return bateBusca;
+    const possuiCategoria = x.categorias?.some((cat) =>
+      categoriasSelecionadas.includes(cat.id),
+    );
+    return bateBusca && possuiCategoria;
+  });
+
   return (
     <div className="text-black max-w-7xl mx-auto animate-fadeIn p-2">
       {/* Botão Superior de Voltar ao Painel Geral */}
@@ -119,6 +157,102 @@ export default function MeusArtigos() {
         </button>
       </div>
 
+      {/* BARRA DE BUSCA + BOTÃO DE FILTROS (só aparece se já existir conteúdo) */}
+      {artigos.length > 0 && (
+        <div className="flex justify-center mb-6 sm:mb-10">
+          <div className="relative w-full max-w-xl flex gap-3 items-center">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                aria-label="Buscar artigos por título"
+                placeholder="Buscar conteúdos por título..."
+                className="w-full pl-5 pr-12 py-3.5 bg-white border border-purple-100 rounded-2xl shadow-xl text-sm font-semibold text-black focus:outline-3 focus:outline-[#ffb300] placeholder-gray-400 transition"
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+              />
+              <div className="absolute right-4 top-3.5 text-purple-700">
+                <Search size={20} />
+              </div>
+            </div>
+
+            {/* Botão de Filtros */}
+            <div className="relative" ref={painelRef}>
+              <button
+                type="button"
+                onClick={() => setPainelAberto((v) => !v)}
+                aria-expanded={painelAberto}
+                aria-controls="painel-filtros-meus-artigos"
+                className={`flex items-center gap-2 px-4 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-xl transition-all cursor-pointer border ${
+                  categoriasSelecionadas.length > 0
+                    ? "bg-[#ff7300] border-orange-400 text-white"
+                    : "bg-white text-purple-950 border-purple-100 hover:bg-purple-50"
+                }`}
+              >
+                <Filter size={16} />
+                <span>
+                  Filtros{" "}
+                  {categoriasSelecionadas.length > 0 &&
+                    `(${categoriasSelecionadas.length})`}
+                </span>
+              </button>
+
+              {/* PAINEL FLUTUANTE */}
+              {painelAberto && (
+                <div
+                  id="painel-filtros-meus-artigos"
+                  className="absolute right-0 top-14 w-[calc(100vw-2rem)] max-w-96 bg-white border border-purple-100 rounded-2xl shadow-2xl p-4 z-50 animate-fadeIn"
+                >
+                  <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
+                    <h3 className="text-xs font-black uppercase text-purple-700 tracking-wider">
+                      Filtrar por Tema
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setPainelAberto(false)}
+                      aria-label="Fechar filtros"
+                      className="p-3 -m-3 text-gray-400 hover:text-red-500 cursor-pointer"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-1.5 max-h-56 overflow-y-auto pr-1">
+                    {categorias.map((cat) => (
+                      <label
+                        key={cat.id}
+                        className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-xs font-bold cursor-pointer select-none transition ${
+                          categoriasSelecionadas.includes(cat.id)
+                            ? "bg-purple-100 border-purple-300 text-purple-950"
+                            : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={categoriasSelecionadas.includes(cat.id)}
+                          onChange={() => handleAlternarCategoria(cat.id)}
+                          className="rounded text-purple-700 focus:ring-purple-600"
+                        />
+                        <span>{cat.nome}</span>
+                      </label>
+                    ))}
+                  </div>
+
+                  {categoriasSelecionadas.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setCategoriasSelecionadas([])}
+                      className="mt-3 pt-2 border-t border-gray-100 w-full text-[11px] font-bold text-red-500 hover:underline cursor-pointer text-left"
+                    >
+                      Limpar filtros
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ESTADO VAZIO */}
       {artigos.length === 0 && (
         <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 sm:p-12 text-center max-w-md mx-auto mt-8 sm:mt-12 shadow-xl text-white">
@@ -135,11 +269,22 @@ export default function MeusArtigos() {
 
       {/* GRID DE CARDS DE ARTIGOS (Design de Alta Qualidade Acadêmica) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8 items-stretch">
+        {/* Existem conteúdos, mas nenhum combina com a busca/filtro */}
+        {artigos.length > 0 && filtrados.length === 0 && (
+          <div className="col-span-full bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 p-8 sm:p-12 text-center max-w-sm mx-auto mt-6 shadow-xl text-white">
+            <p className="text-xl font-bold">📄 Nenhum artigo encontrado</p>
+            <p className="text-purple-200 text-xs mt-1">
+              Experimente alterar o termo digitado ou limpar o filtro de
+              categoria.
+            </p>
+          </div>
+        )}
+
         {/* CARD DE ARTIGO
             Celular (< sm): layout HORIZONTAL compacto — selo de documento à esquerda
             (faz o papel de miniatura, já que artigo não tem imagem), texto à direita.
             sm em diante: card de texto de sempre. */}
-        {artigos.map((artigo) => (
+        {filtrados.map((artigo) => (
           <article
             key={artigo.id}
             className="bg-white rounded-2xl shadow-2xl border border-purple-50 overflow-hidden flex flex-row sm:flex-col sm:justify-between transition-all hover:shadow-purple-950/20 hover:scale-[1.02] motion-reduce:hover:scale-100 duration-300 group"

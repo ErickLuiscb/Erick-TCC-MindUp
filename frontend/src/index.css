@@ -1,8 +1,23 @@
 @import "tailwindcss";
+@import "@fontsource-variable/open-sans";
+@import "@fontsource-variable/roboto";
 
+@theme {
+  --font-sans: "Open Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-titulo: "Roboto Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-titulo);
+  }
+}
 
 body {
   @apply bg-linear-to-br from-purple-800 to-purple-400 min-h-screen;
-
 }
-

@@ -753,7 +753,7 @@ export default function PainelPsicologos() {
                       </div>
 
                       {ehEuMesmo(p) ? (
-                        <span className="sm:w-28 text-center text-xs text-gray-500 font-semibold">
+                        <span className="sm:w-32 text-center text-xs text-gray-500 font-semibold">
                           Você
                         </span>
                       ) : p.crp_status === "aprovado" ? (
@@ -762,7 +762,7 @@ export default function PainelPsicologos() {
                           aria-label={`Revogar permissão de ${p.nome}`}
                           onClick={() => abrirModal(p, "revogar")}
                           disabled={processando}
-                          className="sm:w-28 justify-center px-4 py-3 sm:py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-100 cursor-pointer disabled:opacity-50"
+                          className="sm:w-32 justify-center px-4 py-3 sm:py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-red-100 cursor-pointer disabled:opacity-50"
                         >
                           <X size={12} />
                           <span>Revogar</span>
@@ -773,7 +773,7 @@ export default function PainelPsicologos() {
                           aria-label={`Reativar permissão de ${p.nome}`}
                           onClick={() => aprovar(p, true)}
                           disabled={processando}
-                          className="sm:w-28 justify-center px-4 py-3 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                          className="sm:w-32 justify-center px-4 py-3 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
                         >
                           <Check size={12} />
                           <span>

@@ -257,12 +257,6 @@ export function AuthProvider({ children }) {
     setToken(null);
     setAbilities([]);
     setAutenticado(false);
-
-    try {
-      await api.post("/logout");
-    } catch (err) {
-      console.log("Token já revogado ou expirado no servidor.");
-    }
   };
 
   // =========================

@@ -22,7 +22,14 @@
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_STORE" value="array"/>
-        <env name="DB_DATABASE" value="testing"/>
+        <!-- BANCO DE TESTE: SQLite em memória. NUNCA remova estas duas linhas:
+             sem DB_CONNECTION o PHPUnit usaria o banco do .env (o Supabase!)
+             e o RefreshDatabase apagaria todas as tabelas de produção. -->
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/>
+        <env name="APP_KEY" value="base64:c0Bfm1zim69yscqWmirGjtmYuLihiFEkFzMptQ7jqMs="/>
+        <env name="FILESYSTEM_DISK" value="public"/>
+        <env name="FRONTEND_URL" value="http://front.test"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
