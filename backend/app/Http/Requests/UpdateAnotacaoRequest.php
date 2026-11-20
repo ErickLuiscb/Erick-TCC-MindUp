@@ -17,7 +17,7 @@ class UpdateAnotacaoRequest extends FormRequest
         return [
             'titulo' => 'sometimes|required|string|max:100',
 
-            'texto' => 'sometimes|required|string',
+            'texto' => 'sometimes|required|string|max:5000',
 
             'humor' => Humores::regraValidacao(),
         ];

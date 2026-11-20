@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\ApagaFavoritosAoExcluir;
 
 class Sugestao extends Model
 {
-    use HasFactory;
+    use HasFactory, ApagaFavoritosAoExcluir;
 
     protected $table = 'sugestoes';
 

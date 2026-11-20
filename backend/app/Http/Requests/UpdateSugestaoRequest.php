@@ -17,7 +17,7 @@ class UpdateSugestaoRequest extends FormRequest
 
             'titulo' => 'sometimes|required|string|max:150',
 
-            'descricao' => 'sometimes|nullable|string',
+            'descricao' => 'sometimes|nullable|string|max:5000',
 
             'tipo' => 'sometimes|required|in:livro,filme,serie,anime,musica,podcast,documentario',
 

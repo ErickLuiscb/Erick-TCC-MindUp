@@ -7,6 +7,7 @@ use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Mail\RedefinirSenhaMail;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -80,8 +81,14 @@ class PasswordResetController extends Controller
             ], 422);
         }
 
-        // Verifica se o token expirou
-        $expirado = now()->diffInMinutes($registro->created_at) > self::MINUTOS_EXPIRACAO;
+        // Correção de um bug:
+        // Verifica se o token expirou.
+        // (Não usar now()->diffInMinutes($data): no Carbon 3 o resultado é NEGATIVO
+        // quando a data está no passado, e o "> 60" nunca seria verdadeiro.)
+
+        $expirado = Carbon::parse($registro->created_at)
+            ->addMinutes(self::MINUTOS_EXPIRACAO)
+            ->isPast();
 
         if ($expirado) {
             DB::table('password_reset_tokens')->where('email', $request->email)->delete();

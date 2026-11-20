@@ -22,11 +22,16 @@
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_STORE" value="array"/>
-        <!-- BANCO DE TESTE: SQLite em memória. NUNCA remova estas duas linhas:
-             sem DB_CONNECTION o PHPUnit usaria o banco do .env (o Supabase!)
-             e o RefreshDatabase apagaria todas as tabelas de produção. -->
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
+        <!-- BANCO DE TESTE: um Postgres SEPARADO ("mindup_testing"), no mesmo
+             servidor do Sail. O RefreshDatabase apaga e recria todas as tabelas
+             do banco configurado aqui, por isso o nome NUNCA pode ser o do banco
+             de desenvolvimento nem o do Supabase.
+             Usuário e senha vêm do .env (a senha não fica neste arquivo). -->
+        <env name="DB_CONNECTION" value="pgsql"/>
+        <env name="DB_HOST" value="pgsql"/>
+        <env name="DB_PORT" value="5432"/>
+        <env name="DB_DATABASE" value="mindup_testing"/>
+        <env name="DB_USERNAME" value="LaravelDockerImagem"/>
         <env name="APP_KEY" value="base64:c0Bfm1zim69yscqWmirGjtmYuLihiFEkFzMptQ7jqMs="/>
         <env name="FILESYSTEM_DISK" value="public"/>
         <env name="FRONTEND_URL" value="http://front.test"/>

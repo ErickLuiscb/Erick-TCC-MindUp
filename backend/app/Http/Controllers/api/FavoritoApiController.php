@@ -34,7 +34,11 @@ class FavoritoApiController extends Controller
                 },
             ])
             ->latest('data_criacao')
-            ->get();
+            ->get()
+            // Ignora favoritos "órfãos" (conteúdo já apagado), que podem existir
+            // de antes da correção; sem isto a listagem inteira quebrava.
+            ->filter(fn ($favorito) => $favorito->favoritavel !== null)
+            ->values();
 
         return response()->json([
             'data' => FavoritoResource::collection($favoritos)

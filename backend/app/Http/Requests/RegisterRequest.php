@@ -66,7 +66,7 @@ class RegisterRequest extends FormRequest
                 'required',
                 'regex:/^\d{1,10}$/',
                 Rule::unique('usuarios', 'crp')->where(
-                    fn ($query) => $query->where('crp_regiao', $this->input('crp_regiao'))
+                    fn ($query) => $query->where('crp_regiao', $this->regiaoParaConsulta())
                 ),
             ],
 
@@ -95,6 +95,22 @@ class RegisterRequest extends FormRequest
 
             'cpf.required' => 'Psicólogos devem informar o CPF.',
         ];
+    }
+
+    /**
+     * Região usada na checagem de CRP duplicado.
+     *
+     * O Laravel roda TODAS as regras, mesmo quando uma já falhou. Sem este
+     * cuidado, uma região inválida ("abc", 99999999999...) ia direto para a
+     * consulta e o Postgres estourava erro de tipo (smallint), devolvendo
+     * erro 500 em vez de 422. Região fora de 1 a 24 vira 0: não casa com
+     * ninguém, e o erro certo (integer/between) é mostrado normalmente.
+     */
+    private function regiaoParaConsulta(): int
+    {
+        $regiao = filter_var($this->input('crp_regiao'), FILTER_VALIDATE_INT);
+
+        return ($regiao !== false && $regiao >= 1 && $regiao <= 24) ? $regiao : 0;
     }
 
     /**

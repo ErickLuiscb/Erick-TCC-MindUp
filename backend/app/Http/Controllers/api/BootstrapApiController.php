@@ -59,7 +59,12 @@ class BootstrapApiController extends Controller
                 },
             ])
             ->latest('data_criacao')
-            ->get();
+            ->get()
+            //Arrumando bug invisel futuro:
+            // Ignora favoritos "órfãos" (conteúdo já apagado), que podem existir
+            // de antes da correção; sem isto a listagem inteira quebrava.
+            ->filter(fn ($favorito) => $favorito->favoritavel !== null)
+            ->values();
 
         return response()->json([
             'categorias' => CategoriaResource::collection($categorias),

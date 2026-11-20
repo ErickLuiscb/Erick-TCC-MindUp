@@ -17,7 +17,7 @@ class UpdateVideoRequest extends FormRequest
 
             'titulo' => 'sometimes|required|string|max:100',
 
-            'descricao' => 'sometimes|nullable|string',
+            'descricao' => 'sometimes|nullable|string|max:5000',
 
             'arquivo' => 'sometimes|nullable|file|mimes:mp4,mov,avi,wmv,webm,mkv|max:51200',
 

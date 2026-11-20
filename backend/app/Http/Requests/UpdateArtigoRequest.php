@@ -17,7 +17,7 @@ class UpdateArtigoRequest extends FormRequest
 
             'titulo' => 'sometimes|required|string|max:150',
 
-            'descricao' => 'sometimes|nullable|string',
+            'descricao' => 'sometimes|nullable|string|max:5000',
 
             'arquivo_pdf' => 'sometimes|nullable|file|mimes:pdf|max:20480',
 

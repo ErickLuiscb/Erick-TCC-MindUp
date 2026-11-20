@@ -16,7 +16,7 @@ class UpdateAutoajudaRequest extends FormRequest
     {
         return [
             'titulo' => 'sometimes|required|string|max:150',
-            'descricao' => 'sometimes|nullable|string',
+            'descricao' => 'sometimes|nullable|string|max:5000',
             'tipo_midia' => 'sometimes|required|in:imagem,video',
             'midia' => 'sometimes|required|file|max:51200',
             'ativo' => 'sometimes|required|boolean',
@@ -38,6 +38,20 @@ class UpdateAutoajudaRequest extends FormRequest
             // Se o usuário não enviou o tipo_midia novo, assume o tipo que já estava salvo no banco
             $tipoMidia = $this->input('tipo_midia', $autoajuda?->tipo_midia);
             $file = $this->file('midia');
+
+            // Mudar o tipo (imagem <-> vídeo) sem enviar o novo arquivo deixaria o
+            // registro incoerente: tipo "vídeo" apontando para um arquivo de imagem.
+            if (
+                !$file
+                && $autoajuda
+                && $this->has('tipo_midia')
+                && $this->input('tipo_midia') !== $autoajuda->tipo_midia
+            ) {
+                $validator->errors()->add(
+                    'midia',
+                    'Para trocar o tipo de mídia, envie também o novo arquivo.'
+                );
+            }
 
             if ($file && $tipoMidia) {
                 $extensao = strtolower($file->getClientOriginalExtension());

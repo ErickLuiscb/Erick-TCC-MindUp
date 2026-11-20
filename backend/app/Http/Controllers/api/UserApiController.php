@@ -65,6 +65,10 @@ class UserApiController extends Controller
 
         $user = new User($data);
 
+        // Conta criada por um admin já nasce com o e-mail confirmado. Sem isto o login
+        // da pessoa ficaria bloqueado (403) e nenhum e-mail de confirmação é enviado aqui.
+        $user->email_verified_at = now();
+
         // Criado pelo próprio admin: a decisão já é dele
         if ($user->tipo === 'psicologo') {
             $user->crp_status = 'aprovado';
@@ -97,7 +101,9 @@ class UserApiController extends Controller
         $data = $request->validated();
 
         // senha
-        if (!empty($data['senha'])) {
+        $trocouSenha = !empty($data['senha']);
+
+        if ($trocouSenha) {
             $data['senha'] = Hash::make($data['senha']);
         } else {
             unset($data['senha']);
@@ -119,6 +125,23 @@ class UserApiController extends Controller
         }
 
         $user->update($data);
+
+        // Senha nova => derruba as OUTRAS sessões (quem estava logado com a senha antiga).
+        // Se a pessoa trocou a própria senha, a sessão dela continua; se foi um admin
+        // trocando a de outro usuário, todas as sessões desse usuário caem.
+        if ($trocouSenha) {
+            $tokenAtual = $request->user()->id === $user->id
+                ? $request->user()->currentAccessToken()
+                : null;
+
+            $idAtual = $tokenAtual instanceof \Laravel\Sanctum\PersonalAccessToken
+                ? $tokenAtual->id
+                : null;
+
+            $user->tokens()
+                ->when($idAtual, fn ($consulta, $id) => $consulta->where('id', '!=', $id))
+                ->delete();
+        }
 
         return response()->json([
             'message' => 'Usuário atualizado com sucesso.',
@@ -203,6 +226,8 @@ class UserApiController extends Controller
             $autoajuda->delete();
         }
     }
+    // Sessões abertas da conta (a tabela de tokens não tem exclusão em cascata)
+    $user->tokens()->delete();
     $user->favoritos()->delete();
 
     $user->delete();
