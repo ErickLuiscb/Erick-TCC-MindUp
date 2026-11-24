@@ -15,6 +15,10 @@ const TENTATIVAS_PADRAO = 2;
 
 const COOLDOWN_MS = 8000;
 
+// O /bootstrap traz tudo de uma vez e, no plano gratuito do Render, pode
+// demorar (servidor "acordando"). Só ele ganha mais tempo que o padrão (20s).
+const TIMEOUT_BOOTSTRAP_MS = 60000;
+
 export function BootstrapProvider({ children }) {
   const { autenticado, carregando: carregandoAuth } = useAuth();
 
@@ -37,6 +41,18 @@ export function BootstrapProvider({ children }) {
   // Refs (não causam re-render) para controlar concorrência
   const emAndamentoRef = useRef(false);
   const ultimaBuscaRef = useRef(0);
+  // Controle de cancelamento: a requisição em andamento e o timer da
+  // próxima tentativa, para que retentativas não se empilhem.
+  const controladorRef = useRef(null);
+  const timerRetryRef = useRef(null);
+
+  const cancelarBusca = () => {
+    clearTimeout(timerRetryRef.current);
+    timerRetryRef.current = null;
+    controladorRef.current?.abort();
+    controladorRef.current = null;
+    emAndamentoRef.current = false;
+  };
 
   const ligarLoadings = () => {
     setCarregandoVideos(true);
@@ -73,8 +89,20 @@ export function BootstrapProvider({ children }) {
     ligarLoadings();
     setErro(false);
 
+    // Garante que nenhuma requisição anterior continue pendente
+    controladorRef.current?.abort();
+    const controlador = new AbortController();
+    controladorRef.current = controlador;
+
     try {
-      const resp = await api.get("/bootstrap");
+      const resp = await api.get("/bootstrap", {
+        timeout: TIMEOUT_BOOTSTRAP_MS,
+        signal: controlador.signal,
+      });
+
+      // Resposta de uma busca que já foi cancelada/substituída: descarta
+      if (controlador !== controladorRef.current) return;
+
       const dados = resp.data ?? {};
 
       setCategorias(dados.categorias ?? []);
@@ -86,20 +114,32 @@ export function BootstrapProvider({ children }) {
 
       setPronto(true);
       ultimaBuscaRef.current = Date.now();
+      controladorRef.current = null;
       desligarLoadings();
       emAndamentoRef.current = false;
     } catch (err) {
+      // Busca cancelada de propósito (logout, saída da tela ou nova busca):
+      // não é erro, e quem cancelou já cuidou do estado.
+      if (
+        err.code === "ERR_CANCELED" ||
+        controlador !== controladorRef.current
+      ) {
+        return;
+      }
+
       console.error("Erro ao carregar dados iniciais (/bootstrap):", err);
 
       if (tentativas > 0) {
         // Mantém os "carregando" ligados durante a nova tentativa
-        setTimeout(() => {
+        timerRetryRef.current = setTimeout(() => {
+          timerRetryRef.current = null;
           emAndamentoRef.current = false;
           carregarTudo(tentativas - 1, true);
         }, 2000);
         return;
       }
 
+      controladorRef.current = null;
       setErro(true);
       desligarLoadings();
       emAndamentoRef.current = false;
@@ -113,11 +153,19 @@ export function BootstrapProvider({ children }) {
     if (!carregandoAuth && autenticado) {
       carregarTudo(TENTATIVAS_PADRAO, true);
     } else if (!autenticado) {
+      cancelarBusca();
+      desligarLoadings();
       setPronto(false);
       setErro(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autenticado, carregandoAuth]);
+
+  // Ao desmontar o provider, cancela qualquer busca pendente
+  useEffect(() => {
+    return () => cancelarBusca();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ==========================================
   // ATUALIZA AS LISTAS QUANDO O PSICÓLOGO ALTERA UM CONTEÚDO

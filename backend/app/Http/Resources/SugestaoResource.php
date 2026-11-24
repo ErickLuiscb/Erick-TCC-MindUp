@@ -3,11 +3,14 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\Concerns\ResumoDeFavoritos;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SugestaoResource extends JsonResource
 {
+    use ResumoDeFavoritos;
+
     public function toArray(Request $request): array
     {
         return [
@@ -28,14 +31,9 @@ class SugestaoResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 
-            'favoritado' => auth('sanctum')->check()
-                ? $this->favoritos->contains(
-                'usuario_id',
-              auth('sanctum')->id()
-            )
-             : false,
+            'favoritado' => $this->favoritadoPeloUsuario(),
 
-            'quantidade_favoritos' => $this->favoritos->count(),
+            'quantidade_favoritos' => $this->totalDeFavoritos(),
 
             'autor' => $this->whenLoaded('autor', fn () => new AutorResource($this->autor)),
 
